@@ -17,7 +17,7 @@ Software Development for Mobile Development assignment
 * Done TODO List Screen, which can be used to view finished TODO and recover them later, and permanently delete the TODO List
 
 <ins> GOOD TO HAVE (Your own (extra) requirement) <ins>
-* NA 
+* { To Be Added } 
   
 <ins>Important Note to include in Assignment </ins>
 * Design : Use of Material Design https://m3.material.io/
@@ -28,8 +28,8 @@ Software Development for Mobile Development assignment
 * Minimum Android Version : 11
 
 <ins>For Agile we can use (suggest if there is any better one) </ins>
-* [Github Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/quickstart-for-projects)
 * Trello (https://trello.com/)
+* GitLab
 
 
 
