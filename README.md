@@ -37,4 +37,11 @@ Software Development for Mobile Development assignment
 <ins> Some Important Dates </ins>
 - Demo on Week 11
 
+---
+
+Cloning the project 
+
+* ``` git clone https://gitlab.com/team-msc-2/TODO.git ```
+* Enter user name and passward (set your password in gitlab, if you have not)
+
 
