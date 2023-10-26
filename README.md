@@ -12,7 +12,7 @@ Software Development for Mobile Development assignment
 * Subtasks in TODO
 * GeoLocation/Geofenced and Time Capturing while add/edit 
 * Asking if the user needs a reminder 
-* If Reminder is set show, Notification for showing the time remaining  (  Need to Dicuss : How to show if there are multiple reminders )
+* If Reminder is set show, Notification for showing the time remaining  (  Need to Dicuss : How to show if there are multiple reminders ) [How to Create Notification](https://developer.android.com/develop/ui/views/notifications/build-notification)
 * Deeplinking for opening app from the notification that can take user to the exact TODO List [More Info On Deeplink]( https://developer.android.com/training/app-links/deep-linking )
 * Done TODO List Screen, which can be used to view finished TODO and recover them later, and permanently delete the TODO List
 
