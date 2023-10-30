@@ -8,7 +8,7 @@ These prototypes cover the following use cases:
 	* Adding the title, description, price fields.
 	* Setting the priority from the dropdown.
 	* Adding images using the image picker.
-        * Adding the location using geo-location.
+    * Adding the location using geo-location.
 	* Setting reminder from the drop down.
 	* Assigning due date using the datepicker.
 
@@ -19,7 +19,7 @@ These prototypes cover the following use cases:
 	* Setting the priority from the dropdown.
 	* Adding images using the image picker.
 	* Deleting the images already uploaded.
-        * Changing the location using geo-location
+    * Changing the location using geo-location
 	* Setting reminder from the drop down.
 	* Assigning due date using the datepicker.
 
@@ -32,6 +32,14 @@ These prototypes cover the following use cases:
 5. **Use Case 5**
    Marking a todo as complete.
 
+6. **Use Case 6**
+   Searching for a specified todo
+
+7. **Use Case 7**
+   Using side drawer for accessing additional features
+	
+	* Accessing completed tasks
+	 
 
 [![(Main and Sub TODO) image](../images/Screen_1_(M&S_TODO).jpg "Screen 1")]
 [![(Main and Sub TODO) image](../images/Screen_2_(M&S_TODO).jpg "Screen 2")]
