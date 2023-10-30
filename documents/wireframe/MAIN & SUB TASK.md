@@ -32,16 +32,9 @@ These prototypes cover the following use cases:
 5. **Use Case 5**
    Marking a todo as complete.
 
-<<<<<<< HEAD
-[![(Main_and_Sub_TODO) image](../images/Screen 1.jpg "Screen 1")]
-[![(Main_and_Sub_TODO) image](../images/Screen 2.jpg "Screen 2")]
-[![(Main_and_Sub_TODO) image](../images/Screen 3.jpg "Screen 3")]
-[![(Main_and_Sub_TODO) image](../images/Screen 4.jpg "Screen 4")]
-[![(Main_and_Sub_TODO) image](../images/Screen 5.jpg "Screen 5")]
-=======
-[![(Main and Sub TODO) image](../images/Screen 1.jpg "Screen 1")]
-[![(Main and Sub TODO) image](../images/Screen 2.jpg "Screen 2")]
-[![(Main and Sub TODO) image](../images/Screen 3.jpg "Screen 3")]
-[![(Main and Sub TODO) image](../images/Screen 4.jpg "Screen 4")]
-[![(Main and Sub TODO) image](../images/Screen 5.jpg "Screen 5")]
->>>>>>> 4ed1dc715b2fcaec5453af93f7075f53ec94a71e
+[![(Main_and_Sub_TODO) image](../images/Screen 1_(M&S_TODO).jpg "Screen 1")]
+[![(Main_and_Sub_TODO) image](../images/Screen 2_(M&S_TODO).jpg "Screen 2")]
+[![(Main_and_Sub_TODO) image](../images/Screen 3_(M&S_TODO).jpg "Screen 3")]
+[![(Main_and_Sub_TODO) image](../images/Screen 4_(M&S_TODO).jpg "Screen 4")]
+[![(Main_and_Sub_TODO) image](../images/Screen 5_(M&S_TODO).jpg "Screen 5")]
+
