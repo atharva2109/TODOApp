@@ -8,8 +8,8 @@ These prototypes cover the following use cases:
 	* Adding the title, description, price fields.
 	* Setting the priority from the dropdown.
 	* Adding images using the image picker.
-        * Adding the location using geo-location.
-	* Setting reminder from the drop down.
+    * Adding the location using geo-location.
+	* Setting reminder from the time and date picker.
 	* Assigning due date using the datepicker.
 
 2. **Use Case 2:**
@@ -19,8 +19,8 @@ These prototypes cover the following use cases:
 	* Setting the priority from the dropdown.
 	* Adding images using the image picker.
 	* Deleting the images already uploaded.
-        * Changing the location using geo-location
-	* Setting reminder from the drop down.
+    * Changing the location using geo-location
+	* Setting reminder from the time and date picker.
 	* Assigning due date using the datepicker.
 
 3. **Use Case 3:**
@@ -32,8 +32,16 @@ These prototypes cover the following use cases:
 5. **Use Case 5**
    Marking a todo as complete.
 
+<<<<<<< HEAD
 [![(Main_and_Sub_TODO) image](../images/Screen 1.jpg "Screen 1")]
 [![(Main_and_Sub_TODO) image](../images/Screen 2.jpg "Screen 2")]
 [![(Main_and_Sub_TODO) image](../images/Screen 3.jpg "Screen 3")]
 [![(Main_and_Sub_TODO) image](../images/Screen 4.jpg "Screen 4")]
 [![(Main_and_Sub_TODO) image](../images/Screen 5.jpg "Screen 5")]
+=======
+[![(Main and Sub TODO) image](../images/Screen 1.jpg "Screen 1")]
+[![(Main and Sub TODO) image](../images/Screen 2.jpg "Screen 2")]
+[![(Main and Sub TODO) image](../images/Screen 3.jpg "Screen 3")]
+[![(Main and Sub TODO) image](../images/Screen 4.jpg "Screen 4")]
+[![(Main and Sub TODO) image](../images/Screen 5.jpg "Screen 5")]
+>>>>>>> 4ed1dc715b2fcaec5453af93f7075f53ec94a71e
