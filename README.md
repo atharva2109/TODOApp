@@ -28,14 +28,14 @@ Software Development for Mobile Development assignment
 <ins>Important Note to include in Assignment </ins>
 * Design : Use of Material Design https://m3.material.io/
 * Architecture : MVVM with state
-* Data Persistance for storing data | [Tutorial](https://developer.android.com/courses/android-basics-kotlin/unit-5)
+* Data Persistance for storing data 
 * GPS/GeoLocation
 * Camera Sensor for capturing Image
 * Minimum Android Version : 11
 
-<ins>For Agile we can use (suggest if there is any better one) </ins>
-* Trello (https://trello.com/)
-* GitLab
+<ins>For Agile we are using (suggest if there is any better one) </ins>
+* [Trello] (https://trello.com/b/Qa1JKGLv/real-estate)
+
 
 
 
@@ -45,9 +45,16 @@ Software Development for Mobile Development assignment
 
 ---
 
+Tutorial and information link 
+* [Navigation](https://developer.android.com/jetpack/compose/navigation)
+* [Data Persistance](https://developer.android.com/courses/android-basics-kotlin/unit-5)
+
+
 Cloning the project 
 
 * ``` git clone https://gitlab.com/team-msc-2/TODO.git ```
 * Enter user name and password (set your password in gitlab, if you have not)
+
+
 
 
