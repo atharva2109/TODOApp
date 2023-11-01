@@ -3,7 +3,7 @@ package com.team2.todo.utils
 import androidx.navigation.NavHostController
 
 enum class Screen {
-    Screen1, Screen2, Screen3
+    Listing, AddOREditTODO, CompletedListing,
 }
 
 object NavigationUtil {
