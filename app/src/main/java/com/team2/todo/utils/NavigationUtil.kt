@@ -24,7 +24,7 @@ object NavigationUtil {
         this.navController = navController;
     }
 
-    // nagivate to the given Enum
+    // navigate to the given Enum
     fun navigateTo(screen: Screen) {
         navController.navigate(screen.name)
     }
@@ -36,6 +36,5 @@ fun NavHostControllerProvider() {
     NavHost(navController = NavigationUtil.navController, startDestination = Screen.Listing.name) {
         composable(Screen.Listing.name) { Listing() }
         composable(Screen.CompletedListing.name) { CompletedListing() }
-
     }
 }
