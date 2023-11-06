@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.team2.todo.ui.theme.TODOTheme
 import com.team2.todo.utils.NavHostControllerProvider
 import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.NotificationUtil
 import com.team2.todo.utils.Screen
 
 class MainActivity : ComponentActivity() {
@@ -23,9 +24,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // initalize the navigation
+                    // initalize utils
                     val navController = rememberNavController()
-                    NavigationUtil.init(navController);
+                    NavigationUtil.init(navController)
+                    NotificationUtil.init(this)
 
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
