@@ -1,0 +1,25 @@
+package com.team2.todo.data.daos
+
+import androidx.room.Dao
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Upsert
+import com.team2.todo.data.entities.Todo
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface TodoDao {
+    @Upsert
+    suspend fun upsertTodo(todoEntity: Todo)
+
+    @Query("SELECT * FROM todos where todoId = :todoId")
+    fun getTodoWithSubTodos(todoId: Int): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM todos")
+    fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM todos ORDER BY todoPriority ASC")
+    fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
+}
