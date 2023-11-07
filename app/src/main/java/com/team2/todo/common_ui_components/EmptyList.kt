@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,13 +14,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.ui.theme.PrimaryColor
 
 /**
  * Created by Manu KJ on 11/6/23.
  */
 @Preview
 @Composable
-fun EmptyList(title: String = "No Current Sales", drawableID: Int = R.drawable.no_completed_list) {
+fun EmptyList(title: String = "No Current Sales", drawableID: Int = R.drawable.ic_no_completed_list) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -36,6 +36,7 @@ fun EmptyList(title: String = "No Current Sales", drawableID: Int = R.drawable.n
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = FontFamily.Serif,
+            color = PrimaryColor
         )
     }
 
