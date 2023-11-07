@@ -14,12 +14,12 @@ interface TodoDao {
     suspend fun upsertTodo(todoEntity: Todo)
 
     @Query("SELECT * FROM todos where todoId = :todoId")
-    fun getTodoWithSubTodos(todoId: Int): Flow<List<TodoWithSubTodos>>
+    fun getTodoWithSubTodosBasedOnTodoId(todoId: Int): Flow<List<TodoWithSubTodos>>
 
     @Query("SELECT * FROM todos")
     fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>>
 
-    @Query("SELECT * FROM todos ORDER BY todoPriority ASC")
+    @Query("SELECT * FROM todos ORDER BY priority ASC")
     fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>>
 
 }
