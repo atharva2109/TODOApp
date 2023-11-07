@@ -8,15 +8,15 @@ import java.time.LocalDateTime
 data class Todo(
     @PrimaryKey(autoGenerate = true)
     val todoId: Int,
-    val todoTitle: String,
-    val todoLabel: String?,
-    val todoDescription: String,
-    val todoImage: Byte?,
+    val title: String,
+    val label: String?,
+    val description: String,
+    val image: Byte?,
     val latitude: Double?,
     val longitude: Double?,
     /* added type converter for complex date object */
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
     val status: Boolean?,
-    val todoPriority: Int?
+    val priority: Int?
 )
