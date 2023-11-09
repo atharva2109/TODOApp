@@ -47,6 +47,7 @@ Software Development for Mobile Development assignment
 ----
 <ins> Some Important Dates </ins>
 - Demo on Week 11 - Dec 8th
+- Report on Week 12 - Dec 15th
 
 ---
 
@@ -61,7 +62,7 @@ Tutorial and information link
 
 Cloning the project
 
-* ``` git clone https://gitlab.com/team-msc-2/TODO.git ```
+* ``` git clone https://git.shefcompsci.org.uk/com6510-2023-24/team02/project.git ```
 * Enter user name and password (set your password in gitlab, if you have not)
 
 
