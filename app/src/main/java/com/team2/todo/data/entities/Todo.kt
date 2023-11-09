@@ -11,7 +11,6 @@ data class Todo(
     val title: String,
     val label: String?,
     val description: String,
-    val image: Byte?,
     val latitude: Double?,
     val longitude: Double?,
     /* added type converter for complex date object */

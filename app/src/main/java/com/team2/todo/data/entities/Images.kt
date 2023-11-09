@@ -5,8 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-@Entity(
-    "subtodos",
+@Entity("images",
     foreignKeys = [
         ForeignKey(
             entity = Todo::class,
@@ -14,17 +13,10 @@ import java.time.LocalDateTime
             childColumns = ["todoId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
-)
-data class SubTodo(
+    ])
+data class Images(
     @PrimaryKey(autoGenerate = true)
-    val subTodoId: Int,
-    val todoId: Int,
-    val title: String?,
-    val description: String?,
-    /* added type converter for complex date object */
-    val createdDate: LocalDateTime?,
-    val dueDate: LocalDateTime?,
-    val status: Boolean?,
-    val priority: Int?
+    val imageId: Int,
+    val imagePath: String?,
+    val todoId: Int?
 )

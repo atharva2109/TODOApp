@@ -7,11 +7,12 @@ import androidx.room.TypeConverters
 import com.team2.todo.data.daos.SubTodoDao
 import com.team2.todo.data.daos.TodoDao
 import com.team2.todo.data.datautils.LocalDateTimeConverter
+import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
 
 @Database(
-    entities = [Todo::class, SubTodo::class], version = 1, exportSchema = false
+    entities = [Todo::class, SubTodo::class, Images :: class], version = 1, exportSchema = false
 )
 @TypeConverters(LocalDateTimeConverter::class)
 abstract class RealEstateDatabase : RoomDatabase() {
