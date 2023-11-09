@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.team2.todo.R
+import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
 import com.team2.todo.ui.theme.PrimaryColor
@@ -50,32 +51,9 @@ fun MainScreen() {
                     CompletedSaleList()
                 }
             }
-            NavigationBar(contentColor = PrimaryColor) {
-                NavigationBarItem(
-                    selected = currentPage == 0,
-                    onClick = { currentPage = 0 },
-                    label = { Text(text = "In Sale") },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_todo_list_icon),
-                            contentDescription = "TODO",
-                            modifier = Modifier.size(27.dp)
-                        )
-                    },
-                )
-                NavigationBarItem(
-                    selected = currentPage == 1,
-                    onClick = { currentPage = 1 },
-                    label = { Text(text = "Complete ") },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_completed_list_icon),
-                            contentDescription = "TODO",
-                            modifier = Modifier.size(27.dp)
-                        )
-                    },
-                )
-            }
+            BottomNavigationCompose(
+                currentPage = currentPage,
+                onClick = { nextPage -> currentPage = nextPage })
         }
     }
 }
