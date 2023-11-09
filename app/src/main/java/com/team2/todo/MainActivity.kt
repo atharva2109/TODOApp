@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     NavHostControllerProvider()
 
                     //navigate to inital page
-                    NavigationUtil.navigateTo(Screen.Listing)
+                    NavigationUtil.navigateTo(Screen.MainScreen)
                 }
             }
         }

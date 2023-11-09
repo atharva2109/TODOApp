@@ -1,19 +1,11 @@
 package com.team2.todo.screens.listing
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -27,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.team2.todo.R
@@ -38,7 +29,7 @@ import com.team2.todo.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Listing() {
+fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
     Scaffold { it ->
         Column(
@@ -59,7 +50,7 @@ fun Listing() {
                     CompletedSaleList()
                 }
             }
-            NavigationBar(contentColor = PrimaryColor ) {
+            NavigationBar(contentColor = PrimaryColor) {
                 NavigationBarItem(
                     selected = currentPage == 0,
                     onClick = { currentPage = 0 },
