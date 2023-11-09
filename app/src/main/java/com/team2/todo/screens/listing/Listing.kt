@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.team2.todo.R
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
+import com.team2.todo.ui.theme.PrimaryColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,20 +53,13 @@ fun Listing() {
                     .weight(1f)
                     .fillMaxSize()
             ) {
-                Crossfade(
-                    targetState = currentPage,
-                    animationSpec = tween(300),
-                    label = ""
-                ) { it ->
-                    if (it == 0) {
-                        InSaleList()
-                    } else {
-                        CompletedSaleList()
-                    }
+                if (currentPage == 0) {
+                    InSaleList()
+                } else {
+                    CompletedSaleList()
                 }
-
             }
-            NavigationBar(tonalElevation = 12.0.dp) {
+            NavigationBar(contentColor = PrimaryColor ) {
                 NavigationBarItem(
                     selected = currentPage == 0,
                     onClick = { currentPage = 0 },
