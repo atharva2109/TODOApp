@@ -33,7 +33,7 @@ object NavigationUtil {
 
 @Composable
 fun NavHostControllerProvider() {
-    NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
+    NavHost(navController = NavigationUtil.navController, startDestination = Screen.DetailsScreen.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
     }

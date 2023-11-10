@@ -17,7 +17,7 @@ import com.team2.todo.ui.theme.PrimaryColor
  */
 
 @Composable
-fun BottomNavigationCompose(currentPage: Int, onClick: (nextPage: Int) -> Unit) {
+fun BottomNavigationCompose(currentPage: Int, onClick: (nextPage: Int) -> Unit){
     return NavigationBar(contentColor = PrimaryColor) {
         NavigationBarItem(
             selected = currentPage == 0,
