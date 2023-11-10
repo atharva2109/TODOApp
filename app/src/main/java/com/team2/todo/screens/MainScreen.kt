@@ -1,4 +1,4 @@
-package com.team2.todo.screens.listing
+package com.team2.todo.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

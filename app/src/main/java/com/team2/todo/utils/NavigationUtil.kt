@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.team2.todo.screens.completed_listing.CompletedListing
-import com.team2.todo.screens.listing.MainScreen
+import com.team2.todo.screens.MainScreen
 
 // Enum of all the Screen
 enum class Screen {
