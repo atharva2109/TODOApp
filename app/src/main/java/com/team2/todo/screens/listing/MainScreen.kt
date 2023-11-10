@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,28 +34,30 @@ import com.team2.todo.ui.theme.PrimaryColor
 @Composable
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
-    Scaffold { it ->
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
+    MaterialTheme(typography = Typography()) {
+        Scaffold { it ->
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
+                    .padding(it)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (currentPage == 0) {
-                    InSaleList()
-                } else {
-                    CompletedSaleList()
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                ) {
+                    if (currentPage == 0) {
+                        InSaleList()
+                    } else {
+                        CompletedSaleList()
+                    }
                 }
+                BottomNavigationCompose(
+                    currentPage = currentPage,
+                    onClick = { nextPage -> currentPage = nextPage })
             }
-            BottomNavigationCompose(
-                currentPage = currentPage,
-                onClick = { nextPage -> currentPage = nextPage })
         }
     }
 }

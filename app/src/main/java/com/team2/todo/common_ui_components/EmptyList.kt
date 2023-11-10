@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
@@ -35,8 +36,8 @@ fun EmptyList(title: String = "No Current Sales", drawableID: Int = R.drawable.i
             text = title,
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
-            fontFamily = FontFamily.Serif,
-            color = PrimaryColor
+            color = PrimaryColor,
+            textAlign = TextAlign.Center
         )
     }
 
