@@ -37,7 +37,7 @@ import com.team2.todo.ui.theme.PrimaryColor
 @Composable
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
-    var showReminderAlert by remember { mutableStateOf(true) }
+    var showReminderAlert by remember { mutableStateOf(false) }
     MaterialTheme(typography = Typography()) {
         Scaffold { it ->
             if (showReminderAlert) {
