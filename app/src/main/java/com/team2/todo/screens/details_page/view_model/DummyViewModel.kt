@@ -1,4 +1,4 @@
-package com.team2.todo.screens.completed_listing.view_model
+package com.team2.todo.screens.details_page.view_model
 
 import androidx.lifecycle.ViewModel
 
