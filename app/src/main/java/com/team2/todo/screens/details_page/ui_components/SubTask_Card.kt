@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -22,11 +24,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
+
 
 @Composable
 fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
@@ -38,46 +43,32 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
             ),
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth().clip(CircleShape).padding(15.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onTertiary
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     )
     {
 
         Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(7.dp),
             horizontalArrangement = Arrangement.SpaceBetween
 
         )
         {
 
-
-            Switch(
+            Checkbox(
                 checked = checkedState,
-                onCheckedChange = {
-                    checkedState = it
-                },
-
-                thumbContent = if (checkedState) {
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                        )
-                    }
-
-                } else {
-                    null
-                }
+                onCheckedChange = { checkedState = it }
             )
+
             todos.title?.let {
                 Text(
                     text = it,
                     modifier = Modifier
-                        .padding(16.dp),
+                        .padding(10.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium
 
@@ -86,7 +77,7 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
             Text(
                 text = "Due On: "+ LocalDatetimeToWords.formatLocalDateTimeAsWords(todos.dueDate),
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(10.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleSmall
 
