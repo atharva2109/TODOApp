@@ -28,12 +28,11 @@ import com.team2.todo.utils.ImageBitmap
 fun ImageLoader(url: Uri) {
     val context = LocalContext.current
 
-    var isLoading by remember {
-        mutableStateOf(true)
-    }
     var bitmap by remember {
         mutableStateOf<Bitmap?>(null)
     }
+    var isLoading: Boolean = true
+
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -45,7 +44,7 @@ fun ImageLoader(url: Uri) {
 
         ) {
 
-            if (bitmap == null && isLoading) {
+            if (isLoading) {
 
                 ImageBitmap.loadImagefromUri(
                     context = context,
