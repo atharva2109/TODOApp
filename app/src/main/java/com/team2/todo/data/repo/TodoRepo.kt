@@ -1,6 +1,7 @@
 package com.team2.todo.data.repo
 
 import com.team2.todo.data.RealEstateDatabase
+import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import kotlinx.coroutines.flow.Flow
@@ -26,5 +27,9 @@ class TodoRepo(private val database: RealEstateDatabase) {
     suspend fun updateTodoStatus(todoId: Int, status: Boolean) {
         database.todoDao().updateTodoStatus(todoId, status)
     }
+
+    fun getAllTodoImagesBasedOnTodo(todoId: Int): Flow<List<Images>> =
+        database.todoDao().getAllTodoImagesBasedOnTodo(todoId)
+
 
 }
