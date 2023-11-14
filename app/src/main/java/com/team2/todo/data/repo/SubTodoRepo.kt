@@ -13,6 +13,10 @@ class SubTodoRepo(private val database: RealEstateDatabase) {
     fun getSubTodoBasedOnTodo(todoId: Int): Flow<List<SubTodo>> =
         database.subTodoDao().getSubTodoBasedOnTodo(todoId)
 
+    fun getSubTodoBasedOnSubTodoId(subTodoId: Int): Flow<SubTodo> =
+        database.subTodoDao().getSubTodoBasedOnSubTodoId(subTodoId)
+
+
     fun getSubTodoOrderedByPriority(todoId: Int): Flow<List<SubTodo>> =
         database.subTodoDao().getSubTodoOrderedByPriority(todoId)
 

@@ -31,11 +31,12 @@ import androidx.compose.ui.unit.dp
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 
 
 @Composable
 fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
-    var checkedState by remember { mutableStateOf(false) }
+    var checkedState by remember { mutableStateOf(todos.status) }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -59,10 +60,12 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
         )
         {
 
-            Checkbox(
-                checked = checkedState,
-                onCheckedChange = { checkedState = it }
-            )
+            checkedState?.let {
+                Checkbox(
+                    checked = it,
+                    onCheckedChange = { checkedState = it }
+                )
+            }
 
             todos.title?.let {
                 Text(
@@ -93,4 +96,79 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
     }
 }
+
+
+@Composable
+fun TodosCardMain(todos: TodoWithSubTodos, dateTime: String) {
+    var checkedState by remember { mutableStateOf(false) }
+
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp,
+
+            ),
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onTertiary
+        )
+    )
+    {
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+
+        )
+        {
+
+
+            Switch(
+                checked = checkedState,
+                onCheckedChange = {
+                    checkedState = it
+                },
+
+                thumbContent = if (checkedState) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(SwitchDefaults.IconSize),
+                        )
+                    }
+
+                } else {
+                    null
+                }
+            )
+            Text(
+                text = todos.todo.title,
+                modifier = Modifier
+                    .padding(16.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleMedium
+
+            )
+            Text(
+                text = todos.todo.label!!,
+                modifier = Modifier
+                    .padding(16.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall
+
+            )
+            FilledTonalIconButton(
+                onClick = {
+                }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "SubTodo")
+            }
+        }
+
+
+    }
+}
+
 
