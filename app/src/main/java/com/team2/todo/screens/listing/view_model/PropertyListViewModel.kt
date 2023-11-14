@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2.todo.data.entities.Todo
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import kotlinx.coroutines.launch
 
 /**
@@ -11,10 +12,10 @@ import kotlinx.coroutines.launch
  */
 
 class PropertyListViewModel : ViewModel() {
-    val uncompletedPropertyList = MutableLiveData<List<Todo>>()
-    val completedPropertyList = MutableLiveData<List<Todo>>()
+    val uncompletedPropertyList = MutableLiveData<List<TodoWithSubTodos>>()
+    val completedPropertyList = MutableLiveData<List<TodoWithSubTodos>>()
 
-    fun updatedUncompletedPropertyList(newList: List<Todo>) {
+    fun updatedUncompletedPropertyList(newList: List<TodoWithSubTodos>) {
         viewModelScope.launch {
             try {
                 uncompletedPropertyList.value = newList
@@ -24,7 +25,7 @@ class PropertyListViewModel : ViewModel() {
         }
     }
 
-    fun updatedCompletedPropertyList(newList: List<Todo>) {
+    fun updatedCompletedPropertyList(newList: List<TodoWithSubTodos>) {
         viewModelScope.launch {
             try {
                 completedPropertyList.value = newList
