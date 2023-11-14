@@ -3,6 +3,7 @@ package com.team2.todo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.registerForActivityResult
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,8 +33,10 @@ class MainActivity : ComponentActivity() {
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
 
+
+
                     //navigate to inital page
-                    NavigationUtil.navigateTo(Screen.MainScreen)
+
                 }
             }
         }

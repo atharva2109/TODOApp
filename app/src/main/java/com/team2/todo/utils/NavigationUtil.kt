@@ -10,10 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.team2.todo.screens.completed_listing.CompletedListing
 import com.team2.todo.screens.MainScreen
+import com.team2.todo.screens.add_todo.AddTodos
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, CompletedListing,
+    MainScreen, CompletedListing,AddTodos
 }
 
 object NavigationUtil {
@@ -33,8 +34,9 @@ object NavigationUtil {
 
 @Composable
 fun NavHostControllerProvider() {
-    NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
+    NavHost(navController = NavigationUtil.navController, startDestination = Screen.AddTodos.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
         composable(Screen.CompletedListing.name) { CompletedListing() }
+        composable(Screen.AddTodos.name) { AddTodos() }
     }
 }
