@@ -13,12 +13,12 @@ import com.team2.todo.ui.theme.TODOTheme
 import com.team2.todo.utils.NavHostControllerProvider
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.NotificationUtil
-import com.team2.todo.view_model.PropertyListViewModel
+import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fetchAndUpdateList();
+        fetchAndUpdateList()
         setContent {
             TODOTheme {
                 // A surface container using the 'background' color from the theme

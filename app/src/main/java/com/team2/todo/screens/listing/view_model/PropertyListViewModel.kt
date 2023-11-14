@@ -1,4 +1,4 @@
-package com.team2.todo.view_model
+package com.team2.todo.screens.listing.view_model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
  */
 
 class PropertyListViewModel : ViewModel() {
-    private val uncompletedPropertyList = MutableLiveData<List<Todo>>()
-    private val completedPropertyList = MutableLiveData<List<Todo>>()
+    val uncompletedPropertyList = MutableLiveData<List<Todo>>()
+    val completedPropertyList = MutableLiveData<List<Todo>>()
 
     fun updatedUncompletedPropertyList(newList: List<Todo>) {
         viewModelScope.launch {
