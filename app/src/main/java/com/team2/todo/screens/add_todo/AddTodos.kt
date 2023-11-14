@@ -77,6 +77,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
 import com.team2.todo.screens.add_todo.ui_components.PickImageFromGallery
@@ -84,9 +85,9 @@ import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(){
+fun AddTodos() {
 
-    var ctx= LocalContext.current.applicationContext
+    var ctx = LocalContext.current.applicationContext
     var enteredTitle by remember {
         mutableStateOf("")
     }
@@ -101,138 +102,122 @@ fun AddTodos(){
     var isTitleEmpty by remember { mutableStateOf(false) }
     var isDescriptionEmpty by remember { mutableStateOf(false) }
 
-    var (calendarState,dateselected)= DatePickerComponent()
-    var (timeState,timeselected)= TimePickerComponent()
+    var (calendarState, dateselected) = DatePickerComponent()
+    var (timeState, timeselected) = TimePickerComponent()
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
 
-                TopAppBar(modifier = Modifier.height(40.dp),
-                    title = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+        AddEditAppBar()
 
-                            Text(text = "ADD TASK", color = Color.White, modifier = Modifier.padding(top = 4.dp))
-                        }
-                    },
 
-                    colors = TopAppBarDefaults.smallTopAppBarColors(Color.Black),
+        OutlinedTextField(
+
+            value = enteredTitle,
+            onValueChange = {
+                enteredTitle = it
+                isTitleEmpty = it.isEmpty()
+            },
+            label = { Text(text = "Title") },
+            colors = TextFieldDefaults.colors(),
+            isError = isTitleEmpty,
+
+
+            )
+
+        OutlinedTextField(
+            value = enteredDescription,
+            modifier = Modifier
+                .height(200.dp)
+                .padding(10.dp),
+            onValueChange = {
+                enteredDescription = it
+                isDescriptionEmpty = it.isEmpty()
+            },
+            label = { Text(text = "Description") },
+            colors = TextFieldDefaults.colors(
+//                        textColor = Color.Black
+            ),
+            isError = isDescriptionEmpty,
+        )
+
+
+        PickImageFromGallery(activity = ComponentActivity())
+
+
+        OutlinedTextField(
+            value = enteredPrice, onValueChange = { newText -> enteredPrice = newText },
+            label = { Text(text = "Price: ") },
+            placeholder = { Text(text = "Enter price: ") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            colors = TextFieldDefaults.colors(
+//                        textColor = Color.Black
+            )
+
+        )
+
+        DropDownMenuComponent()
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Due Date")
+            Spacer(modifier = Modifier.padding(4.dp))
+            Button(
+                modifier = Modifier.padding(start = 6.dp),
+                colors = ButtonDefaults.buttonColors(Color.Black),
+                onClick = { calendarState.show() }) {
+                Icon(imageVector = Icons.Filled.DateRange, contentDescription = "DateTime")
+
+            }
+            Spacer(modifier = Modifier.padding(6.dp))
+            Button(
+                colors = ButtonDefaults.buttonColors(Color.Black),
+                onClick = { timeState.show() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_outline_alarm_24),
+                    contentDescription = "TimeClock"
                 )
 
+            }
 
-                OutlinedTextField(
-
-                    value = enteredTitle, onValueChange = { enteredTitle = it
-                                    isTitleEmpty=it.isEmpty()
-                                                          },
-                    label = { Text(text = "Title") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = Color.Black
-                    ),
-                    isError = isTitleEmpty,
-
-
-                )
-
-                OutlinedTextField(
-                    value = enteredDescription,
-                    modifier = Modifier
-                        .height(200.dp)
-                        .padding(10.dp),
-                    onValueChange = {enteredDescription = it
-                        isDescriptionEmpty=it.isEmpty()
-                                    },
-                    label = { Text(text = "Description") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = Color.Black
-                    ),
-                    isError = isDescriptionEmpty,
-                )
-
-
-                PickImageFromGallery(activity = ComponentActivity())
-
-
-                OutlinedTextField(
-                    value = enteredPrice, onValueChange = { newText -> enteredPrice = newText },
-                    label = { Text(text = "Price: ") },
-                    placeholder = { Text(text = "Enter price: ") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = Color.Black
-                    )
-
-                )
-
-                DropDownMenuComponent()
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Due Date")
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    Button(
-                        modifier = Modifier.padding(start = 6.dp),
-                        colors = ButtonDefaults.buttonColors(Color.Black),
-                        onClick = {calendarState.show()  }) {
-                        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "DateTime")
-
-                    }
-                    Spacer(modifier = Modifier.padding(6.dp))
-                    Button(
-                        colors = ButtonDefaults.buttonColors(Color.Black),
-                        onClick = { timeState.show()}) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_outline_alarm_24),
-                            contentDescription = "TimeClock"
-                        )
-
-                    }
-
-                }
-                Row {
-                    Text(text = "Due on  ${dateselected.value}", fontWeight = FontWeight.Bold)
-                    Text(text = " at ${timeselected.value}", fontWeight = FontWeight.Bold)
-                }
+        }
+        Row {
+            Text(text = "Due on  ${dateselected.value}", fontWeight = FontWeight.Bold)
+            Text(text = " at ${timeselected.value}", fontWeight = FontWeight.Bold)
+        }
 
 
 // fetching local context
-            val ctx = LocalContext.current
-            Button(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .padding(top = 12.dp),
-                    elevation = ButtonDefaults.buttonElevation(6.dp),
-                    onClick = {
-                        if(enteredTitle.isEmpty() ){
-                            Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
-                            isTitleEmpty=true
-                        }
-                        else if(enteredDescription.isEmpty() ){
-                            Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT).show()
-                            isDescriptionEmpty=true
-                        }
-                        else if(dateselected.value==""||timeselected.value==""){
-                            Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT).show()
-                    }
-                        else{
-                            Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(Color.Black),
-                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(0.dp))
-                ) {
-                    Text(text = "ADD", color = Color.White)
+        val ctx = LocalContext.current
+        Button(
+            modifier = Modifier
+                .width(200.dp)
+                .padding(top = 12.dp),
+            elevation = ButtonDefaults.buttonElevation(6.dp),
+            onClick = {
+                if (enteredTitle.isEmpty()) {
+                    Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
+                    isTitleEmpty = true
+                } else if (enteredDescription.isEmpty()) {
+                    Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT).show()
+                    isDescriptionEmpty = true
+                } else if (dateselected.value == "" || timeselected.value == "") {
+                    Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
                 }
-            }
+            },
+            colors = ButtonDefaults.buttonColors(Color.Black),
+            shape = MaterialTheme.shapes.small.copy(all = CornerSize(0.dp))
+        ) {
+            Text(text = "ADD", color = Color.White)
         }
+    }
+}
 
 
 
