@@ -1,26 +1,25 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.team2.todo.screens.completed_listing
+package com.team2.todo.screens.details_page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.team2.todo.screens.completed_listing.ui_components.DummyCompose
+import com.team2.todo.screens.details_page.ui_components.DummyCompose
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompletedListing() {
+fun DetailsPage() {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Completed APP Bar")
+                    Text("Details Page")
                 }
             )
         },
@@ -29,7 +28,7 @@ fun CompletedListing() {
                 modifier = Modifier
                     .padding(it)
             ) {
-                DummyCompose(text = "sdsds")
+                DummyCompose(text = "Details Page")
             }
 
         }

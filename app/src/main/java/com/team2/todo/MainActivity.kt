@@ -13,7 +13,6 @@ import com.team2.todo.ui.theme.TODOTheme
 import com.team2.todo.utils.NavHostControllerProvider
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.NotificationUtil
-import com.team2.todo.utils.Screen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +31,6 @@ class MainActivity : ComponentActivity() {
 
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
-
-
 
                     //navigate to inital page
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class TodoRepo(private val database: RealEstateDatabase) {
 
-    suspend fun addTodo(todoEntity: Todo) {
+    suspend fun upsertTodo(todoEntity: Todo) {
         database.todoDao().upsertTodo(todoEntity)
     }
 
@@ -21,5 +21,10 @@ class TodoRepo(private val database: RealEstateDatabase) {
 
     fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>> =
         database.todoDao().getAllTodosOrderedByPriorityWithSubTodos()
+
+
+    suspend fun updateTodoStatus(todoId: Int, status: Boolean) {
+        database.todoDao().updateTodoStatus(todoId, status)
+    }
 
 }
