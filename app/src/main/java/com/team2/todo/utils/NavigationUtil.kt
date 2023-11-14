@@ -29,6 +29,10 @@ object NavigationUtil {
     fun navigateTo(screen: Screen) {
         navController.navigate(screen.name)
     }
+
+    fun goBack(){
+        navController.popBackStack();
+    }
 }
 
 
