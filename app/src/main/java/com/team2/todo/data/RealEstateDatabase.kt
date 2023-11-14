@@ -17,8 +17,8 @@ import com.team2.todo.data.entities.Todo
 @TypeConverters(LocalDateTimeConverter::class)
 abstract class RealEstateDatabase : RoomDatabase() {
 
-    abstract fun todoDao(): TodoDao
-    abstract fun subTodoDao(): SubTodoDao
+   internal abstract fun todoDao(): TodoDao
+    internal abstract fun subTodoDao(): SubTodoDao
 
     //Static Object
     companion object {
