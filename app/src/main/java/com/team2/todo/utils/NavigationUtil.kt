@@ -36,7 +36,7 @@ object NavigationUtil {
 fun NavHostControllerProvider() {
     NavHost(navController = NavigationUtil.navController, startDestination = Screen.AddTodos.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
-        composable(Screen.CompletedListing.name) { CompletedListing() }
+//        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos() }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
     }
