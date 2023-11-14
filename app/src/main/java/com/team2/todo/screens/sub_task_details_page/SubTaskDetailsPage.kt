@@ -31,28 +31,30 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.details_page.view_model.DetailsPageViewModel
+import com.team2.todo.screens.sub_task_details_page.view_model.SubDetailsPageViewModel
 import com.team2.todo.utils.NavigationUtil
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun SubTaskDetailsPage(id: Int) {
 
-
-    val todoContext = LocalContext.current
-    val database = RealEstateDatabase.getInstance(todoContext)
-    val todoRepo = TodoRepo(database)
-    val subTodoRepo = SubTodoRepo(database)
-    val viewModel = DetailsPageViewModel(todoRepo, subTodoRepo)
-
     val navController = NavigationUtil.navController
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val itemId = navBackStackEntry?.arguments?.getInt("subTodoId") ?: -1
-    
+
+
+    val todoContext = LocalContext.current
+    val database = RealEstateDatabase.getInstance(todoContext)
+    val subTodoRepo = SubTodoRepo(database)
+    val viewModel = SubDetailsPageViewModel(subTodoRepo, itemId)
 
 
 
+
+    val collectedSubTodo by viewModel.subTodo.collectAsState(initial = SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
 
     var subTaskList = mutableListOf<SubTodo>();
 
@@ -60,7 +62,7 @@ fun SubTaskDetailsPage(id: Int) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Subtask: " + itemId, Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                    Text(text = "Subtask: " + (collectedSubTodo?.title ?: collectedSubTodo), Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                 }
             )
         },

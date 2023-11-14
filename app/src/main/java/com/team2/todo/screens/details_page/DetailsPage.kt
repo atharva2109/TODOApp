@@ -168,7 +168,23 @@ fun DetailsPage() {
                     contentAlignment = Alignment.BottomEnd) {
                     SmallFloatingActionButton(
                         onClick = {
-                            NavigationUtil.navigateTo(Screen.CreateTodo)
+                            viewModel.addTodo(mainTask)
+                        },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.secondary
+                    ) {
+                        Icon(Icons.Filled.Add, "Create")
+                    }
+                }
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(end = 15.dp),
+                    contentAlignment = Alignment.BottomEnd) {
+                    SmallFloatingActionButton(
+                        onClick = {
+                            viewModel.addSubTodos(subTaskList[0])
+                            viewModel.addSubTodos(subTaskList[1])
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.secondary

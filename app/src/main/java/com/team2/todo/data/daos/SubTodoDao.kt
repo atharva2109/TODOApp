@@ -24,5 +24,8 @@ interface SubTodoDao {
     @Query("SELECT  * FROM subtodos where todoId = :todoId ORDER BY priority ASC")
     fun getSubTodoOrderedByPriority(todoId : Int): Flow<List<SubTodo>>
 
+    @Query("SELECT  * FROM subtodos where subTodoId = :subTodoId ORDER BY priority ASC")
+    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId : Int): Flow<SubTodo>
+
 
 }
