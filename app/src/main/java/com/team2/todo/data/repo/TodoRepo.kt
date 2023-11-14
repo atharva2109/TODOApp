@@ -12,6 +12,12 @@ class TodoRepo(private val database: RealEstateDatabase) {
         database.todoDao().upsertTodo(todoEntity)
     }
 
+
+    suspend fun addImage(imageEntity: Images) {
+        database.todoDao().insertImage(imageEntity)
+    }
+
+
     fun getTodoWithSubTodosBasedOnTodoId(todoId: Int): Flow<List<TodoWithSubTodos>> =
         database.todoDao().getTodoWithSubTodosBasedOnTodoId(todoId)
 
