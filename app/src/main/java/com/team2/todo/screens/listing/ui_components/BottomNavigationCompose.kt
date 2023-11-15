@@ -43,8 +43,7 @@ fun BottomNavigationCompose(currentPage: Int, onClick: (nextPage: Int) -> Unit) 
         NavigationBarItem(
             selected = currentPage == 1,
             onClick = {
-                NavigationUtil.navigateTo(Screen.AddTodos)
-//                onClick(1)
+                onClick(1)
             },
             label = { Text(text = "Complete ", color = AppBarContentColor) },
             icon = {
