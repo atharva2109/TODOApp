@@ -38,7 +38,7 @@ object NavigationUtil {
 
 @Composable
 fun NavHostControllerProvider() {
-    NavHost(navController = NavigationUtil.navController, startDestination = Screen.AddTodos.name) {
+    NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
 //        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos() }

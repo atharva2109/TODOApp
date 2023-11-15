@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -31,6 +34,8 @@ import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
 import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +68,11 @@ fun MainScreen() {
                         CompletedSaleList()
                     }
                 }
+                ExtendedFloatingActionButton(
+                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
+                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
+                    text = { Text(text = "Add New Property") },
+                )
                 BottomNavigationCompose(
                     currentPage = currentPage,
                     onClick = { nextPage -> currentPage = nextPage })

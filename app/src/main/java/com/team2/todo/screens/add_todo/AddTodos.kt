@@ -23,10 +23,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,8 +49,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
+import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
 import com.team2.todo.screens.add_todo.ui_components.PickImageFromGallery
@@ -114,7 +121,7 @@ fun AddTodos() {
                 OutlinedTextField(
                     value = enteredDescription,
                     modifier = OutLinedTextModifier
-                        .height(200.dp),
+                        .height(120.dp),
                     onValueChange = {
                         enteredDescription = it
                         isDescriptionEmpty = it.isEmpty()
@@ -123,7 +130,8 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-
+                PickImageFromGallery(activity = ComponentActivity())
+                DropDownMenuComponent()
                 OutlinedTextField(
                     value = enteredPrice, onValueChange = { newText -> enteredPrice = newText },
                     label = { Text(text = "Price: ") },
@@ -135,15 +143,22 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     modifier = OutLinedTextModifier,
                 )
-
-                PickImageFromGallery(activity = ComponentActivity())
+                DateAndTimeField(
+                    date = dateselected.value,
+                    time = timeselected.value,
+                    onDateClick = {
+                        println("calender getting called")
+                        calendarState.show()
+                    },
+                    onTimeClick = {
+                        timeState.show()
+                    })
             }
             val ctx = LocalContext.current
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 25.dp, vertical = 10.dp)
-                    .border(2.dp, Color.Black, shape = RoundedCornerShape(8.dp)),
+                    .padding(horizontal = 25.dp, vertical = 10.dp),
                 elevation = ButtonDefaults.buttonElevation(6.dp),
                 onClick = {
                     if (enteredTitle.isEmpty()) {
@@ -159,32 +174,17 @@ fun AddTodos() {
                         Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
                     }
                 },
-                colors = ButtonDefaults.buttonColors(Color.Black),
+
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
-                Text(text = "ADD", color = Color.White)
+                Text(
+                    text = "ADD",
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
             }
 
 
-//
-//            PickImageFromGallery(activity = ComponentActivity())
-//
-//
-//            OutlinedTextField(
-//                value = enteredPrice, onValueChange = { newText -> enteredPrice = newText },
-//                label = { Text(text = "Price: ") },
-//                placeholder = { Text(text = "Enter price: ") },
-//                keyboardOptions = KeyboardOptions(
-//                    keyboardType = KeyboardType.Number,
-//                    imeAction = ImeAction.Done
-//                ),
-//                colors = TextFieldDefaults.colors(
-//                    //                        textColor = Color.Black
-//                )
-//
-//            )
-//
-//            DropDownMenuComponent()
 //
 //            Row(verticalAlignment = Alignment.CenterVertically) {
 //                Text(text = "Due Date")
@@ -219,11 +219,4 @@ fun AddTodos() {
         }
     }
 }
-
-
-
-
-
-
-
 

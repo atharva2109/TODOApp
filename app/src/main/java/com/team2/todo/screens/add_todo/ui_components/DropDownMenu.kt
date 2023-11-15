@@ -28,7 +28,7 @@ fun DropDownMenuComponent() {
     val priorities = listOf("Low", "Medium", "High")
     var selectedPriority by remember { mutableStateOf("") }
 
-    var textfieldSize by remember { mutableStateOf(Size.Zero)}
+    var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (menuexpanded)
         Icons.Filled.KeyboardArrowUp
@@ -36,7 +36,7 @@ fun DropDownMenuComponent() {
         Icons.Filled.KeyboardArrowDown
 
 
-    Column(Modifier.padding(20.dp)) {
+    Column(Modifier.fillMaxWidth().padding(vertical = 5.dp)) {
         OutlinedTextField(
             value = selectedPriority,
             onValueChange = { selectedPriority = it },
@@ -44,11 +44,12 @@ fun DropDownMenuComponent() {
                 .onGloballyPositioned { coordinates ->
                     //This value is used to assign to the DropDown the same width
                     textfieldSize = coordinates.size.toSize()
-                },
-            label = {Text("Priority")},
+                }
+                .fillMaxWidth(),
+            label = { Text("Priority") },
             //trailingIcon is for the dropdown arrow
             trailingIcon = {
-                Icon(icon,"contentDescription",
+                Icon(icon, "contentDescription",
                     Modifier.clickable { menuexpanded = !menuexpanded })
             }
         )
@@ -61,12 +62,13 @@ fun DropDownMenuComponent() {
             //this basically states that the dropdown menu will have the same width
             //as TextField
             modifier = Modifier
-                .width(with(LocalDensity.current){textfieldSize.width.toDp()})
+                .width(with(LocalDensity.current) { textfieldSize.width.toDp() }
+                )
         ) {
             priorities.forEach { priority ->
                 DropdownMenuItem(text = {
                     Text(text = priority)
-                },onClick = {
+                }, onClick = {
                     selectedPriority = priority
                     menuexpanded = false
                 })

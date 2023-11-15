@@ -208,7 +208,6 @@ fun UploadImagePlaceHolder() {
             .fillMaxWidth()
             .padding(vertical = 10.dp),
     ) {
-        // Text label
         Text(
             text = "Upload Image",
             modifier = Modifier.padding(bottom = 10.dp),
@@ -216,7 +215,6 @@ fun UploadImagePlaceHolder() {
             color = PrimaryColor,
             fontSize = 18.sp
         )
-        // Box with dotted border, center icon, and text
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -225,7 +223,7 @@ fun UploadImagePlaceHolder() {
                 .border(1.dp, color = PrimaryColor, shape = RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            // Icon in the center
+
             Image(
                 painter = painterResource(id = R.drawable.image_upload_placeholder),
                 contentDescription = "Upload Image",
