@@ -8,12 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.team2.todo.screens.details_page.DetailsPage
+import com.team2.todo.common_ui_components.CameraCapture
 import com.team2.todo.screens.MainScreen
+import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen,
+    MainScreen, DetailsScreen, CameraCapture
 }
 
 object NavigationUtil {
@@ -33,8 +34,10 @@ object NavigationUtil {
 
 @Composable
 fun NavHostControllerProvider() {
-    NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
+    NavHost(navController = NavigationUtil.navController, startDestination = Screen.CameraCapture.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
+        composable(Screen.CameraCapture.name) { CameraCapture() }
+
     }
 }
