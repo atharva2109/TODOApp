@@ -44,7 +44,21 @@ fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
     var showReminderAlert by remember { mutableStateOf(false) }
     MaterialTheme(typography = Typography()) {
-        Scaffold { it ->
+        Scaffold(
+            floatingActionButton = {
+                if (currentPage == 0) ExtendedFloatingActionButton(
+                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
+                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
+                    text = { Text(text = "Add New Property") },
+                )
+            },
+            bottomBar = {
+                BottomNavigationCompose(
+                    currentPage = currentPage,
+                    onClick = { nextPage -> currentPage = nextPage },
+                )
+            }
+        ) { it ->
             if (showReminderAlert) {
                 ModalBottomSheet(onDismissRequest = { showReminderAlert = false; }) {
                     ReminderAlertCompose()
@@ -57,25 +71,13 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                ) {
-                    if (currentPage == 0) {
-                        InSaleList()
-                    } else {
-                        CompletedSaleList()
-                    }
+                if (currentPage == 0) {
+                    InSaleList()
+                } else {
+                    CompletedSaleList()
                 }
-                ExtendedFloatingActionButton(
-                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
-                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
-                    text = { Text(text = "Add New Property") },
-                )
-                BottomNavigationCompose(
-                    currentPage = currentPage,
-                    onClick = { nextPage -> currentPage = nextPage })
+
+
             }
         }
     }
