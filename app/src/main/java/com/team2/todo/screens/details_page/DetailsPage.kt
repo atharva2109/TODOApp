@@ -53,10 +53,9 @@ import java.time.LocalDateTime
 
 
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DetailsPage() {
+fun DetailsPage(todoId: Int) {
 
 
     val todoContext = LocalContext.current
@@ -93,27 +92,36 @@ fun DetailsPage() {
 
    // val todos by viewModel.todoListBasedOnId.collectAsState(initial = emptyList())
     var mainTask = Todo(todoId = 1, title = "Main Task One", status = false, priority = 2, longitude = 54.0, latitude = 55.0, label = "Maintenance", dueDate = LocalDateTime.now(), createdDate = LocalDateTime.now(), description = "Property in Lahore")
-    var mainTaskOne = TodoWithSubTodos(todo = Todo(todoId = 1, title = "Main Task One", status = false, priority = 2, longitude = 54.0, latitude = 55.0, label = "Maintenance", dueDate = LocalDateTime.now(), createdDate = LocalDateTime.now(), description = "Property in Lahore"), subtodos = subTaskList, images = emptyList() )
 
 
+    val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial =  emptyList())
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = mainTask.title, Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-                }
-            )
-        },
-        content = {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .padding(start = 10.dp),
-            ) {
-                Text(text = "Description :" + mainTask.description)
 
-                Spacer(modifier = Modifier.padding(top = 30.dp))
+ if(collectedTodo.isEmpty()){
+     Text(text = "loading")
+ }else {
+     val propertyDetails : TodoWithSubTodos = collectedTodo[0];
+     Scaffold(
+         topBar = {
+             TopAppBar(
+                 title = {
+                     Text(
+                         text = propertyDetails.todo.title,
+                         Modifier.fillMaxWidth(),
+                         textAlign = TextAlign.Center
+                     )
+                 }
+             )
+         },
+         content = {
+             Column(
+                 modifier = Modifier
+                     .padding(it)
+                     .padding(start = 10.dp),
+             ) {
+                 Text(text = "Description :" + propertyDetails.todo.description)
+
+                 Spacer(modifier = Modifier.padding(top = 30.dp))
 
 //                Box(){
 //                    HorizontalPager(state = pagerState, key = {dummy_images[2]}) {
@@ -127,99 +135,104 @@ fun DetailsPage() {
 //                    }
 //                }
 
-                Spacer(modifier = Modifier.padding(top = 20.dp))
+                 Spacer(modifier = Modifier.padding(top = 20.dp))
 
-                Box {
-                    if(mainTask.latitude == null && mainTask.longitude == null){
-                        Text(text = "Verification Status: Not Verified")
-                    }else{
-                        Row {
-                            Text(text = "Verification Status: ")
-                            Image(
-                                imageVector = Icons.Default.Check, // or use Icons.Default.Check
-                                contentDescription = null, // Provide a suitable description
-                                modifier = Modifier.size(15.dp, 15.dp),
-                                contentScale = ContentScale.Fit,
-                            )
-                        }
-                    }
+                 Box {
+                     if (propertyDetails.todo.longitude == null && propertyDetails.todo.latitude == null) {
+                         Text(text = "Verification Status: Not Verified")
+                     } else {
+                         Row {
+                             Text(text = "Verification Status: ")
+                             Image(
+                                 imageVector = Icons.Default.Check, // or use Icons.Default.Check
+                                 contentDescription = null, // Provide a suitable description
+                                 modifier = Modifier.size(15.dp, 15.dp),
+                                 contentScale = ContentScale.Fit,
+                             )
+                         }
+                     }
 
-                    Spacer(modifier = Modifier.padding(top = 20.dp))
-                }
+                     Spacer(modifier = Modifier.padding(top = 20.dp))
+                 }
 
-                Box {
-                    Text(text = "Priority: ###########")
+                 Box {
+                     Text(text = "Priority: " + propertyDetails.todo.priority)
 
-                    Spacer(modifier = Modifier.padding(top = 20.dp))
-                }
-                
-
-                Box {
-                    Text(text = "Due Date: ###########")
-
-                    Box {
-                        Spacer(modifier = Modifier.padding(top = 20.dp))
-                    }
-                }
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(end = 15.dp),
-                    contentAlignment = Alignment.BottomEnd) {
-                    SmallFloatingActionButton(
-                        onClick = {
-                            viewModel.addTodo(mainTask)
-                        },
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.secondary
-                    ) {
-                        Icon(Icons.Filled.Add, "Create")
-                    }
-                }
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(end = 15.dp),
-                    contentAlignment = Alignment.BottomEnd) {
-                    SmallFloatingActionButton(
-                        onClick = {
-                            viewModel.addSubTodos(subTaskList[0])
-                            viewModel.addSubTodos(subTaskList[1])
-                        },
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.secondary
-                    ) {
-                        Icon(Icons.Filled.Add, "Create")
-                    }
-                }
-
-                Box() {
-                    Text(text = "Sub Tasks ", fontSize = 20.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-
-                }
-                Box {
-                    LazyColumn() {
-                        items(subTaskList) { subTask ->
-                            //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
-                            Box(Modifier.clickable {
-                                Log.e(subTask.subTodoId.toString(), subTask.subTodoId.toString())
-
-                                subTodoId = subTask.subTodoId
-
-                                NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
-                            }) {
-                                TodosCard(todos = subTask)
-                            }
-                        }
-                    }
-                }
+                     Spacer(modifier = Modifier.padding(top = 20.dp))
+                 }
 
 
+                 Box {
+                     Text(text = "Due Date: " + propertyDetails.todo.dueDate)
+
+                     Box {
+                         Spacer(modifier = Modifier.padding(top = 20.dp))
+                     }
+                 }
+                 Box(
+                     Modifier
+                         .fillMaxWidth()
+                         .padding(end = 15.dp),
+                     contentAlignment = Alignment.BottomEnd
+                 ) {
+                     SmallFloatingActionButton(
+                         onClick = {
+                             viewModel.addTodo(mainTask)
+                         },
+                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                         contentColor = MaterialTheme.colorScheme.secondary
+                     ) {
+                         Icon(Icons.Filled.Add, "Create")
+                     }
+                 }
+                 Box(
+                     Modifier
+                         .fillMaxWidth()
+                         .padding(end = 15.dp),
+                     contentAlignment = Alignment.BottomEnd
+                 ) {
+                     SmallFloatingActionButton(
+                         onClick = {
+                             viewModel.addSubTodos(subTaskList[0])
+                             viewModel.addSubTodos(subTaskList[1])
+                         },
+                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                         contentColor = MaterialTheme.colorScheme.secondary
+                     ) {
+                         Icon(Icons.Filled.Add, "Create")
+                     }
+                 }
+
+                 Box() {
+                     Text(
+                         text = "Sub Tasks ",
+                         fontSize = 20.sp,
+                         textAlign = TextAlign.Center,
+                         modifier = Modifier.fillMaxWidth()
+                     )
+
+                 }
+                 Box {
+                     LazyColumn() {
+                         items(propertyDetails.subtodos) { subTask ->
+                             //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
+                             Box(Modifier.clickable {
+                                 Log.e(subTask.subTodoId.toString(), subTask.subTodoId.toString())
+
+                                 subTodoId = subTask.subTodoId
+
+                                 NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
+                             }) {
+                                 TodosCard(todos = subTask)
+                             }
+                         }
+                     }
+                 }
 
 
+             }
 
-            }
-
-        }
-    )
+         }
+     )
+ }
 }

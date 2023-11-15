@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: SubTodoRepo) : ViewModel() {
-    var todoListBasedOnId: Flow<List<TodoWithSubTodos>> = emptyFlow()
+
 
     var todosList = repo.getAllTodosWithSubTodos();
 
-    fun getTasksBasedOnId(id: Int): Unit{
-        todoListBasedOnId = repo.getTodoWithSubTodosBasedOnTodoId(id)
+    fun getPropertyFromId(propertyId:Int):Flow<List<TodoWithSubTodos>>{
+        return  repo.getTodoWithSubTodosBasedOnTodoId(propertyId)
     }
 
     fun getSubTodosListBasedOnSubTodoId(subTodoId: Int): Flow<SubTodo> {

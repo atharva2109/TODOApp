@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.EmptyList
 import com.team2.todo.data.RealEstateDatabase
@@ -33,14 +34,16 @@ import com.team2.todo.utils.Screen
 
 @Composable
 fun InSaleList() {
-    
+
+
+
 
     val todoContext = LocalContext.current
     val database = RealEstateDatabase.getInstance(todoContext)
     val todoRepo = TodoRepo(database)
     val subTodoRepo = SubTodoRepo(database)
 
-    val viewModel = DetailsPageViewModel(todoRepo, subTodoRepo)
+    val viewModel = DetailsPageViewModel(todoRepo, subTodoRepo, )
 
     val todos by viewModel.todosList.collectAsState(initial = emptyList())
     if (todos.isNotEmpty()) {
@@ -60,7 +63,7 @@ fun InSaleList() {
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(Modifier.clickable {
 
-                    NavigationUtil.navigateTo(Screen.DetailsScreen)
+                    NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${item.todo.todoId}")
                 }) {
 
                     TodosCardMain(todos = item, dateTime = dateTime)

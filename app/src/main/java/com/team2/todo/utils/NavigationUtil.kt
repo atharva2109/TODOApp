@@ -45,10 +45,16 @@ object NavigationUtil {
 fun NavHostControllerProvider() {
     NavHost(
         navController = NavigationUtil.navController,
-        startDestination = Screen.DetailsScreen.name
+        startDestination = Screen.Listing.name
     ) {
         composable(Screen.MainScreen.name) { MainScreen() }
-        composable(Screen.DetailsScreen.name) { DetailsPage() }
+        composable(
+            route = "${Screen.DetailsScreen.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getInt("todoId") ?: -1
+            DetailsPage(todoId)
+        }
         composable(Screen.Listing.name) { Listing() }
         composable(Screen.CreateTodo.name) { CreateTodo() }
         composable(

@@ -41,22 +41,17 @@ import java.time.LocalDateTime
 @Composable
 fun SubTaskDetailsPage(id: Int) {
 
-    val navController = NavigationUtil.navController
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val itemId = navBackStackEntry?.arguments?.getInt("subTodoId") ?: -1
-
 
     val todoContext = LocalContext.current
     val database = RealEstateDatabase.getInstance(todoContext)
     val subTodoRepo = SubTodoRepo(database)
-    val viewModel = SubDetailsPageViewModel(subTodoRepo, itemId)
+    val viewModel = SubDetailsPageViewModel(subTodoRepo, id)
 
 
 
 
     val collectedSubTodo by viewModel.subTodo.collectAsState(initial = SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
 
-    var subTaskList = mutableListOf<SubTodo>();
 
     Scaffold(
         topBar = {
@@ -72,7 +67,7 @@ fun SubTaskDetailsPage(id: Int) {
                     .padding(it)
                     .padding(start = 10.dp),
             ) {
-                Text(text = "Description : "  )
+                Text(text = "Description : " + collectedSubTodo.description  )
 
                 Spacer(modifier = Modifier.padding(top = 30.dp))
 
@@ -109,14 +104,14 @@ fun SubTaskDetailsPage(id: Int) {
 //                }
 
                 Box {
-                    Text(text = "Priority: ")
+                    Text(text = "Priority: " + collectedSubTodo.priority)
 
                     Spacer(modifier = Modifier.padding(top = 20.dp))
                 }
 
 
                 Box {
-                    Text(text = "Due Date: " )
+                    Text(text = "Due Date: " + collectedSubTodo.dueDate)
 
                     Box {
                         Spacer(modifier = Modifier.padding(top = 20.dp))
