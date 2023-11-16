@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavigationUtil.init(navController)
                     NotificationUtil.init(this)
-                    LocationUtils.init(this)
+                    LocationUtils.init(this, this)
 
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
