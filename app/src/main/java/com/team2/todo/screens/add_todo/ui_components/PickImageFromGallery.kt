@@ -1,13 +1,10 @@
 package com.team2.todo.screens.add_todo.ui_components
 
-import androidx.compose.runtime.Composable
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Base64
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,13 +12,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,31 +26,24 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.ui.theme.PrimaryColor
-import java.io.ByteArrayOutputStream
-import java.lang.Integer.min
+
 
 @Composable
 fun PickImageFromGallery(activity: ComponentActivity) {
@@ -105,66 +93,49 @@ fun PickImageFromGallery(activity: ComponentActivity) {
         }
     } else {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(
-                modifier = Modifier.width(20.dp),
-                onClick = {
-                    // Handle backward arrow click
-                    startIndex -= 3
-                }
-            ) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Backward")
-            }
 
-            Row(
-                modifier = Modifier
-                    .width(300.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
 
                 // Use LazyRow instead of Row for horizontal scrolling
                 LazyRow(
-                    contentPadding = PaddingValues(horizontal = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .width(300.dp)
-                        .height(100.dp)
+                    contentPadding = PaddingValues(horizontal = 1.dp),
 
-                    // Set the fixed height of the carousel
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(vertical = 40.dp)
+
+
                 ) {
-                    // Display three images at a time based on the visible range
                     itemsIndexed(
                         bitmaps.value.subList(
-                            startIndex,
-                            min(startIndex + 3, bitmaps.value.size)
+                            0,
+                            bitmaps.value.size
                         )
                     ) { index, bitmap ->
+
                         Box(
                             modifier = Modifier
-                                .width(100.dp) // Set the fixed width of each Box
-                                .aspectRatio(1f)
-                                .clip(MaterialTheme.shapes.medium)
+                                .width(300.dp) // Set the fixed width of each Box
+                                .height(600.dp)
+
                         ) {
-                            val byteArrayOutputStream = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-                            val byteArray = byteArrayOutputStream.toByteArray()
-
-                            // Convert the byte array to a base64-encoded string
-                            val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-
-                            // Log the base64-encoded string
-                            Log.d("BitmapLog", base64String)
+//                            val byteArrayOutputStream = ByteArrayOutputStream()
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+//                            val byteArray = byteArrayOutputStream.toByteArray()
+//                            val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxSize()
+                               contentScale = ContentScale.FillBounds,
+                                modifier = Modifier.fillMaxHeight()
+                                    .width(250.dp)
                             )
 
                             // Delete icon functionality
                             IconButton(
                                 modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(4.dp),
+                                    .align(Alignment.TopStart)
+                                    .padding(start=210.dp, top = 0.dp),
                                 onClick = {
                                     // Remove the clicked image
                                     val globalIndex = index + startIndex
@@ -186,17 +157,8 @@ fun PickImageFromGallery(activity: ComponentActivity) {
                 }
 
             }
-            IconButton(
-                modifier = Modifier.width(20.dp),
-                onClick = {
-                    // Handle forward arrow click
-                    startIndex += 3
-                }
-            ) {
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Forward")
-            }
 
-        }
+
     }
 }
 
@@ -227,6 +189,10 @@ fun UploadImagePlaceHolder() {
             Image(
                 painter = painterResource(id = R.drawable.image_upload_placeholder),
                 contentDescription = "Upload Image",
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth(.6f)
+
             )
         }
     }

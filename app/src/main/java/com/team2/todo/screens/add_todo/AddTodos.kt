@@ -1,5 +1,6 @@
 package com.team2.todo.screens.add_todo
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,8 +57,11 @@ import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
 import com.team2.todo.screens.add_todo.ui_components.PickImageFromGallery
+import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.ui.theme.PrimaryColor
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -147,75 +151,50 @@ fun AddTodos() {
                     date = dateselected.value,
                     time = timeselected.value,
                     onDateClick = {
-                        println("calender getting called")
                         calendarState.show()
                     },
                     onTimeClick = {
                         timeState.show()
                     })
+
+                if(dateselected.value!="" && timeselected.value!="") {
+                    ReminderField(dateselected.value, timeselected.value)
+                }
+
+
+                val ctx = LocalContext.current
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 25.dp, vertical = 10.dp),
+                    elevation = ButtonDefaults.buttonElevation(6.dp),
+                    onClick = {
+                        if (enteredTitle.isEmpty()) {
+                            Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
+                            isTitleEmpty = true
+                        } else if (enteredDescription.isEmpty()) {
+                            Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
+                                .show()
+                            isDescriptionEmpty = true
+                        } else if (dateselected.value == "" || timeselected.value == "") {
+                            Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+
+                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
+                ) {
+                    Text(
+                        text = "ADD",
+                        color = Color.White,
+                        modifier = Modifier.padding(vertical = 5.dp)
+                    )
+                }
+
+
             }
-            val ctx = LocalContext.current
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp, vertical = 10.dp),
-                elevation = ButtonDefaults.buttonElevation(6.dp),
-                onClick = {
-                    if (enteredTitle.isEmpty()) {
-                        Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
-                        isTitleEmpty = true
-                    } else if (enteredDescription.isEmpty()) {
-                        Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
-                            .show()
-                        isDescriptionEmpty = true
-                    } else if (dateselected.value == "" || timeselected.value == "") {
-                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
-                    }
-                },
-
-                shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
-            ) {
-                Text(
-                    text = "ADD",
-                    color = Color.White,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
-            }
-
-
-//
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Text(text = "Due Date")
-//                Spacer(modifier = Modifier.padding(4.dp))
-//                Button(
-//                    modifier = Modifier.padding(start = 6.dp),
-//                    colors = ButtonDefaults.buttonColors(Color.Black),
-//                    onClick = { calendarState.show() }) {
-//                    Icon(imageVector = Icons.Filled.DateRange, contentDescription = "DateTime")
-//
-//                }
-//                Spacer(modifier = Modifier.padding(6.dp))
-//                Button(
-//                    colors = ButtonDefaults.buttonColors(Color.Black),
-//                    onClick = { timeState.show() }) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ic_outline_alarm_24),
-//                        contentDescription = "TimeClock"
-//                    )
-//
-//                }
-//
-//            }
-//            Row {
-//                Text(text = "Due on  ${dateselected.value}", fontWeight = FontWeight.Bold)
-//                Text(text = " at ${timeselected.value}", fontWeight = FontWeight.Bold)
-//            }
-
-
-            // fetching local context
-
         }
     }
 }
