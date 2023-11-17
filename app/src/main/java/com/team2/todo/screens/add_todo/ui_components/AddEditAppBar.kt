@@ -42,7 +42,7 @@ fun AddEditAppBar() {
     return TopAppBar(
         title = {
             Text(
-                text = "Add Task",
+                text = "Add New Property",
                 color = AppBarContentColor,
                 fontWeight = FontWeight.Bold
             )
