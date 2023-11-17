@@ -1,5 +1,4 @@
 package com.team2.todo.common_ui_components
-
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
@@ -43,7 +42,7 @@ import java.util.Objects
 
 
 @Composable
-fun CameraCapture() {
+fun CameraCapture(imageUriString: (String) -> Unit) {
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -89,6 +88,8 @@ fun CameraCapture() {
         }
     }
     if (capturedImageUri.path?.isNotEmpty() == true) {
+
+        imageUriString(capturedImageUri.toString())
 
         Column(
             modifier = Modifier
