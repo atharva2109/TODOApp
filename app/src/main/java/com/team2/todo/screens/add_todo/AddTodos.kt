@@ -55,6 +55,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
@@ -161,70 +162,80 @@ fun AddTodos() {
                         timeState.show()
                     })
 
-                if(dateselected.value!="" && timeselected.value!="") {
+                if (dateselected.value != "" && timeselected.value != "") {
                     ReminderField(dateselected.value, timeselected.value)
                 }
-                    var currentlatitude by remember {
-                        mutableStateOf("")
-                    }
+                var currentlatitude by remember {
+                    mutableStateOf("")
+                }
                 var currentlongitude by remember {
                     mutableStateOf("")
                 }
-                Button( modifier = Modifier
+//                Button(modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(vertical = 10.dp),
+//                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),
+//                    elevation = ButtonDefaults.buttonElevation(6.dp), onClick = {
+//                        // Debugging the current location
+//                        LocationUtils.getCurrentLocation { location: Location ->
+//                            currentlatitude = location.latitude.toString()
+//                            currentlongitude = location.longitude.toString()
+//                        }
+//                    }) {
+//                    Row {
+//                        Text(
+//                            text = "Get Current Location",
+//                            modifier = Modifier.padding(vertical = 5.dp)
+//                        )
+//                        Image(
+//                            imageVector = Icons.Filled.LocationOn,
+//                            contentDescription = "Location",
+//                            colorFilter = ColorFilter.tint(Color.White),
+//                            modifier = Modifier.padding(start = 6.dp)
+//                        )
+//                    }
+//                }
+                VerifyByLocationCompose(
+                    callback = { location ->
+                        currentlatitude = location.latitude.toString()
+                        currentlongitude = location.longitude.toString()
+                    }
+                )
+                val ctx = LocalContext.current.applicationContext
+                if (currentlatitude != "" && currentlongitude != "") {
+                    Toast.makeText(ctx, "Your current location is captured", Toast.LENGTH_LONG)
+                        .show()
+                }
+
+            }
+            Button(
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp, vertical = 10.dp),
-                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),
-                    elevation = ButtonDefaults.buttonElevation(6.dp),onClick = {
-                        // Debugging the current location
-                        LocationUtils.getCurrentLocation { location: Location ->
-                            currentlatitude=location.latitude.toString()
-                            currentlongitude=location.longitude.toString()
-                        }
-                    }) {
-                    Row {
-                        Text(text = "Get Current Location",modifier = Modifier.padding(vertical = 5.dp))
-                        Image(imageVector = Icons.Filled.LocationOn, contentDescription = "Location", colorFilter = ColorFilter.tint(Color.White), modifier = Modifier.padding(start = 6.dp))
+                elevation = ButtonDefaults.buttonElevation(6.dp),
+                onClick = {
+                    if (enteredTitle.isEmpty()) {
+                        Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
+                        isTitleEmpty = true
+                    } else if (enteredDescription.isEmpty()) {
+                        Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
+                            .show()
+                        isDescriptionEmpty = true
+                    } else if (dateselected.value == "" || timeselected.value == "") {
+                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
                     }
+                },
 
-                }
-                val ctx = LocalContext.current.applicationContext
-                if(currentlatitude!="" && currentlongitude!="")
-                {
-                   Toast.makeText(ctx,"Your current location is captured",Toast.LENGTH_LONG).show()
-                }
-
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 25.dp, vertical = 10.dp),
-                    elevation = ButtonDefaults.buttonElevation(6.dp),
-                    onClick = {
-                        if (enteredTitle.isEmpty()) {
-                            Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
-                            isTitleEmpty = true
-                        } else if (enteredDescription.isEmpty()) {
-                            Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
-                                .show()
-                            isDescriptionEmpty = true
-                        } else if (dateselected.value == "" || timeselected.value == "") {
-                            Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-
-                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
-                ) {
-                    Text(
-                        text = "ADD",
-                        color = Color.White,
-                        modifier = Modifier.padding(vertical = 5.dp)
-                    )
-                }
-
-
+                shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
+            ) {
+                Text(
+                    text = "ADD",
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
             }
         }
     }
