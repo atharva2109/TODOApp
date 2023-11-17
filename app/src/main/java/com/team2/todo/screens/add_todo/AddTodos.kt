@@ -68,7 +68,9 @@ import com.team2.todo.utils.LocationUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
+/**
+ * Created by Atharva K on 11/13/23.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodos() {
@@ -171,30 +173,7 @@ fun AddTodos() {
                 var currentlongitude by remember {
                     mutableStateOf("")
                 }
-//                Button(modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(vertical = 10.dp),
-//                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),
-//                    elevation = ButtonDefaults.buttonElevation(6.dp), onClick = {
-//                        // Debugging the current location
-//                        LocationUtils.getCurrentLocation { location: Location ->
-//                            currentlatitude = location.latitude.toString()
-//                            currentlongitude = location.longitude.toString()
-//                        }
-//                    }) {
-//                    Row {
-//                        Text(
-//                            text = "Get Current Location",
-//                            modifier = Modifier.padding(vertical = 5.dp)
-//                        )
-//                        Image(
-//                            imageVector = Icons.Filled.LocationOn,
-//                            contentDescription = "Location",
-//                            colorFilter = ColorFilter.tint(Color.White),
-//                            modifier = Modifier.padding(start = 6.dp)
-//                        )
-//                    }
-//                }
+
                 VerifyByLocationCompose(
                     callback = { location ->
                         currentlatitude = location.latitude.toString()

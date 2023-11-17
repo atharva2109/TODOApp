@@ -44,6 +44,9 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.ui.theme.PrimaryColor
 
+/**
+ * Created by Atharva K on 11/14/23.
+ */
 
 @Composable
 fun PickImageFromGallery(activity: ComponentActivity) {
@@ -119,10 +122,6 @@ fun PickImageFromGallery(activity: ComponentActivity) {
                                 .height(600.dp)
 
                         ) {
-//                            val byteArrayOutputStream = ByteArrayOutputStream()
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-//                            val byteArray = byteArrayOutputStream.toByteArray()
-//                            val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = null,
