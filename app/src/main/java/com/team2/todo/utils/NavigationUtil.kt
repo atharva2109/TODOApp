@@ -13,7 +13,7 @@ import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen, CameraCapture
+    MainScreen, DetailsScreen
 }
 
 object NavigationUtil {
