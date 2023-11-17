@@ -50,11 +50,7 @@ class MainActivity : ComponentActivity() {
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
 
-                    // Debugging the current location
-                     LocationUtils.getCurrentLocation { location: Location ->
 
-                         // Access the lat long from location
-                     }
                 }
             }
         }

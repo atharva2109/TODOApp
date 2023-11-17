@@ -1,5 +1,6 @@
 package com.team2.todo.screens.add_todo
 
+import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -40,11 +41,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -60,6 +63,7 @@ import com.team2.todo.screens.add_todo.ui_components.PickImageFromGallery
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.utils.LocationUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -160,9 +164,36 @@ fun AddTodos() {
                 if(dateselected.value!="" && timeselected.value!="") {
                     ReminderField(dateselected.value, timeselected.value)
                 }
+                    var currentlatitude by remember {
+                        mutableStateOf("")
+                    }
+                var currentlongitude by remember {
+                    mutableStateOf("")
+                }
+                Button( modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 25.dp, vertical = 10.dp),
+                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),
+                    elevation = ButtonDefaults.buttonElevation(6.dp),onClick = {
+                        // Debugging the current location
+                        LocationUtils.getCurrentLocation { location: Location ->
+                            currentlatitude=location.latitude.toString()
+                            currentlongitude=location.longitude.toString()
+                        }
+                    }) {
+                    Row {
+                        Text(text = "Get Current Location",modifier = Modifier.padding(vertical = 5.dp))
+                        Image(imageVector = Icons.Filled.LocationOn, contentDescription = "Location", colorFilter = ColorFilter.tint(Color.White), modifier = Modifier.padding(start = 6.dp))
+                    }
+
+                }
+                val ctx = LocalContext.current.applicationContext
+                if(currentlatitude!="" && currentlongitude!="")
+                {
+                   Toast.makeText(ctx,"Your current location is captured",Toast.LENGTH_LONG).show()
+                }
 
 
-                val ctx = LocalContext.current
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
