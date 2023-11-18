@@ -18,8 +18,8 @@ import java.time.LocalDateTime
 )
 data class SubTodo(
     @PrimaryKey(autoGenerate = true)
-    val subTodoId: Int,
-    val todoId: Int,
+    val subTodoId: Long,
+    val todoId: Long,
     val title: String?,
     val description: String?,
     /* added type converter for complex date object */
