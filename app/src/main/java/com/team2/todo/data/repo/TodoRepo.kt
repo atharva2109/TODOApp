@@ -8,17 +8,16 @@ import kotlinx.coroutines.flow.Flow
 
 class TodoRepo(private val database: RealEstateDatabase) {
 
-    suspend fun upsertTodo(todoEntity: Todo) {
-        database.todoDao().upsertTodo(todoEntity)
+    suspend fun upsertTodo(todoEntity: Todo) : Long {
+        return database.todoDao().upsertTodo(todoEntity)
     }
-
 
     suspend fun addImage(imageEntity: Images) {
         database.todoDao().insertImage(imageEntity)
     }
 
 
-    fun getTodoWithSubTodosBasedOnTodoId(todoId: Int): Flow<List<TodoWithSubTodos>> =
+    fun getTodoWithSubTodosBasedOnTodoId(todoId: Long): Flow<List<TodoWithSubTodos>> =
         database.todoDao().getTodoWithSubTodosBasedOnTodoId(todoId)
 
 
@@ -34,11 +33,11 @@ class TodoRepo(private val database: RealEstateDatabase) {
         database.todoDao().getAllTodosOrderedByPriorityDESCWithSubTodos()
 
 
-    suspend fun updateTodoStatus(todoId: Int, status: Boolean) {
+    suspend fun updateTodoStatus(todoId: Long, status: Boolean) {
         database.todoDao().updateTodoStatus(todoId, status)
     }
 
-    fun getAllTodoImagesBasedOnTodo(todoId: Int): Flow<List<Images>> =
+    fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>> =
         database.todoDao().getAllTodoImagesBasedOnTodo(todoId)
 
     fun getAllTodosOrderedByPriceASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =

@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoDao {
     @Upsert
-    suspend fun upsertTodo(todoEntity: Todo)
+    suspend fun upsertTodo(todoEntity: Todo) : Long
 
     @Query("SELECT * FROM todos where todoId = :todoId")
-    fun getTodoWithSubTodosBasedOnTodoId(todoId: Int): Flow<List<TodoWithSubTodos>>
+    fun getTodoWithSubTodosBasedOnTodoId(todoId: Long): Flow<List<TodoWithSubTodos>>
 
     @Query("SELECT * FROM todos")
     fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>>
@@ -29,10 +29,10 @@ interface TodoDao {
 
     @Transaction
     @Query("UPDATE todos SET status = :status WHERE todoId = :todoId")
-    suspend fun updateTodoStatus(todoId: Int, status: Boolean)
+    suspend fun updateTodoStatus(todoId: Long, status: Boolean)
 
     @Query("SELECT * FROM images WHERE todoId = :todoId")
-    fun getAllTodoImagesBasedOnTodo(todoId: Int): Flow<List<Images>>
+    fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>>
 
     @Insert
     suspend fun insertImage(imageEntity: Images)
