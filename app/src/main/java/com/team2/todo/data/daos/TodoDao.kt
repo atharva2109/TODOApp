@@ -22,7 +22,10 @@ interface TodoDao {
     fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>>
 
     @Query("SELECT * FROM todos ORDER BY priority ASC")
-    fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM todos ORDER BY priority DESC")
+    fun getAllTodosOrderedByPriorityDESCWithSubTodos(): Flow<List<TodoWithSubTodos>>
 
     @Transaction
     @Query("UPDATE todos SET status = :status WHERE todoId = :todoId")
@@ -33,5 +36,12 @@ interface TodoDao {
 
     @Insert
     suspend fun insertImage(imageEntity: Images)
+
+    @Query("SELECT * FROM todos ORDER BY price ASC")
+    fun getAllTodosOrderedByPriceASCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM todos ORDER BY price DESC")
+    fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
 
 }

@@ -26,8 +26,12 @@ class TodoRepo(private val database: RealEstateDatabase) {
         database.todoDao().getAllTodosWithSubTodos()
 
 
-    fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosOrderedByPriorityWithSubTodos()
+    fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriorityASCWithSubTodos()
+
+
+    fun getAllTodosOrderedByPriorityDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriorityDESCWithSubTodos()
 
 
     suspend fun updateTodoStatus(todoId: Int, status: Boolean) {
@@ -37,5 +41,10 @@ class TodoRepo(private val database: RealEstateDatabase) {
     fun getAllTodoImagesBasedOnTodo(todoId: Int): Flow<List<Images>> =
         database.todoDao().getAllTodoImagesBasedOnTodo(todoId)
 
+    fun getAllTodosOrderedByPriceASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriceASCWithSubTodos()
+
+    fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriceDESCWithSubTodos()
 
 }
