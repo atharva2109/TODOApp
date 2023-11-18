@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.team2.todo.screens.details_page.DetailsPage
 import com.team2.todo.screens.MainScreen
 import com.team2.todo.screens.add_todo.AddTodos
+import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
@@ -43,5 +43,6 @@ fun NavHostControllerProvider() {
 //        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos() }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
+
     }
 }

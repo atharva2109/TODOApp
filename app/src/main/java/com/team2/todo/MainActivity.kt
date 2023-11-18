@@ -49,8 +49,6 @@ class MainActivity : ComponentActivity() {
 
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
-
-
                 }
             }
         }

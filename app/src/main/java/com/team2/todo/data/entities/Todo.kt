@@ -13,6 +13,7 @@ data class Todo(
     val description: String,
     val latitude: Double?,
     val longitude: Double?,
+    val price: Double?,
     /* added type converter for complex date object */
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
