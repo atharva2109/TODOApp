@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.daos.TodoDao
+import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
@@ -48,6 +49,7 @@ import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.ui.theme.PrimaryColor
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -103,10 +105,15 @@ fun AddTodos() {
     var currentlongitude by remember {
         mutableStateOf(0.0)
     }
-    // Define the format of your date and time strings
-    val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val timeFormat = DateTimeFormatter.ofPattern("HH:m")
+    var imageUris:List<String> = mutableListOf()
+
     var localdateTime:LocalDateTime= LocalDateTime.now()
+
+    //Getting TodoId from Todos Table
+    val scope = rememberCoroutineScope()
+    var todoIdretrieved by remember { mutableStateOf<Long?>(null) }
+    var todoIdretrievalInProgress by remember { mutableStateOf(false) }
+
 
     var selectpriorityindex by remember {
         mutableStateOf(0)
@@ -162,7 +169,9 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-                PickImageFromGallery(activity = ComponentActivity())
+                var listUris=PickImageFromGallery(activity = ComponentActivity())
+                imageUris=listUris.map { it.toString() }
+                Log.d("ImageList",imageUris.toString())
                 selectpriorityindex=DropDownMenuComponent()
                 OutlinedTextField(
                     value = enteredPrice.toString(), onValueChange = { newText -> enteredPrice = newText.toDouble() },
@@ -187,26 +196,19 @@ fun AddTodos() {
 
 
                 if (dateselected.value != "" && timeselected.value != "") {
-                    Log.d("Date",dateselected.value)
-                    Log.d("Time",timeselected.value)
                     val formatter = DateTimeFormatterBuilder()
                         .parseCaseInsensitive()
-                        .appendPattern("dd/MM/yyyy[ HH:m[:ss]]") // Optionally include time part
+                        .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
                         .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
                         .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
                         .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
                         .toFormatter()
 
                     try {
-                        // Parse the date and time strings into LocalDateTime objects
                         localdateTime = LocalDateTime.parse(dateselected.value + " " + timeselected.value, formatter)
-
-                        // Now localDateTime contains the combined date and time in the local time zone
                         Log.d("Local Time",localdateTime.toString())
                     } catch (e: Exception) {
-                        // Handle the exception (print the stack trace, log, or handle it based on your requirements)
                         e.printStackTrace()
-                        // or provide an alternative behavior or error message
                         println("Error parsing date or time: ${e.message}")
                     }
 
@@ -244,11 +246,41 @@ fun AddTodos() {
                         Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        viewModel.addTodo(Todo(0,enteredTitle,enteredLabel,enteredDescription,currentlatitude,currentlongitude,enteredPrice,LocalDateTime.now(),localdateTime,false,selectpriorityindex))
-                        Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
+                        scope.launch {
+                            try {
+                                todoIdretrievalInProgress = true
+                                todoIdretrieved = viewModel.addTodo(
+                                    Todo(
+                                        0,
+                                        enteredTitle,
+                                        enteredLabel,
+                                        enteredDescription,
+                                        currentlatitude,
+                                        currentlongitude,
+                                        enteredPrice,
+                                        LocalDateTime.now(),
+                                        localdateTime,
+                                        false,
+                                        selectpriorityindex
+                                    )
+                                )
+                                todoIdretrievalInProgress = false
+                                todoIdretrieved?.let { todoId ->
+                                   for(stringValue in imageUris){
+                                       viewModel.addImage(Images(0,stringValue,todoId))
+                                   }
+                                    Toast.makeText(ctx, "Added todo successfully", Toast.LENGTH_SHORT).show()
+                                } ?: run {
+                                    Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT).show()
+                                }
+
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 },
-
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
                 Text(
