@@ -9,11 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.team2.todo.screens.MainScreen
+import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen
+    MainScreen, CompletedListing,AddTodos,DetailsScreen
 }
 
 object NavigationUtil {
@@ -28,6 +29,10 @@ object NavigationUtil {
     fun navigateTo(screen: Screen) {
         navController.navigate(screen.name)
     }
+
+    fun goBack(){
+        navController.popBackStack();
+    }
 }
 
 
@@ -35,6 +40,8 @@ object NavigationUtil {
 fun NavHostControllerProvider() {
     NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
         composable(Screen.MainScreen.name) { MainScreen() }
+//        composable(Screen.CompletedListing.name) { CompletedListing() }
+        composable(Screen.AddTodos.name) { AddTodos() }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
 
     }
