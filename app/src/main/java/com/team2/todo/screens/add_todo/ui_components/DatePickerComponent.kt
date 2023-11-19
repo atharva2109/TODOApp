@@ -10,6 +10,9 @@ import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * Created by Atharva K on 11/14/23.
+ */
 
 @Composable
 fun DatePickerComponent():Pair<DatePickerDialog,MutableState<String>>{

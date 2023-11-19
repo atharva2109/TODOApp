@@ -16,7 +16,7 @@ import java.time.LocalDateTime
     ])
 data class Images(
     @PrimaryKey(autoGenerate = true)
-    val imageId: Int,
+    val imageId: Long,
     val imagePath: String?,
-    val todoId: Int?
+    val todoId: Long?
 )

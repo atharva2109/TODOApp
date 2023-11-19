@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,27 +17,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
@@ -46,12 +36,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
+import com.team2.todo.data.RealEstateDatabase
+import com.team2.todo.data.daos.TodoDao
+import com.team2.todo.data.entities.Images
+import com.team2.todo.data.entities.Todo
+import com.team2.todo.data.repo.TodoRepo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
@@ -63,12 +60,22 @@ import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
 import com.team2.todo.screens.add_todo.ui_components.PickImageFromGallery
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
+import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.ui.theme.PrimaryColor
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.DateTimeParseException
+import java.time.temporal.ChronoField
 import com.team2.todo.utils.LocationUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
+/**
+ * Created by Atharva K on 11/13/23.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodos() {
@@ -82,8 +89,15 @@ fun AddTodos() {
         .fillMaxWidth()
         .padding(vertical = 5.dp)
 
-    var ctx = LocalContext.current.applicationContext
+    var ctx = LocalContext.current
+    var db = RealEstateDatabase.getInstance(ctx)
+    var repository = TodoRepo(db)
+    var viewModel = AddTodoViewModel(repository)
+
     var enteredTitle by remember {
+        mutableStateOf("")
+    }
+    var enteredLabel by remember {
         mutableStateOf("")
     }
     var enteredDescription by remember {
@@ -91,15 +105,35 @@ fun AddTodos() {
     }
 
     var enteredPrice by remember {
-        mutableStateOf("")
+        mutableStateOf(0.0)
     }
 
     var isTitleEmpty by remember { mutableStateOf(false) }
+    var isLabelEmpty by remember { mutableStateOf(false) }
     var isDescriptionEmpty by remember { mutableStateOf(false) }
 
     var (calendarState, dateselected) = DatePickerComponent()
     var (timeState, timeselected) = TimePickerComponent()
 
+    var currentlatitude by remember {
+        mutableStateOf(0.0)
+    }
+    var currentlongitude by remember {
+        mutableStateOf(0.0)
+    }
+    var imageUris: List<String> = mutableListOf()
+
+    var localdateTime: LocalDateTime = LocalDateTime.now()
+
+    //Getting TodoId from Todos Table
+    val scope = rememberCoroutineScope()
+    var todoIdretrieved by remember { mutableStateOf<Long?>(null) }
+    var todoIdretrievalInProgress by remember { mutableStateOf(false) }
+
+
+    var selectpriorityindex by remember {
+        mutableStateOf(0)
+    }
     Scaffold {
         Column(
             modifier = Modifier
@@ -126,6 +160,18 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     isError = isTitleEmpty,
                 )
+                //Label
+                OutlinedTextField(
+                    modifier = OutLinedTextModifier,
+                    value = enteredLabel,
+                    onValueChange = {
+                        enteredLabel = it
+                        isLabelEmpty = it.isEmpty()
+                    },
+                    label = { Text(text = "Label") },
+                    colors = OutLineTextColor,
+                    isError = isLabelEmpty,
+                )
                 // Description
                 OutlinedTextField(
                     value = enteredDescription,
@@ -139,10 +185,13 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-                PickImageFromGallery(activity = ComponentActivity())
-                DropDownMenuComponent()
+                var listUris = PickImageFromGallery(activity = ComponentActivity())
+                imageUris = listUris.map { it.toString() }
+                Log.d("ImageList", imageUris.toString())
+                selectpriorityindex = DropDownMenuComponent()
                 OutlinedTextField(
-                    value = enteredPrice, onValueChange = { newText -> enteredPrice = newText },
+                    value = enteredPrice.toString(),
+                    onValueChange = { newText -> enteredPrice = newText.toDouble() },
                     label = { Text(text = "Price: ") },
                     placeholder = { Text(text = "Enter price: ") },
                     keyboardOptions = KeyboardOptions(
@@ -162,47 +211,37 @@ fun AddTodos() {
                         timeState.show()
                     })
 
+
                 if (dateselected.value != "" && timeselected.value != "") {
+                    val formatter = DateTimeFormatterBuilder()
+                        .parseCaseInsensitive()
+                        .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
+                        .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                        .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                        .toFormatter()
+
+                    try {
+                        localdateTime = LocalDateTime.parse(
+                            dateselected.value + " " + timeselected.value,
+                            formatter
+                        )
+                        Log.d("Local Time", localdateTime.toString())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        println("Error parsing date or time: ${e.message}")
+                    }
+
                     ReminderField(dateselected.value, timeselected.value)
                 }
-                var currentlatitude by remember {
-                    mutableStateOf("")
-                }
-                var currentlongitude by remember {
-                    mutableStateOf("")
-                }
-//                Button(modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(vertical = 10.dp),
-//                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),
-//                    elevation = ButtonDefaults.buttonElevation(6.dp), onClick = {
-//                        // Debugging the current location
-//                        LocationUtils.getCurrentLocation { location: Location ->
-//                            currentlatitude = location.latitude.toString()
-//                            currentlongitude = location.longitude.toString()
-//                        }
-//                    }) {
-//                    Row {
-//                        Text(
-//                            text = "Get Current Location",
-//                            modifier = Modifier.padding(vertical = 5.dp)
-//                        )
-//                        Image(
-//                            imageVector = Icons.Filled.LocationOn,
-//                            contentDescription = "Location",
-//                            colorFilter = ColorFilter.tint(Color.White),
-//                            modifier = Modifier.padding(start = 6.dp)
-//                        )
-//                    }
-//                }
                 VerifyByLocationCompose(
                     callback = { location ->
-                        currentlatitude = location.latitude.toString()
-                        currentlongitude = location.longitude.toString()
+                        currentlatitude = location.latitude
+                        currentlongitude = location.longitude
                     }
                 )
                 val ctx = LocalContext.current.applicationContext
-                if (currentlatitude != "" && currentlongitude != "") {
+                if (currentlatitude != 0.0 && currentlongitude != 0.0) {
                     Toast.makeText(ctx, "Your current location is captured", Toast.LENGTH_LONG)
                         .show()
                 }
@@ -225,10 +264,46 @@ fun AddTodos() {
                         Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        Toast.makeText(ctx, "Entries are added!!", Toast.LENGTH_SHORT).show()
+                        scope.launch {
+                            try {
+                                todoIdretrievalInProgress = true
+                                todoIdretrieved = viewModel.addTodo(
+                                    Todo(
+                                        0,
+                                        enteredTitle,
+                                        enteredLabel,
+                                        enteredDescription,
+                                        currentlatitude,
+                                        currentlongitude,
+                                        enteredPrice,
+                                        LocalDateTime.now(),
+                                        localdateTime,
+                                        false,
+                                        selectpriorityindex
+                                    )
+                                )
+                                todoIdretrievalInProgress = false
+                                todoIdretrieved?.let { todoId ->
+                                    for (stringValue in imageUris) {
+                                        viewModel.addImage(Images(0, stringValue, todoId))
+                                    }
+                                    Toast.makeText(
+                                        ctx,
+                                        "Added todo successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } ?: run {
+                                    Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 },
-
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
                 Text(

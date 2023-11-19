@@ -5,6 +5,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,9 +45,12 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.ui.theme.PrimaryColor
 
+/**
+ * Created by Atharva K on 11/14/23.
+ */
 
 @Composable
-fun PickImageFromGallery(activity: ComponentActivity) {
+fun PickImageFromGallery(activity: ComponentActivity):List<Uri> {
     var imageUris by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
@@ -119,10 +123,6 @@ fun PickImageFromGallery(activity: ComponentActivity) {
                                 .height(600.dp)
 
                         ) {
-//                            val byteArrayOutputStream = ByteArrayOutputStream()
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-//                            val byteArray = byteArrayOutputStream.toByteArray()
-//                            val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = null,
@@ -144,6 +144,8 @@ fun PickImageFromGallery(activity: ComponentActivity) {
                                     bitmaps.value =
                                         bitmaps.value.toMutableList()
                                             .apply { removeAt(globalIndex) }
+
+
                                 }
                             ) {
                                 Icon(
@@ -160,6 +162,7 @@ fun PickImageFromGallery(activity: ComponentActivity) {
 
 
     }
+    return imageUris
 }
 
 
