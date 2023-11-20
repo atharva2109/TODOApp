@@ -53,6 +53,8 @@ android {
 
 dependencies {
 
+    implementation("androidx.wear.compose:compose-material:1.2.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     val nav_version = "2.7.5"
 
 
@@ -72,6 +74,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.24.8-beta")
 
     val room_version = "2.6.0"
     implementation("androidx.room:room-runtime:$room_version")

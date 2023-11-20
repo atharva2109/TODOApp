@@ -16,6 +16,8 @@ import java.time.LocalDateTime
         )
     ]
 )
+
+
 data class SubTodo(
     @PrimaryKey(autoGenerate = true)
     val subTodoId: Int,
@@ -26,5 +28,12 @@ data class SubTodo(
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
     val status: Boolean?,
-    val priority: Int?
+    val priority: Int?,
+    val isCompleted:Boolean = false
+
 )
+
+
+
+
+

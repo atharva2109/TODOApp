@@ -16,6 +16,8 @@ data class Todo(
     /* added type converter for complex date object */
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
-    val status: Boolean?,
+    var status: Boolean,
     val priority: Int?
 )
+
+

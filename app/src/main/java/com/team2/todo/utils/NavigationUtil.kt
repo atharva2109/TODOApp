@@ -28,6 +28,10 @@ object NavigationUtil {
     fun navigateTo(screen: Screen) {
         navController.navigate(screen.name)
     }
+
+    fun navigateToCompletedListScreen() {
+        TODO("Not yet implemented")
+    }
 }
 
 
