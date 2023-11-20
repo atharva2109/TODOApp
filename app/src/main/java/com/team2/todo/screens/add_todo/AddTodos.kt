@@ -1,6 +1,5 @@
 package com.team2.todo.screens.add_todo
 
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -29,30 +28,17 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
-import com.team2.todo.data.daos.TodoDao
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.TodoRepo
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.team2.todo.R
-import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
@@ -63,15 +49,9 @@ import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.ui.theme.PrimaryColor
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoField
-import com.team2.todo.utils.LocationUtils
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Created by Atharva K on 11/13/23.

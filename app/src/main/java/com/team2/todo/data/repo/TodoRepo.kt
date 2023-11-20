@@ -4,7 +4,6 @@ import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 
 class TodoRepo(private val database: RealEstateDatabase) {

@@ -1,7 +1,5 @@
 package com.team2.todo.screens.listing
 
-import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -9,15 +7,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,23 +26,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.team2.todo.R
 import com.team2.todo.data.RealEstateDatabase
-import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
-import com.team2.todo.screens.create_todo.view_model.CreateTodoViewModel
 import com.team2.todo.screens.details_page.view_model.DetailsPageViewModel
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
-import com.team2.todo.screens.listing.view_model.DummyViewModel
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
-import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,15 +85,7 @@ fun Listing() {
                 modifier = Modifier
                     .padding(8.dp)
             ) {
-                SmallFloatingActionButton(
-                    onClick = {
-                        NavigationUtil.navigateTo(Screen.CreateTodo)
-                    },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.secondary
-                ) {
-                    Icon(Icons.Filled.Add, "Create")
-                }
+
             }
             NavigationBar(tonalElevation = 12.0.dp) {
                 NavigationBarItem(

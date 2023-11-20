@@ -10,13 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.team2.todo.screens.MainScreen
 import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, CompletedListing,AddTodos,DetailsScreen
+    MainScreen, CompletedListing,AddTodos,DetailsScreen, SubTodoDetails
 }
 
 object NavigationUtil {
@@ -28,8 +29,8 @@ object NavigationUtil {
     }
 
     // navigate to the given Enum
-    fun navigateTo(screen: Screen) {
-        navController.navigate(screen.name)
+    fun navigateTo(screen: String) {
+        navController.navigate(screen)
     }
 
     fun goBack(){
@@ -42,12 +43,18 @@ object NavigationUtil {
 fun NavHostControllerProvider() {
     NavHost(
         navController = NavigationUtil.navController,
-        startDestination = Screen.Listing.name
+        startDestination = Screen.MainScreen.name
     ) {
         composable(Screen.MainScreen.name) { MainScreen() }
 //        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos() }
-        composable(Screen.DetailsScreen.name) { DetailsPage() }
+        composable(
+            route = "${Screen.DetailsScreen.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            DetailsPage(todoId)
+        }
 
     }
 }

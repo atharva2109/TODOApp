@@ -16,29 +16,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
@@ -55,7 +52,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DetailsPage(todoId: Int) {
+fun DetailsPage(todoId: Long) {
 
 
     val todoContext = LocalContext.current
@@ -68,39 +65,24 @@ fun DetailsPage(todoId: Int) {
 
     var subTaskList = mutableListOf<SubTodo>();
 
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), false,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), false,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), false,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), false,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
-    subTaskList.add(SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
-    subTaskList.add(SubTodo(2,1,"SubTask2", "Inspect Property", LocalDateTime.now(), LocalDateTime.now(), true,1))
 
 
    // val todos by viewModel.todoListBasedOnId.collectAsState(initial = emptyList())
-    var mainTask = Todo(todoId = 1, title = "Main Task One", status = false, priority = 2, longitude = 54.0, latitude = 55.0, label = "Maintenance", dueDate = LocalDateTime.now(), createdDate = LocalDateTime.now(), description = "Property in Lahore")
+    var mainTask = Todo(todoId = 1, title = "Main Task One", status = false, priority = 2, longitude = 54.0, latitude = 55.0, label = "Maintenance", dueDate = LocalDateTime.now(), createdDate = LocalDateTime.now(), price = 45.0, description = "Property in Lahore")
 
 
     val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial =  emptyList())
+    val collecetedImages by viewModel.getTodoImages(todoId).collectAsState(initial = emptyList())
 
 
- if(collectedTodo.isEmpty()){
+
+
+    if(collectedTodo.isEmpty()){
      Text(text = "loading")
  }else {
      val propertyDetails : TodoWithSubTodos = collectedTodo[0];
+
+        var checkedState by remember { mutableStateOf(propertyDetails.todo.status) }
      Scaffold(
          topBar = {
              TopAppBar(
@@ -123,17 +105,12 @@ fun DetailsPage(todoId: Int) {
 
                  Spacer(modifier = Modifier.padding(top = 30.dp))
 
-//                Box(){
-//                    HorizontalPager(state = pagerState, key = {dummy_images[2]}) {
-//                        index ->
-//                        Image(
-//                            painter = painterResource(id = dummy_images[index]),
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop,
-//
-//                        )
-//                    }
-//                }
+
+                 Box(Modifier.fillMaxWidth()){
+                     collecetedImages.map { it.imagePath }?.let { it1 -> ImageLoader(uris = it1) }
+                 }
+
+
 
                  Spacer(modifier = Modifier.padding(top = 20.dp))
 
@@ -169,39 +146,16 @@ fun DetailsPage(todoId: Int) {
                          Spacer(modifier = Modifier.padding(top = 20.dp))
                      }
                  }
-                 Box(
-                     Modifier
-                         .fillMaxWidth()
-                         .padding(end = 15.dp),
-                     contentAlignment = Alignment.BottomEnd
-                 ) {
-                     SmallFloatingActionButton(
-                         onClick = {
-                             viewModel.addTodo(mainTask)
-                         },
-                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                         contentColor = MaterialTheme.colorScheme.secondary
-                     ) {
-                         Icon(Icons.Filled.Add, "Create")
+
+                 Checkbox(
+                     checked = checkedState!!,
+                     onCheckedChange = { checkedState = !checkedState!!
+                        viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
+                         NavigationUtil.navigateTo(Screen.MainScreen.name)
                      }
-                 }
-                 Box(
-                     Modifier
-                         .fillMaxWidth()
-                         .padding(end = 15.dp),
-                     contentAlignment = Alignment.BottomEnd
-                 ) {
-                     SmallFloatingActionButton(
-                         onClick = {
-                             viewModel.addSubTodos(subTaskList[0])
-                             viewModel.addSubTodos(subTaskList[1])
-                         },
-                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                         contentColor = MaterialTheme.colorScheme.secondary
-                     ) {
-                         Icon(Icons.Filled.Add, "Create")
-                     }
-                 }
+                 )
+
+
 
                  Box() {
                      Text(
@@ -219,7 +173,7 @@ fun DetailsPage(todoId: Int) {
                              Box(Modifier.clickable {
                                  Log.e(subTask.subTodoId.toString(), subTask.subTodoId.toString())
 
-                                 subTodoId = subTask.subTodoId
+                                 subTodoId = subTask.subTodoId.toInt()
 
                                  NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
                              }) {

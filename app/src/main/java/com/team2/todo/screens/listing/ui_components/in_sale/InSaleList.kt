@@ -29,4 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun InSaleList(viewModel: PropertyListViewModel = viewModel()) {
     val list = viewModel.uncompletedPropertyList.value
     EmptyList(title = "No Active Sales Found", drawableID = R.drawable.ic_no_in_sale_list)
+
+
 }
