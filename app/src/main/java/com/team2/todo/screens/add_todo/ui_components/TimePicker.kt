@@ -15,23 +15,17 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerComponent():Pair<TimePickerDialog,MutableState<String>>{
-    // Fetching local context
-    val mContext = LocalContext.current
+    val currentcontext = LocalContext.current
+    val calendarinstance = Calendar.getInstance()
+    val hour = calendarinstance[Calendar.HOUR_OF_DAY]
+    val minute = calendarinstance[Calendar.MINUTE]
+    val time = remember { mutableStateOf("") }
 
-    // Declaring and initializing a calendar
-    val mCalendar = Calendar.getInstance()
-    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-    val mMinute = mCalendar[Calendar.MINUTE]
-
-    // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
-
-    // Creating a TimePicker dialod
     val mTimePickerDialog = TimePickerDialog(
-        mContext,
+        currentcontext,
         {_, mHour : Int, mMinute: Int ->
-            mTime.value = "$mHour:$mMinute"
-        }, mHour, mMinute, false
+            time.value = "$mHour:$mMinute"
+        }, hour, minute, false
     )
-return Pair(mTimePickerDialog,mTime)
+return Pair(mTimePickerDialog,time)
 }

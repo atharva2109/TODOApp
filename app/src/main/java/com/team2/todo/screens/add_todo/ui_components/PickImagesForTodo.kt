@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,8 +52,8 @@ import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
  */
 
 @Composable
-fun PickImageFromGallery(activity: ComponentActivity): List<Uri> {
 
+fun PickImagesForTodo(activity: ComponentActivity):List<Uri> {
 
     val context = LocalContext.current
     var imageUris by remember {

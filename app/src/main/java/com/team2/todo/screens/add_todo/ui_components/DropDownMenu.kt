@@ -26,22 +26,18 @@ import androidx.compose.ui.unit.toSize
  */
 
 enum class priorities {
-    Low,               //Types.FOO.ordinal == 0 also position == 0
-    Medium,               //Types.BAR.ordinal == 1 also position == 1
-    High            //Types.FOO_BAR.ordinal == 2 also position == 2
+    Low,
+    Medium,
+    High
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenuComponent():Int {
+fun DropDownMenuComponent(): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
-
-
-//    val priorities = listOf("Low", "Medium", "High")
     var selectedPriority by remember { mutableStateOf("") }
-
     var selectedPriorityIndex by remember { mutableStateOf(0) }
-
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (menuexpanded)
@@ -49,8 +45,10 @@ fun DropDownMenuComponent():Int {
     else
         Icons.Filled.KeyboardArrowDown
 
-
-    Column(Modifier.fillMaxWidth().padding(vertical = 5.dp)) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp)) {
         OutlinedTextField(
             value = selectedPriority.toString(),
             onValueChange = { selectedPriority = it },
@@ -71,7 +69,6 @@ fun DropDownMenuComponent():Int {
             expanded = menuexpanded,
             //onDismissRequest->
             // when the user clicks outside the menu, the dropdown collapses
-
             onDismissRequest = { menuexpanded = false },
             //this basically states that the dropdown menu will have the same width
             //as TextField
@@ -84,12 +81,11 @@ fun DropDownMenuComponent():Int {
                     Text(text = priority.name)
                 }, onClick = {
                     selectedPriority = priority.name
-                    selectedPriorityIndex=priority.ordinal
+                    selectedPriorityIndex = priority.ordinal
                     menuexpanded = false
                 })
             }
         }
     }
-return selectedPriorityIndex
+    return selectedPriorityIndex
 }
-
