@@ -1,6 +1,16 @@
 package com.team2.todo.common_ui_components.location
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
+import android.provider.Settings
+import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,16 +38,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.team2.todo.R
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.LocationUtils
+import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
 
 /**
  * Created by Manu KJ on 11/17/23.
@@ -49,7 +62,33 @@ fun VerifyByLocationCompose(
     locationLCEViewModel: LocationLCEViewModel = viewModel(),
     callback: (Location) -> Unit
 ) {
-    val fetchedLocation = locationLCEViewModel.fetchedLocation;
+    val context = LocalContext.current
+    val locationPermissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+
+    val launcherMultiplePermissions = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissionsMap ->
+        val areGranted = permissionsMap.values.reduce { acc, next -> acc || next }
+        if (areGranted) {
+            LocationUtils.getCurrentLocation { location: Location ->
+                callback(location)
+                locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
+                locationLCEViewModel.updateFetchedLocation(location = location)
+            }
+        } else {
+            Toast.makeText(context, "Please enable location permission", Toast.LENGTH_SHORT).show()
+            locationLCEViewModel.updateLoadingState(false);
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", context.packageName, null)
+            intent.data = uri
+            context.startActivity(intent)
+        }
+    }
+
+
     return Column(modifier = Modifier.padding(vertical = 10.dp)) {
         Text(
             text = "Verify property",
@@ -103,16 +142,22 @@ fun VerifyByLocationCompose(
                     color = PrimaryColor,
                     fontWeight = if (locationLCEViewModel.isLocationPresent()) FontWeight.Bold else FontWeight.Normal
                 )
-                if (locationLCEViewModel.isLoading)
-//                    CircularProgressIndicator()
-                else if (!locationLCEViewModel.isLocationPresent())
+
+                if (!locationLCEViewModel.isLocationPresent() && !locationLCEViewModel.isLoading)
                     Button(onClick = {
                         locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                        LocationUtils.getCurrentLocation { location: Location ->
-                            callback(location)
-                            locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                            locationLCEViewModel.updateFetchedLocation(location = location)
+                        checkAndRequestLocationPermissions(
+                            context,
+                            locationPermissions,
+                            launcherMultiplePermissions
+                        ) {
+                            LocationUtils.getCurrentLocation { location: Location ->
+                                callback(location)
+                                locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
+                                locationLCEViewModel.updateFetchedLocation(location = location)
+                            }
                         }
+
                     }) {
                         Text(text = "Verify")
                     }
