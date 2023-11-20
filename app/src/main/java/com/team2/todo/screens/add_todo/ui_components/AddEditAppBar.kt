@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.team2.todo.ui.theme.AppBarBackGroundColor
 import com.team2.todo.ui.theme.AppBarContentColor
@@ -38,14 +39,13 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AddEditAppBar() {
+fun AddEditAppBar(isSubTodo:Boolean=false) {
     return TopAppBar(
         title = {
             Text(
-                text = "Add New Property",
+                text = if(isSubTodo)"Add New SubTask" else "Add New Property",
                 color = AppBarContentColor,
-                fontWeight = FontWeight.Bold
-            )
+                fontWeight = FontWeight.Bold)
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = AppBarBackGroundColor),
         navigationIcon = {
