@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -73,7 +74,10 @@ fun PickImageFromGallery(activity: ComponentActivity): List<Uri> {
             imageUris = it
             bitmaps.value =
                 it.map { uri ->
+                    uri.path?.let { it1 -> Log.d("Image", it1) }
+
                     if (Build.VERSION.SDK_INT < 28) {
+
                         MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                     } else {
                         val source = ImageDecoder.createSource(context.contentResolver, uri)

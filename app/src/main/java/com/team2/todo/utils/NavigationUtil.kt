@@ -4,7 +4,6 @@ package com.team2.todo.utils
  * Created by Manu KJ on 11/1/23.
  */
 
-import SubTaskDetailsPage
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType

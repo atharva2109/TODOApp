@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.team2.todo.common_ui_components.CameraCapture
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
@@ -165,9 +166,13 @@ fun AddTodos() {
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-                var listUris = PickImageFromGallery(activity = ComponentActivity())
-                imageUris = listUris.map { it.toString() }
-                Log.d("ImageList", imageUris.toString())
+                CameraCapture { uri ->
+                    imageUris = listOf(uri)
+                    Log.d("ImageList", imageUris.toString())
+                }
+//                var listUris = PickImageFromGallery(activity = ComponentActivity())
+//                imageUris = listUris.map { it.toString() }
+//                Log.d("ImageList", imageUris.toString())
                 selectpriorityindex = DropDownMenuComponent()
                 OutlinedTextField(
                     value = enteredPrice.toString(),
