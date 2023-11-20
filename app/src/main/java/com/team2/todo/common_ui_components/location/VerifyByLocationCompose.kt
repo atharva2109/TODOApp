@@ -133,32 +133,34 @@ fun VerifyByLocationCompose(
                     color = PrimaryColor,
                     fontWeight = if (locationLCEViewModel.isLocationPresent()) FontWeight.Bold else FontWeight.Normal
                 )
-
-                if (!locationLCEViewModel.isLocationPresent() && !locationLCEViewModel.isLoading)
-                    Button(onClick = {
-                        locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                        checkAndRequestLocationPermissions(
-                            context,
-                            locationPermissions,
-                            launcherForLocationPermission
-                        ) {
-                            LocationUtils.getCurrentLocation { location: Location ->
-                                callback(location)
-                                locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                                locationLCEViewModel.updateFetchedLocation(location = location)
-                            }
-                        }
-
-                    }) {
-                        Text(text = "Verify")
-                    }
+                if (locationLCEViewModel.isLoading)
+//                    CircularProgressIndicator()
                 else
-                    Icon(
-                        Icons.Filled.CheckCircle,
-                        contentDescription = "",
-                        tint = BlueColor,
-                        modifier = Modifier.size(45.dp)
-                    )
+                    if (!locationLCEViewModel.isLocationPresent())
+                        Button(onClick = {
+                            locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
+                            checkAndRequestLocationPermissions(
+                                context,
+                                locationPermissions,
+                                launcherForLocationPermission
+                            ) {
+                                LocationUtils.getCurrentLocation { location: Location ->
+                                    callback(location)
+                                    locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
+                                    locationLCEViewModel.updateFetchedLocation(location = location)
+                                }
+                            }
+
+                        }) {
+                            Text(text = "Verify")
+                        }
+                    else
+                        Icon(
+                            Icons.Filled.CheckCircle,
+                            contentDescription = "",
+                            tint = BlueColor,
+                            modifier = Modifier.size(45.dp)
+                        )
 
             }
         }
