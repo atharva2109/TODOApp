@@ -10,16 +10,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.team2.todo.data.entities.SubTodo
-import com.team2.todo.screens.details_page.DetailsPage
 import com.team2.todo.screens.MainScreen
-import com.team2.todo.screens.create_todo.CreateTodo
-import com.team2.todo.screens.listing.Listing
+import com.team2.todo.screens.add_todo.AddTodos
+import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen, Listing, CreateTodo, SubTodoDetails
+    MainScreen, CompletedListing,AddTodos,DetailsScreen
 }
 
 object NavigationUtil {
@@ -35,8 +32,8 @@ object NavigationUtil {
         navController.navigate(screen.name)
     }
 
-    fun navigateTo(path: String) {
-        navController.navigate(path)
+    fun goBack(){
+        navController.popBackStack();
     }
 }
 
@@ -48,21 +45,9 @@ fun NavHostControllerProvider() {
         startDestination = Screen.Listing.name
     ) {
         composable(Screen.MainScreen.name) { MainScreen() }
-        composable(
-            route = "${Screen.DetailsScreen.name}/{todoId}",
-            arguments = listOf(navArgument("todoId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val todoId = backStackEntry.arguments?.getInt("todoId") ?: -1
-            DetailsPage(todoId)
-        }
-        composable(Screen.Listing.name) { Listing() }
-        composable(Screen.CreateTodo.name) { CreateTodo() }
-        composable(
-            route = "${Screen.SubTodoDetails.name}/{subTodoId}",
-            arguments = listOf(navArgument("subTodoId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val subTodoId = backStackEntry.arguments?.getInt("subTodoId") ?: -1
-            SubTaskDetailsPage(subTodoId)
-        }
+//        composable(Screen.CompletedListing.name) { CompletedListing() }
+        composable(Screen.AddTodos.name) { AddTodos() }
+        composable(Screen.DetailsScreen.name) { DetailsPage() }
+
     }
 }
