@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
+import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import kotlinx.coroutines.flow.Flow
@@ -21,5 +22,11 @@ interface TodoDao {
 
     @Query("SELECT * FROM todos ORDER BY priority ASC")
     fun getAllTodosOrderedByPriorityWithSubTodos(): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM images WHERE todoId = :todoId")
+    fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>>
+
+
+
 
 }

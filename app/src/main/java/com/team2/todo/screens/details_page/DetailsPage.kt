@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
@@ -95,6 +96,7 @@ fun DetailsPage(todoId: Int) {
 
 
     val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial =  emptyList())
+    val collectedImages by viewModel.getTodoImages(todoId.toLong()).collectAsState(initial = emptyList())
 
 
  if(collectedTodo.isEmpty()){
@@ -123,17 +125,9 @@ fun DetailsPage(todoId: Int) {
 
                  Spacer(modifier = Modifier.padding(top = 30.dp))
 
-//                Box(){
-//                    HorizontalPager(state = pagerState, key = {dummy_images[2]}) {
-//                        index ->
-//                        Image(
-//                            painter = painterResource(id = dummy_images[index]),
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop,
-//
-//                        )
-//                    }
-//                }
+                 Box(){
+                     ImageLoader(uris = collectedImages.map {  } )
+                 }
 
                  Spacer(modifier = Modifier.padding(top = 20.dp))
 

@@ -3,6 +3,7 @@ package com.team2.todo.screens.details_page.view_model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
@@ -16,6 +17,10 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
 
 
     var todosList = repo.getAllTodosWithSubTodos();
+
+    fun getTodoImages(id: Long): Flow<List<Images>>{
+        return repo.getAllTodoImagesBasedOnTodo(id)
+    }
 
     fun getPropertyFromId(propertyId:Int):Flow<List<TodoWithSubTodos>>{
         return  repo.getTodoWithSubTodosBasedOnTodoId(propertyId)
