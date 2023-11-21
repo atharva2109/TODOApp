@@ -16,7 +16,7 @@ interface SubTodoDao {
     fun getSubTodosBasedOnTodo(todoId: Long): Flow<List<SubTodo>>
 
     @Query("SELECT  * FROM subtodos where subTodoId = :subTodoId ORDER BY priority ASC")
-    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Int): Flow<SubTodo>
+    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Long): Flow<SubTodo>
 
     @Transaction
     @Query("UPDATE subtodos SET status = :status WHERE subTodoId = :subTodoId")

@@ -32,7 +32,7 @@ import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 
 @Composable
-fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Int) {
+fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
     viewModel.getSubTodoById(subTodoId)
     val subTodoState by remember { viewModel.subTodo }.collectAsState()

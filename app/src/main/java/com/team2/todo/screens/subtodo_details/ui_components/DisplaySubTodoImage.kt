@@ -22,32 +22,40 @@ import com.team2.todo.R
 
 @Composable
 fun DisplaySubTodoImage(imagePathUri: String?) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(16.dp)),
-            contentAlignment = Alignment.Center,
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
 
-            if (imagePathUri != null) {
-                Image(
-                    bitmap = ImageDecoder.decodeBitmap(
-                        ImageDecoder.createSource(
-                            LocalContext.current.contentResolver, imagePathUri.toUri()
-                        )
-                    ).asImageBitmap(),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .fillMaxWidth(.7f)
-                        .height(150.dp),
-                    contentScale = ContentScale.Fit
-                )
+                if (imagePathUri != null && imagePathUri != "" ) {
+                    Image(
+                        bitmap = ImageDecoder.decodeBitmap(
+                            ImageDecoder.createSource(
+                                LocalContext.current.contentResolver, imagePathUri.toUri()
+                            )
+                        ).asImageBitmap(),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxWidth(.7f)
+                            .height(150.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                else{
+
+                    Image(
+                        painter = painterResource(id = R.drawable.forsale),
+                        contentDescription = ""
+                    )
+
+                }
+
             }
-
         }
-    }
 }

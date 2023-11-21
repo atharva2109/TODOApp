@@ -39,7 +39,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SubTaskDetailsPage(id: Int) {
+fun SubTaskDetailsPage(id: Long) {
 
 
     val todoContext = LocalContext.current

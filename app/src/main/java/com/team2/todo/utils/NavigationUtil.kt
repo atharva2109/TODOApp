@@ -59,10 +59,10 @@ fun NavHostControllerProvider() {
             DetailsPage(todoId)
         }
         composable(
-            route = "${Screen.SubTodoDetails.name}/{todoId}",
-            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+            route = "${Screen.SubTodoDetails.name}/{subTodoId}",
+            arguments = listOf(navArgument("subTodoId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val subTodoId = backStackEntry.arguments?.getInt("subTodoId") ?: -1
+            val subTodoId = backStackEntry.arguments?.getLong("subTodoId") ?: -1
             SubTodoDetails(subTodoId)
         }
         composable(

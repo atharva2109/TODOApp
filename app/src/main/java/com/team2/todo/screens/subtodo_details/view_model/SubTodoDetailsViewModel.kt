@@ -15,7 +15,7 @@ class SubTodoDetailsViewModel(private val repo: SubTodoRepo) : ViewModel() {
 
     val subTodo: MutableStateFlow<SubTodo?> = _subTodo
 
-    fun getSubTodoById(subTodoId: Int) {
+    fun getSubTodoById(subTodoId: Long) {
         try {
             viewModelScope.launch {
                 repo.getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId).collect { subTodoObj ->
