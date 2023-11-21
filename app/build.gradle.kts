@@ -77,7 +77,10 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.4.0")
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
-    
+    implementation("androidx.compose.material:material-icons-extended:1.5.3")
+
+
+
     val room_version = "2.6.0"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
