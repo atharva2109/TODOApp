@@ -54,8 +54,8 @@ import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
  */
 
 @Composable
-fun PickImageFromGallery(activity: ComponentActivity): List<Uri> {
 
+fun PickImagesForTodo(activity: ComponentActivity):List<Uri> {
 
     val context = LocalContext.current
     var imageUris by remember {

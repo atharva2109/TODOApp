@@ -28,8 +28,8 @@ object NavigationUtil {
     }
 
     // navigate to the given Enum
-    fun navigateTo(screen: String) {
-        navController.navigate(screen)
+    fun navigateTo(screen: Screen) {
+        navController.navigate(screen.name)
     }
 
     fun goBack(){
@@ -45,7 +45,6 @@ fun NavHostControllerProvider() {
         startDestination = Screen.MainScreen.name
     ) {
         composable(Screen.MainScreen.name) { MainScreen() }
-//        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos() }
         composable(
             route = "${Screen.DetailsScreen.name}/{todoId}",
