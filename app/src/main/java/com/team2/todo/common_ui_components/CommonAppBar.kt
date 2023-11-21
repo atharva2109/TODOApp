@@ -1,5 +1,7 @@
 package com.team2.todo.common_ui_components
 
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
@@ -24,10 +26,11 @@ import com.team2.todo.utils.NavigationUtil
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun CommonAppBar(text: String = "Dummy App Bar") {
+fun CommonAppBar(text: String = "Dummy App Bar", actions: @Composable RowScope.() -> Unit = {}) {
     return TopAppBar(
+        actions = actions,
+        modifier = Modifier.padding(end = 15.dp),
         title = {
             Text(
                 text = text,
