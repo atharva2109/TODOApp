@@ -6,15 +6,18 @@ package com.team2.todo.utils
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.team2.todo.screens.MainScreen
 import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
+import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, CompletedListing,AddTodos,DetailsScreen
+    MainScreen, CompletedListing,AddTodos,DetailsScreen, SubTodoDetails
 }
 
 object NavigationUtil {
@@ -43,6 +46,14 @@ fun NavHostControllerProvider() {
 //        composable(Screen.CompletedListing.name) { CompletedListing() }
         composable(Screen.AddTodos.name) { AddTodos(false) }
         composable(Screen.DetailsScreen.name) { DetailsPage() }
+        composable(
+            route = "${Screen.SubTodoDetails.name}/{subTodoId}",
+            arguments = listOf(navArgument("subTodoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val subTodoId = backStackEntry.arguments?.getLong("subTodoId") ?: -1
+            SubTodoDetails(subTodoId)
+
+        }
 
     }
 }
