@@ -16,9 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -35,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.team2.todo.common_ui_components.CommonAppBar
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.SubTodo
@@ -94,22 +98,21 @@ fun DetailsPage(todoId: Long) {
 
         var checkedState by remember { mutableStateOf(propertyDetails.todo.status) }
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = propertyDetails.todo.title,
-                            Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    onClick = { NavigationUtil.navigateTo("${Screen.AddOrEditSubToDo.name}/${todoId}") },
+                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
+                    text = { Text(text = "Add New Task") },
                 )
+            },
+            topBar = {
+                CommonAppBar(text = propertyDetails.todo.title)
             },
             content = {
                 Column(
                     modifier = Modifier
                         .padding(it)
-                        .padding(start = 10.dp),
+                        .padding(horizontal = 25.dp),
                 ) {
                     Text(text = "Description :" + propertyDetails.todo.description)
 
@@ -166,8 +169,6 @@ fun DetailsPage(todoId: Long) {
                             NavigationUtil.navigateTo(Screen.MainScreen)
                         }
                     )
-
-
 
                     Box() {
                         Text(

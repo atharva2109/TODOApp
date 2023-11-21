@@ -16,7 +16,7 @@ import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, CompletedListing, AddTodos, DetailsScreen, SubTodoDetails
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails
 }
 
 object NavigationUtil {
@@ -57,6 +57,18 @@ fun NavHostControllerProvider() {
             val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
             DetailsPage(todoId)
         }
+        composable(
+            route = "${Screen.SubTodoDetails.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ){
 
+        }
+        composable(
+            route = "${Screen.AddOrEditSubToDo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            AddTodos(isSubTodo = true, todoid = todoId)
+        }
     }
 }
