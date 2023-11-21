@@ -77,7 +77,6 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.4.0")
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
-    implementation("androidx.compose.material:material-icons-extended:1.5.3")
 
 
 

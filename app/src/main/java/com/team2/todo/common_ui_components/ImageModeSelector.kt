@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BrowseGallery
-import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -66,7 +65,7 @@ fun ImageModeSelector(){
                     }
                 }) {
 
-                    Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null)
+                    Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
                     Spacer(modifier = Modifier.width(width = 8.dp))
                     Text(text = "Camera")
                     Spacer(modifier = Modifier.width(width = 4.dp))
@@ -80,7 +79,7 @@ fun ImageModeSelector(){
                     }
                 }) {
 
-                    Icon(imageVector = Icons.Default.BrowseGallery, contentDescription = null)
+                    Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
                     Spacer(modifier = Modifier.width(width = 8.dp))
                     Text(text = "Gallery")
                     Spacer(modifier = Modifier.width(width = 4.dp))
