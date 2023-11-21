@@ -192,6 +192,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                 if (isSubTodo) {
                     CameraCapture { uri ->
                         imageUris = listOf(uri)
+                        imageUri = imageUris[0]
                         Log.d("ImageList", imageUris.toString())
                     }
                 } else {
