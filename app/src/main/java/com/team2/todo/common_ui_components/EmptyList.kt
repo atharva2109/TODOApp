@@ -26,14 +26,17 @@ import com.team2.todo.utils.Screen
  */
 @Preview
 @Composable
-fun EmptyList(title: String = "No Current Sales", drawableID: Int = R.drawable.ic_no_completed_list) {
+fun EmptyList(
+    title: String = "No Current Sales",
+    drawableID: Int = R.drawable.ic_no_completed_list
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(onClick = {NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${1}")}) {
-            
+        Button(onClick = { NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${1}") }) {
+            Text(text = "Go To First Details");
         }
 
         Image(
