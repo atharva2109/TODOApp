@@ -257,11 +257,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                             currentlongitude = location.longitude
                         }
                     )
-                    val ctx = LocalContext.current.applicationContext
-                    if (currentlatitude != 0.0 && currentlongitude != 0.0) {
-                        Toast.makeText(ctx, "Your current location is captured", Toast.LENGTH_LONG)
-                            .show()
-                    }
                 }
 
 
@@ -290,7 +285,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                     LocalDateTime.now(), localdateTime, false, selectpriorityindex
                                 )
                             )
-
+                            NavigationUtil.goBack();
                             Toast.makeText(ctx, "SubTodo added successfully", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
@@ -321,11 +316,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
-                                        Toast.makeText(
-                                            ctx,
-                                            "Added todo successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
                                     } ?: run {
                                         Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
                                             .show()
