@@ -1,21 +1,16 @@
 package com.team2.todo.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
@@ -27,15 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.team2.todo.R
 import com.team2.todo.common_ui_components.ReminderAlertCompose
 import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
-import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
@@ -54,6 +44,7 @@ fun MainScreen() {
                     text = { Text(text = "Add New Property") },
                 )
             },
+
             bottomBar = {
                 BottomNavigationCompose(
                     currentPage = currentPage,

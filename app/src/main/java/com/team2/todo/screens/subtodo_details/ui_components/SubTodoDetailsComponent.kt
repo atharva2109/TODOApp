@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -32,7 +32,7 @@ import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 
 @Composable
-fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
+fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Int) {
 
     viewModel.getSubTodoById(subTodoId)
     val subTodoState by remember { viewModel.subTodo }.collectAsState()
@@ -96,7 +96,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             leadingIcon = {
                                 if (subTodoState?.priority == 1) {
                                     Icon(
-                                        imageVector = Icons.Filled.Label,
+                                        imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
                                         Modifier.size(AssistChipDefaults.IconSize),
                                         tint = Color.Red
@@ -104,7 +104,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 }
                                 if (subTodoState?.priority == 2) {
                                     Icon(
-                                        imageVector = Icons.Filled.Label,
+                                        imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
                                         Modifier.size(AssistChipDefaults.IconSize),
                                         tint = Color.Yellow
@@ -112,7 +112,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 }
                                 if (subTodoState?.priority == 3) {
                                     Icon(
-                                        imageVector = Icons.Filled.Label,
+                                        imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
                                         Modifier.size(AssistChipDefaults.IconSize),
                                         tint = Color.LightGray

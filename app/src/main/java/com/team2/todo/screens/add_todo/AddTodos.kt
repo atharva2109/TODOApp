@@ -1,6 +1,5 @@
 package com.team2.todo.screens.add_todo
 
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -29,29 +28,24 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.team2.todo.common_ui_components.CameraCapture
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
-import com.team2.todo.data.daos.TodoDao
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.TodoRepo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.common_ui_components.LoaderBottomSheet
+import com.team2.todo.common_ui_components.ReminderAlertCompose
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.repo.SubTodoRepo
@@ -66,23 +60,19 @@ import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.Screen
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoField
-import com.team2.todo.utils.LocationUtils
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Created by Atharva K on 11/13/23.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
+fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Black,
         unfocusedBorderColor = PrimaryColor,
@@ -98,8 +88,8 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
     var repository = TodoRepo(db)
     var viewModel = AddTodoViewModel(repository)
 
-    var subtodorepo=SubTodoRepo(db)
-    var subtodviewmodel=AddSubTodoViewModel(subtodorepo)
+    var subtodorepo = SubTodoRepo(db)
+    var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
 
     var enteredTitle by remember {
         mutableStateOf("")
@@ -130,7 +120,7 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
     }
     var imageUris: List<String> = mutableListOf()
 
-    var imageUri:String=""
+    var imageUri: String = ""
 
     var localdateTime: LocalDateTime = LocalDateTime.now()
 
@@ -143,6 +133,9 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
     var selectpriorityindex by remember {
         mutableStateOf(0)
     }
+
+    var showAddingDbLoading by remember { mutableStateOf(false) }
+
     Scaffold {
         Column(
             modifier = Modifier
@@ -165,12 +158,12 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
                         enteredTitle = it
                         isTitleEmpty = it.isEmpty()
                     },
-                    label = { if(isSubTodo) Text(text = "Subtask Title") else Text(text = "Title")},
+                    label = { if (isSubTodo) Text(text = "Subtask Title") else Text(text = "Title") },
                     colors = OutLineTextColor,
                     isError = isTitleEmpty,
                 )
                 //Label
-                if(!isSubTodo) {
+                if (!isSubTodo) {
                     OutlinedTextField(
                         modifier = OutLinedTextModifier,
                         value = enteredLabel,
@@ -192,23 +185,25 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
                         enteredDescription = it
                         isDescriptionEmpty = it.isEmpty()
                     },
-                    label = { if(isSubTodo) Text(text = "Subtask Description") else Text(text = "Description") },
+                    label = { if (isSubTodo) Text(text = "Subtask Description") else Text(text = "Description") },
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-                if(isSubTodo){
-                    var uri=PickImageForSubTodo(activity = ComponentActivity())
-                    imageUri=uri.toString()
-                }
-                else{
-                    var listUris = PickImagesForTodo(activity = ComponentActivity())
-                    imageUris = listUris.map { it.toString() }
-                    Log.d("ImageList", imageUris.toString())
+                if (isSubTodo) {
+                    CameraCapture { uri ->
+                        imageUris = listOf(uri)
+                        Log.d("ImageList", imageUris.toString())
+                    }
+                } else {
+                    CameraCapture { uri ->
+                        imageUris = listOf(uri)
+                        Log.d("ImageList", imageUris.toString())
+                    }
                 }
 
                 selectpriorityindex = DropDownMenuComponent()
 
-                if(!isSubTodo) {
+                if (!isSubTodo) {
                     OutlinedTextField(
                         value = enteredPrice.toString(),
                         onValueChange = { newText -> enteredPrice = newText.toDouble() },
@@ -255,18 +250,13 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
 
                     ReminderField(dateselected.value, timeselected.value)
                 }
-                if(!isSubTodo){
+                if (!isSubTodo) {
                     VerifyByLocationCompose(
                         callback = { location ->
                             currentlatitude = location.latitude
                             currentlongitude = location.longitude
                         }
                     )
-                    val ctx = LocalContext.current.applicationContext
-                    if (currentlatitude != 0.0 && currentlongitude != 0.0) {
-                        Toast.makeText(ctx, "Your current location is captured", Toast.LENGTH_LONG)
-                            .show()
-                    }
                 }
 
 
@@ -288,13 +278,18 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
                         Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        if(isSubTodo){
-                            subtodviewmodel.addSubTodo(SubTodo(0,todoid,enteredTitle,enteredDescription,imageUri,
-                                LocalDateTime.now(),localdateTime,false,selectpriorityindex))
+                        if (isSubTodo) {
+                            subtodviewmodel.addSubTodo(
+                                SubTodo(
+                                    0, todoid, enteredTitle, enteredDescription, imageUri,
+                                    LocalDateTime.now(), localdateTime, false, selectpriorityindex
+                                )
+                            )
+                            NavigationUtil.goBack();
                             Toast.makeText(ctx, "SubTodo added successfully", Toast.LENGTH_SHORT)
                                 .show()
-                        }
-                        else{
+                        } else {
+                            showAddingDbLoading = true
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
@@ -318,19 +313,19 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
                                         for (stringValue in imageUris) {
                                             viewModel.addImage(Images(0, stringValue, todoId))
                                         }
-                                        Toast.makeText(
-                                            ctx,
-                                            "Added todo successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        showAddingDbLoading = false
+                                        NavigationUtil.goBack()
+                                        NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
                                     } ?: run {
                                         Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
                                             .show()
                                     }
 
                                 } catch (e: Exception) {
+                                    showAddingDbLoading = false;
                                     e.printStackTrace()
-                                    Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         }
@@ -344,6 +339,11 @@ fun AddTodos(isSubTodo:Boolean=false,todoid:Long=0) {
                     color = Color.White,
                     modifier = Modifier.padding(vertical = 5.dp)
                 )
+            }
+        }
+        if (showAddingDbLoading) {
+            ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
+                LoaderBottomSheet()
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.team2.todo.common_ui_components
+
 import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -32,15 +31,14 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageLoader(uris: List<String>) {
+fun ImageLoader(uris: List<String?>) {
     var currentImageIndex by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column() {
 
         Box(
             modifier = Modifier
-                .weight(1f)
                 .height(100.dp)
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -70,17 +68,19 @@ fun ImageLoader(uris: List<String>) {
                     ) {
 
 
-                        Image(
-                            bitmap = ImageDecoder.decodeBitmap(
-                                ImageDecoder.createSource(
-                                    LocalContext.current.contentResolver,
-                                    uri.toUri()
-                                )
-                            ).asImageBitmap(),
-                            contentDescription = "",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Fit
-                        )
+                        if (uri != null) {
+                            Image(
+                                bitmap = ImageDecoder.decodeBitmap(
+                                    ImageDecoder.createSource(
+                                        LocalContext.current.contentResolver,
+                                        uri.toUri()
+                                    )
+                                ).asImageBitmap(),
+                                contentDescription = "",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
                     }
                 }
 

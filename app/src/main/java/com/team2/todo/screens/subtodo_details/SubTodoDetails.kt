@@ -8,7 +8,7 @@ import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 
 @Composable
-fun SubTodoDetails(subTodoId: Long) {
+fun SubTodoDetails(subTodoId: Int) {
 
     val subTodoDetailsContext = LocalContext.current
     val database = RealEstateDatabase.getInstance(subTodoDetailsContext)

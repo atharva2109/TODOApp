@@ -7,7 +7,6 @@ import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.repo.SubTodoRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 
 class SubTodoDetailsViewModel(private val repo: SubTodoRepo) : ViewModel() {
@@ -16,7 +15,7 @@ class SubTodoDetailsViewModel(private val repo: SubTodoRepo) : ViewModel() {
 
     val subTodo: MutableStateFlow<SubTodo?> = _subTodo
 
-    fun getSubTodoById(subTodoId: Long) {
+    fun getSubTodoById(subTodoId: Int) {
         try {
             viewModelScope.launch {
                 repo.getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId).collect { subTodoObj ->
