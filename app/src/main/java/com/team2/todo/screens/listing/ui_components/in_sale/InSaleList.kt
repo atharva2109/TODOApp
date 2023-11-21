@@ -36,10 +36,10 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos as TodoWithSubTod
 fun InSaleList(viewModel: PropertyListViewModel = viewModel()) {
 //    val list = viewModel.uncompletedPropertyList.value
     // For expand and collapse https://mrugendrathatte.medium.com/expandable-list-in-compose-b5ebdd768f37
-    val todoContext = LocalContext.current
-    val database = RealEstateDatabase.getInstance(todoContext)
-    val todoRepo = TodoRepo(database)
-    val viewModel = PropertyListViewModel(todoRepo)
+//    val todoContext = LocalContext.current
+//    val database = RealEstateDatabase.getInstance(todoContext)
+//    val todoRepo = TodoRepo(database)
+//    val viewModel = PropertyListViewModel(todoRepo)
     val list = getDummyData();
 
     if (list.isEmpty()) {
@@ -58,12 +58,11 @@ fun InSaleList(viewModel: PropertyListViewModel = viewModel()) {
             ) {
                 items(list.size) { index ->
                     val todo = list[index]
-                    CustomListItem(property = todo,viewModel)
+                    CustomListItem(property = todo)
                 }
             }
 
         }
-
 
 
     }

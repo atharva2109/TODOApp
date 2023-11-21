@@ -59,9 +59,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.Visibility
-import androidx.wear.compose.material.ContentAlpha
-import androidx.wear.compose.material.Scaffold
 import com.team2.todo.R
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.screens.listing.view_model.PropertyListViewModel
