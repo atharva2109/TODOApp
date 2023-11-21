@@ -39,7 +39,7 @@ fun MainScreen() {
         Scaffold(
             floatingActionButton = {
                 if (currentPage == 0) ExtendedFloatingActionButton(
-                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos.name) },
+                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
                     icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
                     text = { Text(text = "Add New Property") },
                 )

@@ -49,7 +49,6 @@ import com.team2.todo.utils.Screen
 import java.time.LocalDateTime
 
 
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun DetailsPage(todoId: Long) {
@@ -66,127 +65,143 @@ fun DetailsPage(todoId: Long) {
     var subTaskList = mutableListOf<SubTodo>();
 
 
+    // val todos by viewModel.todoListBasedOnId.collectAsState(initial = emptyList())
+    var mainTask = Todo(
+        todoId = 1,
+        title = "Main Task One",
+        status = false,
+        priority = 2,
+        longitude = 54.0,
+        latitude = 55.0,
+        label = "Maintenance",
+        dueDate = LocalDateTime.now(),
+        createdDate = LocalDateTime.now(),
+        price = 45.0,
+        description = "Property in Lahore"
+    )
 
-   // val todos by viewModel.todoListBasedOnId.collectAsState(initial = emptyList())
-    var mainTask = Todo(todoId = 1, title = "Main Task One", status = false, priority = 2, longitude = 54.0, latitude = 55.0, label = "Maintenance", dueDate = LocalDateTime.now(), createdDate = LocalDateTime.now(), price = 45.0, description = "Property in Lahore")
 
-
-    val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial =  emptyList())
+    val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial = emptyList())
     val collecetedImages by viewModel.getTodoImages(todoId).collectAsState(initial = emptyList())
 
 
 
 
-    if(collectedTodo.isEmpty()){
-     Text(text = "loading")
- }else {
-     val propertyDetails : TodoWithSubTodos = collectedTodo[0];
+    if (collectedTodo.isEmpty()) {
+        Text(text = "loading")
+    } else {
+        val propertyDetails: TodoWithSubTodos = collectedTodo[0];
 
         var checkedState by remember { mutableStateOf(propertyDetails.todo.status) }
-     Scaffold(
-         topBar = {
-             TopAppBar(
-                 title = {
-                     Text(
-                         text = propertyDetails.todo.title,
-                         Modifier.fillMaxWidth(),
-                         textAlign = TextAlign.Center
-                     )
-                 }
-             )
-         },
-         content = {
-             Column(
-                 modifier = Modifier
-                     .padding(it)
-                     .padding(start = 10.dp),
-             ) {
-                 Text(text = "Description :" + propertyDetails.todo.description)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = propertyDetails.todo.title,
+                            Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                )
+            },
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(start = 10.dp),
+                ) {
+                    Text(text = "Description :" + propertyDetails.todo.description)
 
-                 Spacer(modifier = Modifier.padding(top = 30.dp))
-
-
-                 Box(Modifier.fillMaxWidth()){
-                     collecetedImages.map { it.imagePath }?.let { it1 -> ImageLoader(uris = it1) }
-                 }
+                    Spacer(modifier = Modifier.padding(top = 30.dp))
 
 
-
-                 Spacer(modifier = Modifier.padding(top = 20.dp))
-
-                 Box {
-                     if (propertyDetails.todo.longitude == null && propertyDetails.todo.latitude == null) {
-                         Text(text = "Verification Status: Not Verified")
-                     } else {
-                         Row {
-                             Text(text = "Verification Status: ")
-                             Image(
-                                 imageVector = Icons.Default.Check, // or use Icons.Default.Check
-                                 contentDescription = null, // Provide a suitable description
-                                 modifier = Modifier.size(15.dp, 15.dp),
-                                 contentScale = ContentScale.Fit,
-                             )
-                         }
-                     }
-
-                     Spacer(modifier = Modifier.padding(top = 20.dp))
-                 }
-
-                 Box {
-                     Text(text = "Priority: " + propertyDetails.todo.priority)
-
-                     Spacer(modifier = Modifier.padding(top = 20.dp))
-                 }
-
-
-                 Box {
-                     Text(text = "Due Date: " + propertyDetails.todo.dueDate)
-
-                     Box {
-                         Spacer(modifier = Modifier.padding(top = 20.dp))
-                     }
-                 }
-
-                 Checkbox(
-                     checked = checkedState!!,
-                     onCheckedChange = { checkedState = !checkedState!!
-                        viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
-                         NavigationUtil.navigateTo(Screen.MainScreen.name)
-                     }
-                 )
+                    Box(Modifier.fillMaxWidth()) {
+                        collecetedImages.map { it.imagePath }
+                            ?.let { it1 -> ImageLoader(uris = it1) }
+                    }
 
 
 
-                 Box() {
-                     Text(
-                         text = "Sub Tasks ",
-                         fontSize = 20.sp,
-                         textAlign = TextAlign.Center,
-                         modifier = Modifier.fillMaxWidth()
-                     )
+                    Spacer(modifier = Modifier.padding(top = 20.dp))
 
-                 }
-                 Box {
-                     LazyColumn() {
-                         items(propertyDetails.subtodos) { subTask ->
-                             //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
-                             Box(Modifier.clickable {
-                                 Log.e(subTask.subTodoId.toString(), subTask.subTodoId.toString())
+                    Box {
+                        if (propertyDetails.todo.longitude == null && propertyDetails.todo.latitude == null) {
+                            Text(text = "Verification Status: Not Verified")
+                        } else {
+                            Row {
+                                Text(text = "Verification Status: ")
+                                Image(
+                                    imageVector = Icons.Default.Check, // or use Icons.Default.Check
+                                    contentDescription = null, // Provide a suitable description
+                                    modifier = Modifier.size(15.dp, 15.dp),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            }
+                        }
 
-                                 subTodoId = subTask.subTodoId.toInt()
+                        Spacer(modifier = Modifier.padding(top = 20.dp))
+                    }
 
-                                 NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
-                             }) {
-                                 TodosCard(todos = subTask)
-                             }
-                         }
-                     }
-                 }
+                    Box {
+                        Text(text = "Priority: " + propertyDetails.todo.priority)
+
+                        Spacer(modifier = Modifier.padding(top = 20.dp))
+                    }
 
 
-             }
+                    Box {
+                        Text(text = "Due Date: " + propertyDetails.todo.dueDate)
 
-         }
-     )
- }
+                        Box {
+                            Spacer(modifier = Modifier.padding(top = 20.dp))
+                        }
+                    }
+
+                    Checkbox(
+                        checked = checkedState!!,
+                        onCheckedChange = {
+                            checkedState = !checkedState!!
+                            viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
+                            NavigationUtil.navigateTo(Screen.MainScreen)
+                        }
+                    )
+
+
+
+                    Box() {
+                        Text(
+                            text = "Sub Tasks ",
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                    }
+                    Box {
+                        LazyColumn() {
+                            items(propertyDetails.subtodos) { subTask ->
+                                //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
+                                Box(Modifier.clickable {
+                                    Log.e(
+                                        subTask.subTodoId.toString(),
+                                        subTask.subTodoId.toString()
+                                    )
+
+                                    subTodoId = subTask.subTodoId.toInt()
+
+                                    NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
+                                }) {
+                                    TodosCard(todos = subTask)
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+            }
+        )
+    }
 }

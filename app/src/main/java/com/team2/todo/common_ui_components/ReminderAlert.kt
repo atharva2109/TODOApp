@@ -61,7 +61,7 @@ fun ReminderAlertCompose(
         )
         Button(
             onClick = {
-                NavigationUtil.navigateTo(Screen.DetailsScreen.name)
+                NavigationUtil.navigateTo(Screen.DetailsScreen)
             },
             modifier = Modifier
                 .padding(vertical = 10.dp, horizontal = 10.dp)

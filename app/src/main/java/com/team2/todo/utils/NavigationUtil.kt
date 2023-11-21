@@ -16,7 +16,7 @@ import com.team2.todo.screens.details_page.DetailsPage
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, CompletedListing,AddTodos,DetailsScreen, SubTodoDetails
+    MainScreen, CompletedListing, AddTodos, DetailsScreen, SubTodoDetails
 }
 
 object NavigationUtil {
@@ -32,7 +32,11 @@ object NavigationUtil {
         navController.navigate(screen.name)
     }
 
-    fun goBack(){
+    fun navigateTo(screen: String) {
+        navController.navigate(screen)
+    }
+
+    fun goBack() {
         navController.popBackStack();
     }
 }
