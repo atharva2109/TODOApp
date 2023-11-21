@@ -1,4 +1,5 @@
 package com.team2.todo.common_ui_components
+
 import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,11 +35,10 @@ fun ImageLoader(uris: List<String?>) {
     var currentImageIndex by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column() {
 
         Box(
             modifier = Modifier
-                .weight(1f)
                 .height(100.dp)
                 .fillMaxWidth()
                 .padding(16.dp)
