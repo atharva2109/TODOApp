@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 
@@ -43,6 +44,8 @@ import com.team2.todo.data.repo.TodoRepo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.common_ui_components.LoaderBottomSheet
+import com.team2.todo.common_ui_components.ReminderAlertCompose
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.repo.SubTodoRepo
@@ -57,6 +60,8 @@ import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.Screen
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatterBuilder
@@ -128,6 +133,9 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
     var selectpriorityindex by remember {
         mutableStateOf(0)
     }
+
+    var showAddingDbLoading by remember { mutableStateOf(false) }
+
     Scaffold {
         Column(
             modifier = Modifier
@@ -282,9 +290,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                     LocalDateTime.now(), localdateTime, false, selectpriorityindex
                                 )
                             )
+
                             Toast.makeText(ctx, "SubTodo added successfully", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
+                            showAddingDbLoading = true
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
@@ -308,6 +318,9 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                         for (stringValue in imageUris) {
                                             viewModel.addImage(Images(0, stringValue, todoId))
                                         }
+                                        showAddingDbLoading = false
+                                        NavigationUtil.goBack()
+                                        NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
                                         Toast.makeText(
                                             ctx,
                                             "Added todo successfully",
@@ -319,6 +332,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                     }
 
                                 } catch (e: Exception) {
+                                    showAddingDbLoading = false;
                                     e.printStackTrace()
                                     Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
                                         .show()
@@ -335,6 +349,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                     color = Color.White,
                     modifier = Modifier.padding(vertical = 5.dp)
                 )
+            }
+        }
+        if (showAddingDbLoading) {
+            ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
+                LoaderBottomSheet()
             }
         }
     }
