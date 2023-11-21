@@ -67,40 +67,22 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomListItem(property: TodoWithSubTodos, viewModel: PropertyListViewModel) {
+fun CustomListItem(property: TodoWithSubTodos) {
     var showSubtasks by remember { mutableStateOf(false) }
 
-    viewModel.updatedUncompletedPropertyList()
-    val todos by remember {
-        viewModel.uncompletedProperties
-    }.collectAsState()
-
-    Scaffold {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Row(
             modifier = Modifier
-                .padding(4.dp)
+                .fillMaxWidth()
+                .padding(10.dp)
                 .background(Color.Gray)
                 .clickable { showSubtasks = !showSubtasks },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image
-            Image(
-                painter = painterResource(id = R.drawable.home), // Replace with your image resource
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(8.dp)
-            )
-
-            Text(
-                text = property.todo.title,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(10.dp)
-            )
             Checkbox(
                 checked = property.todo.status,
                 onCheckedChange = { isChecked ->
@@ -108,9 +90,33 @@ fun CustomListItem(property: TodoWithSubTodos, viewModel: PropertyListViewModel)
                     showSubtasks = isChecked
                 }
             )
+            Text(
+                text = property.todo.title,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(10.dp)
+            )
+            // Scroll down icon on the right side
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                modifier = Modifier
+            )
         }
 
+        // Spacer to fill the space when subtasks are hidden
+        Spacer(
+            modifier = Modifier
+                .height(2.dp)
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(10.dp)
+                .animateContentSize()
+                .alpha(if (showSubtasks) 1f else 0f)
+        )
 
+        // AnimatedVisibility for smooth rollout animation with spring effect
         AnimatedVisibility(
             visible = showSubtasks,
             enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
@@ -118,6 +124,9 @@ fun CustomListItem(property: TodoWithSubTodos, viewModel: PropertyListViewModel)
         ) {
             Box(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(10.dp)
                     .background(Color.White)
                     .border(
                         width = 1.dp,
@@ -127,10 +136,39 @@ fun CustomListItem(property: TodoWithSubTodos, viewModel: PropertyListViewModel)
                     .draggable(
                         orientation = Orientation.Vertical,
                         state = rememberDraggableState { delta ->
-
+                            // Implement scrolling behavior here
                         }
                     )
-            )
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                ) {
+                    items(count = property.subtodos.size) { index ->
+                        var subTodo by remember { mutableStateOf(property.subtodos[index]) }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                                .border(width = 1.dp, color = Color.White)
+                                .clickable { /* Add any action on subtask click if needed */ },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = subTodo.isCompleted,
+                                onCheckedChange = { isChecked ->
+                                    subTodo = subTodo.copy(isCompleted = isChecked)
+                                }
+                            )
+                            Text(
+                                text = subTodo.title ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
