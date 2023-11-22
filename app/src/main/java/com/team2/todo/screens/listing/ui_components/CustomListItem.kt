@@ -127,6 +127,9 @@ fun CustomListItem(
                 modifier = Modifier
                     .weight(1f)
                     .alpha(if (isCompleted) 0.5f else 1.0f)
+                    .clickable {
+                        NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${property.todo.todoId}")
+                    }
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
