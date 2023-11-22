@@ -43,5 +43,8 @@ interface TodoDao {
     @Query("SELECT * FROM todos ORDER BY price DESC")
     fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>>
 
+    @Query("DELETE FROM todos WHERE todoId = :todoId")
+    fun deleteProperty(todoId: Long)
+
 
 }

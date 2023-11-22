@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
@@ -57,6 +58,8 @@ import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium
+import com.team2.todo.utils.AppUtil
+import com.team2.todo.utils.AppUtil.getPriorityColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 import kotlinx.coroutines.launch
@@ -66,29 +69,17 @@ import kotlinx.coroutines.launch
 fun CustomListItem(
     property: TodoWithSubTodos,
     onClearTaskClicked: () -> Unit,
+    onPermanentDelete: () -> Unit = {}
 ) {
 
-    var priority = "Low";
-    if (property.todo.priority == 1) {
-        priority = "Medium"
-    }
-    if (property.todo.priority == 2) {
-        priority = "High"
-    }
+    var priority = AppUtil.getPriorityString(priorityIndex = property.todo.priority ?: -1)
 
-    fun getPriorityColor(): Color {
-        var color = PriorityMedium
-        if (priority.lowercase() == "low") {
-            color = PriorityLow
-        }
-        if (priority.lowercase() == "high") {
-            color = PriorityHigh
-        }
-        return color
-    }
 
     fun shouldShowVerified(): Boolean {
-        return property.todo.latitude != null && property.todo.longitude != null
+        var latitudeNotPresent = (property.todo.latitude == null || property.todo.latitude == 0.0)
+        var longitudeNotPresent =
+            (property.todo.longitude == null || property.todo.longitude == 0.0)
+        return !(latitudeNotPresent && longitudeNotPresent)
     }
 
     val title = property.todo.title
@@ -105,7 +96,11 @@ fun CustomListItem(
                 horizontal = 10.dp,
                 vertical = 10.dp
             )
-            .border(0.3.dp, color = getPriorityColor(), shape = RoundedCornerShape(10.dp))
+            .border(
+                0.3.dp,
+                color = getPriorityColor(property.todo.priority ?: -1),
+                shape = RoundedCornerShape(10.dp)
+            )
             .clickable {
             },
         elevation = CardDefaults.cardElevation(
@@ -119,7 +114,7 @@ fun CustomListItem(
                 modifier = Modifier
                     .width(10.dp)
                     .height(90.dp)
-                    .background(getPriorityColor())
+                    .background(getPriorityColor(property.todo.priority ?: -1))
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column(
@@ -138,11 +133,11 @@ fun CustomListItem(
                         Modifier
                             .size(15.dp)
                             .padding(end = 5.dp),
-                        tint = getPriorityColor()
+                        tint = getPriorityColor(property.todo.priority ?: -1)
                     )
                     Text(
                         text = priority,
-                        color = getPriorityColor(),
+                        color = getPriorityColor(property.todo.priority ?: -1),
                         fontWeight = FontWeight.Light,
                         fontSize = 15.sp,
                         textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
@@ -167,6 +162,14 @@ fun CustomListItem(
                 onClearTaskClicked()
             })
 
+            if (isCompleted)
+                Icon(
+                    Icons.Filled.Delete,
+                    contentDescription = "sdds",
+                    modifier = Modifier.clickable {
+                        onPermanentDelete()
+                    },
+                )
         }
     }
 }

@@ -4,7 +4,9 @@ import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class TodoRepo(private val database: RealEstateDatabase) {
 
@@ -45,5 +47,11 @@ class TodoRepo(private val database: RealEstateDatabase) {
 
     fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
         database.todoDao().getAllTodosOrderedByPriceDESCWithSubTodos()
+
+    suspend fun deleteProperty(todoId: Long) {
+        withContext(Dispatchers.IO) {
+            database.todoDao().deleteProperty(todoId)
+        }
+    }
 
 }
