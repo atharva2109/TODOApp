@@ -36,11 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,7 +63,10 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun CustomListItem(property: TodoWithSubTodos, onClearTaskClicked: () -> Unit) {
+fun CustomListItem(
+    property: TodoWithSubTodos,
+    onClearTaskClicked: () -> Unit,
+) {
 
     var priority = "Low";
     if (property.todo.priority == 1) {
@@ -82,7 +87,12 @@ fun CustomListItem(property: TodoWithSubTodos, onClearTaskClicked: () -> Unit) {
         return color
     }
 
-    var title = property.todo.title
+    fun shouldShowVerified(): Boolean {
+        return property.todo.latitude != null && property.todo.longitude != null
+    }
+
+    val title = property.todo.title
+    val isCompleted = property.todo.status
 
     Card(
         colors = CardDefaults.cardColors(
@@ -114,7 +124,9 @@ fun CustomListItem(property: TodoWithSubTodos, onClearTaskClicked: () -> Unit) {
             Spacer(modifier = Modifier.width(10.dp))
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .alpha(if (isCompleted) 0.5f else 1.0f)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -129,20 +141,26 @@ fun CustomListItem(property: TodoWithSubTodos, onClearTaskClicked: () -> Unit) {
                         text = priority,
                         color = getPriorityColor(),
                         fontWeight = FontWeight.Light,
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
-                    VerifiedLogo()
+                    if (shouldShowVerified()) VerifiedLogo()
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(text = title, fontSize = 23.sp, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = title,
+                        fontSize = 23.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                    )
 
                 }
 
             }
-            Checkbox(checked = false, onCheckedChange = {
+            Checkbox(checked = property.todo.status, onCheckedChange = {
                 onClearTaskClicked()
             })
 
