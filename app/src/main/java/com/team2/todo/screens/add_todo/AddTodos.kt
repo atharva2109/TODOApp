@@ -72,7 +72,7 @@ import java.time.temporal.ChronoField
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
+fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) {
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Black,
         unfocusedBorderColor = PrimaryColor,
@@ -136,215 +136,236 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
 
     var showAddingDbLoading by remember { mutableStateOf(false) }
 
-    Scaffold {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(it)
-        ) {
-            AddEditAppBar(isSubTodo)
+
+    if(isEdit==true){
+        Log.d("Edit Mode","Edit composable")
+    }
+    else {
+        Scaffold {
             Column(
                 modifier = Modifier
-                    .weight(weight = 1.0F)
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxHeight()
+                    .padding(it)
             ) {
-                //Title
-                OutlinedTextField(
-                    modifier = OutLinedTextModifier,
-                    value = enteredTitle,
-                    onValueChange = {
-                        enteredTitle = it
-                        isTitleEmpty = it.isEmpty()
-                    },
-                    label = { if (isSubTodo) Text(text = "Subtask Title") else Text(text = "Title") },
-                    colors = OutLineTextColor,
-                    isError = isTitleEmpty,
-                )
-                //Label
-                if (!isSubTodo) {
+                AddEditAppBar(isSubTodo)
+                Column(
+                    modifier = Modifier
+                        .weight(weight = 1.0F)
+                        .fillMaxWidth()
+                        .padding(horizontal = 25.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    //Title
                     OutlinedTextField(
                         modifier = OutLinedTextModifier,
-                        value = enteredLabel,
+                        value = enteredTitle,
                         onValueChange = {
-                            enteredLabel = it
-                            isLabelEmpty = it.isEmpty()
+                            enteredTitle = it
+                            isTitleEmpty = it.isEmpty()
                         },
-                        label = { Text(text = "Label") },
+                        label = { if (isSubTodo) Text(text = "Subtask Title") else Text(text = "Title") },
                         colors = OutLineTextColor,
-                        isError = isLabelEmpty,
+                        isError = isTitleEmpty,
                     )
-                }
-                // Description
-                OutlinedTextField(
-                    value = enteredDescription,
-                    modifier = OutLinedTextModifier
-                        .height(120.dp),
-                    onValueChange = {
-                        enteredDescription = it
-                        isDescriptionEmpty = it.isEmpty()
-                    },
-                    label = { if (isSubTodo) Text(text = "Subtask Description") else Text(text = "Description") },
-                    colors = OutLineTextColor,
-                    isError = isDescriptionEmpty,
-                )
-                if (isSubTodo) {
-                    CameraCapture { uri ->
-                        imageUris = listOf(uri)
-                        imageUri = imageUris[0]
-                        Log.d("ImageList", imageUris.toString())
-                    }
-                } else {
-                    CameraCapture { uri ->
-                        imageUris = listOf(uri)
-                        Log.d("ImageList", imageUris.toString())
-                    }
-                }
-
-                selectpriorityindex = DropDownMenuComponent()
-
-                if (!isSubTodo) {
-                    OutlinedTextField(
-                        value = enteredPrice.toString(),
-                        onValueChange = { newText -> enteredPrice = newText.toDouble() },
-                        label = { Text(text = "Price: ") },
-                        placeholder = { Text(text = "Enter price: ") },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        colors = OutLineTextColor,
-                        modifier = OutLinedTextModifier,
-                    )
-                }
-                DateAndTimeField(
-                    date = dateselected.value,
-                    time = timeselected.value,
-                    onDateClick = {
-                        calendarState.show()
-                    },
-                    onTimeClick = {
-                        timeState.show()
-                    })
-
-
-                if (dateselected.value != "" && timeselected.value != "") {
-                    val formatter = DateTimeFormatterBuilder()
-                        .parseCaseInsensitive()
-                        .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
-                        .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                        .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                        .toFormatter()
-
-                    try {
-                        localdateTime = LocalDateTime.parse(
-                            dateselected.value + " " + timeselected.value,
-                            formatter
+                    //Label
+                    if (!isSubTodo) {
+                        OutlinedTextField(
+                            modifier = OutLinedTextModifier,
+                            value = enteredLabel,
+                            onValueChange = {
+                                enteredLabel = it
+                                isLabelEmpty = it.isEmpty()
+                            },
+                            label = { Text(text = "Label") },
+                            colors = OutLineTextColor,
+                            isError = isLabelEmpty,
                         )
-                        Log.d("Local Time", localdateTime.toString())
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        println("Error parsing date or time: ${e.message}")
+                    }
+                    // Description
+                    OutlinedTextField(
+                        value = enteredDescription,
+                        modifier = OutLinedTextModifier
+                            .height(120.dp),
+                        onValueChange = {
+                            enteredDescription = it
+                            isDescriptionEmpty = it.isEmpty()
+                        },
+                        label = { if (isSubTodo) Text(text = "Subtask Description") else Text(text = "Description") },
+                        colors = OutLineTextColor,
+                        isError = isDescriptionEmpty,
+                    )
+                    if (isSubTodo) {
+                        CameraCapture { uri ->
+                            imageUris = listOf(uri)
+                            imageUri = imageUris[0]
+                            Log.d("ImageList", imageUris.toString())
+                        }
+                    } else {
+                        CameraCapture { uri ->
+                            imageUris = listOf(uri)
+                            Log.d("ImageList", imageUris.toString())
+                        }
                     }
 
-                    ReminderField(dateselected.value, timeselected.value)
-                }
-                if (!isSubTodo) {
-                    VerifyByLocationCompose(
-                        callback = { location ->
-                            currentlatitude = location.latitude
-                            currentlongitude = location.longitude
-                        }
-                    )
-                }
+                    selectpriorityindex = DropDownMenuComponent()
+
+                    if (!isSubTodo) {
+                        OutlinedTextField(
+                            value = enteredPrice.toString(),
+                            onValueChange = { newText -> enteredPrice = newText.toDouble() },
+                            label = { Text(text = "Price: ") },
+                            placeholder = { Text(text = "Enter price: ") },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            colors = OutLineTextColor,
+                            modifier = OutLinedTextModifier,
+                        )
+                    }
+                    DateAndTimeField(
+                        date = dateselected.value,
+                        time = timeselected.value,
+                        onDateClick = {
+                            calendarState.show()
+                        },
+                        onTimeClick = {
+                            timeState.show()
+                        })
 
 
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp, vertical = 10.dp),
-                elevation = ButtonDefaults.buttonElevation(6.dp),
-                onClick = {
-                    if (enteredTitle.isEmpty()) {
-                        Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
-                        isTitleEmpty = true
-                    } else if (enteredDescription.isEmpty()) {
-                        Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
-                            .show()
-                        isDescriptionEmpty = true
-                    } else if (dateselected.value == "" || timeselected.value == "") {
-                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        if (isSubTodo) {
-                            subtodviewmodel.addSubTodo(
-                                SubTodo(
-                                    0, todoid, enteredTitle, enteredDescription, imageUri,
-                                    LocalDateTime.now(), localdateTime, false, selectpriorityindex
-                                )
+                    if (dateselected.value != "" && timeselected.value != "") {
+                        val formatter = DateTimeFormatterBuilder()
+                            .parseCaseInsensitive()
+                            .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
+                            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                            .toFormatter()
+
+                        try {
+                            localdateTime = LocalDateTime.parse(
+                                dateselected.value + " " + timeselected.value,
+                                formatter
                             )
-                            NavigationUtil.goBack();
-                            Toast.makeText(ctx, "SubTodo added successfully", Toast.LENGTH_SHORT)
+                            Log.d("Local Time", localdateTime.toString())
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            println("Error parsing date or time: ${e.message}")
+                        }
+
+                        ReminderField(dateselected.value, timeselected.value)
+                    }
+                    if (!isSubTodo) {
+                        VerifyByLocationCompose(
+                            callback = { location ->
+                                currentlatitude = location.latitude
+                                currentlongitude = location.longitude
+                            }
+                        )
+                    }
+
+
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 25.dp, vertical = 10.dp),
+                    elevation = ButtonDefaults.buttonElevation(6.dp),
+                    onClick = {
+                        if (enteredTitle.isEmpty()) {
+                            Toast.makeText(ctx, "Please fill the title", Toast.LENGTH_SHORT).show()
+                            isTitleEmpty = true
+                        } else if (enteredDescription.isEmpty()) {
+                            Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
+                                .show()
+                            isDescriptionEmpty = true
+                        } else if (dateselected.value == "" || timeselected.value == "") {
+                            Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-                            showAddingDbLoading = true
-                            scope.launch {
-                                try {
-                                    todoIdretrievalInProgress = true
-                                    todoIdretrieved = viewModel.addTodo(
-                                        Todo(
-                                            0,
-                                            enteredTitle,
-                                            enteredLabel,
-                                            enteredDescription,
-                                            currentlatitude,
-                                            currentlongitude,
-                                            enteredPrice,
-                                            LocalDateTime.now(),
-                                            localdateTime,
-                                            false,
-                                            selectpriorityindex
-                                        )
+                            if (isSubTodo) {
+                                subtodviewmodel.addSubTodo(
+                                    SubTodo(
+                                        0,
+                                        todoid,
+                                        enteredTitle,
+                                        enteredDescription,
+                                        imageUri,
+                                        LocalDateTime.now(),
+                                        localdateTime,
+                                        false,
+                                        selectpriorityindex
                                     )
-                                    todoIdretrievalInProgress = false
-                                    todoIdretrieved?.let { todoId ->
-                                        for (stringValue in imageUris) {
-                                            viewModel.addImage(Images(0, stringValue, todoId))
+                                )
+                                NavigationUtil.goBack();
+                                Toast.makeText(
+                                    ctx,
+                                    "SubTodo added successfully",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else {
+                                showAddingDbLoading = true
+                                scope.launch {
+                                    try {
+                                        todoIdretrievalInProgress = true
+                                        todoIdretrieved = viewModel.addTodo(
+                                            Todo(
+                                                0,
+                                                enteredTitle,
+                                                enteredLabel,
+                                                enteredDescription,
+                                                currentlatitude,
+                                                currentlongitude,
+                                                enteredPrice,
+                                                LocalDateTime.now(),
+                                                localdateTime,
+                                                false,
+                                                selectpriorityindex
+                                            )
+                                        )
+                                        todoIdretrievalInProgress = false
+                                        todoIdretrieved?.let { todoId ->
+                                            for (stringValue in imageUris) {
+                                                viewModel.addImage(Images(0, stringValue, todoId))
+                                            }
+                                            showAddingDbLoading = false
+                                            NavigationUtil.goBack()
+                                            NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
+                                        } ?: run {
+                                            Toast.makeText(
+                                                ctx,
+                                                "Error adding Todo",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
                                         }
-                                        showAddingDbLoading = false
-                                        NavigationUtil.goBack()
-                                        NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
-                                    } ?: run {
+
+                                    } catch (e: Exception) {
+                                        showAddingDbLoading = false;
+                                        e.printStackTrace()
                                         Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
                                             .show()
                                     }
-
-                                } catch (e: Exception) {
-                                    showAddingDbLoading = false;
-                                    e.printStackTrace()
-                                    Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
-                                        .show()
                                 }
                             }
-                        }
 
-                    }
-                },
-                shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
-            ) {
-                Text(
-                    text = "ADD",
-                    color = Color.White,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
+                        }
+                    },
+                    shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
+                ) {
+                    Text(
+                        text = "ADD",
+                        color = Color.White,
+                        modifier = Modifier.padding(vertical = 5.dp)
+                    )
+                }
             }
-        }
-        if (showAddingDbLoading) {
-            ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
-                LoaderBottomSheet()
+            if (showAddingDbLoading) {
+                ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
+                    LoaderBottomSheet()
+                }
             }
         }
     }

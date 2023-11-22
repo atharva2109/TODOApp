@@ -4,6 +4,7 @@ package com.team2.todo.utils
  * Created by Manu KJ on 11/1/23.
  */
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,7 +18,7 @@ import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails,EditSubTodo
 }
 
 object NavigationUtil {
@@ -71,6 +72,15 @@ fun NavHostControllerProvider() {
         ) { backStackEntry ->
             val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
             AddTodos(isSubTodo = true, todoid = todoId)
+        }
+
+        composable(
+            route = "${Screen.EditSubTodo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            Log.d("In Edit Route","In edit route")
+            AddTodos(isSubTodo = false, todoid = todoId,isEdit = true)
         }
     }
 }

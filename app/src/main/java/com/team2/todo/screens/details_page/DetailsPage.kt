@@ -130,8 +130,7 @@ fun DetailsPage(todoId: Long) {
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    //TODO handle navigation to edit
-
+                                   NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoId}")
                                 }
                         )
                     },
