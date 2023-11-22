@@ -14,5 +14,16 @@ val PrimaryColor = Color(0xFF888990)
 val GreyColor = Color(0xFF888990)
 val BlueColor = Color(0XFF5D9CE9)
 
+val DarkRedColor = Color(0xFF800900)
+val DarkGreenColor = Color(0xFF448000)
+val DarkGreyColor = Color(0xFF008071)
+
 val AppBarBackGroundColor = Color(0x97FFFFFF)
 val AppBarContentColor = Color(0x97000000)
+
+
+
+
+val PriorityHigh = DarkRedColor
+val PriorityMedium = DarkGreenColor
+val PriorityLow = DarkGreyColor

@@ -11,7 +11,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.team2.todo.screens.MainScreen
+import com.team2.todo.screens.listing.MainScreen
 import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
 import com.team2.todo.screens.subtodo_details.SubTodoDetails

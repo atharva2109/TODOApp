@@ -4,11 +4,13 @@ import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class TodoRepo(private val database: RealEstateDatabase) {
 
-    suspend fun upsertTodo(todoEntity: Todo) : Long {
+    suspend fun upsertTodo(todoEntity: Todo): Long {
         return database.todoDao().upsertTodo(todoEntity)
     }
 
@@ -21,8 +23,8 @@ class TodoRepo(private val database: RealEstateDatabase) {
         database.todoDao().getTodoWithSubTodosBasedOnTodoId(todoId)
 
 
-    fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosWithSubTodos()
+    fun getAllTodosWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosWithSubTodos(status = status)
 
 
     fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
@@ -45,5 +47,11 @@ class TodoRepo(private val database: RealEstateDatabase) {
 
     fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
         database.todoDao().getAllTodosOrderedByPriceDESCWithSubTodos()
+
+    suspend fun deleteProperty(todoId: Long) {
+        withContext(Dispatchers.IO) {
+            database.todoDao().deleteProperty(todoId)
+        }
+    }
 
 }
