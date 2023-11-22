@@ -50,7 +50,6 @@ import com.team2.todo.utils.Screen
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
     var showReminderAlert by remember { mutableStateOf(false) }
-    var showFilter by remember { mutableStateOf(false) }
 
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
@@ -85,22 +84,6 @@ fun MainScreen() {
                 }
             }
         ) { it ->
-
-            FloatingActionButton(
-                onClick = {
-                          showFilter = true
-                },
-                modifier = Modifier
-                    .padding(top = 20.dp, start = 315.dp)
-            ) {
-                Icon(Icons.Filled.Menu, contentDescription = "Add")
-            }
-
-            if (showFilter) {
-                ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
-                    FilterScreenCompose()
-                }
-            }
 
             if (showReminderAlert) {
                 ModalBottomSheet(onDismissRequest = { showReminderAlert = false; }) {

@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 */
 
 class FilterViewModel: ViewModel() {
+
     private val _selectedFilter = mutableStateOf(getAllFilters()[0])
+
     val selectedFilter: State<Filter>
         get() = _selectedFilter
 
@@ -31,9 +33,11 @@ class FilterViewModel: ViewModel() {
         val map = Filter.values().associateBy(Filter::value)
         return map[value]
     }
+
 }
 
-enum class Filter(val value: String){
+enum class Filter(val value: String) {
+
     DEFAULT_FILTER("Date of Creation"),
     GEO_LOCATION("Nearby Location"),
     DUE_DATE("Deadline"),
