@@ -35,7 +35,7 @@ import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
     viewModel.getSubTodoById(subTodoId)
-    val subTodoState by remember { viewModel.subTodo }.collectAsState()
+    val propertySubTaskState by remember { viewModel.subTodo }.collectAsState()
     Scaffold { padding ->
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -61,7 +61,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                 ) {
 
                     Spacer(modifier = Modifier.height(8.dp))
-                    subTodoState?.title?.let {
+                    propertySubTaskState?.title?.let {
                         Text(
                             text = it,
                             fontWeight = FontWeight.Bold,
@@ -80,21 +80,21 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                         AssistChip(
                             onClick = { },
                             label = {
-                                if (subTodoState?.priority == 1) {
+                                if (propertySubTaskState?.priority == 1) {
                                     Text("High")
 
                                 }
-                                if (subTodoState?.priority == 2) {
+                                if (propertySubTaskState?.priority == 2) {
                                     Text("Medium")
 
                                 }
-                                if (subTodoState?.priority == 3) {
+                                if (propertySubTaskState?.priority == 3) {
                                     Text("Low")
 
                                 }
                             },
                             leadingIcon = {
-                                if (subTodoState?.priority == 1) {
+                                if (propertySubTaskState?.priority == 1) {
                                     Icon(
                                         imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
@@ -102,7 +102,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                         tint = Color.Red
                                     )
                                 }
-                                if (subTodoState?.priority == 2) {
+                                if (propertySubTaskState?.priority == 2) {
                                     Icon(
                                         imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
@@ -110,7 +110,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                         tint = Color.Yellow
                                     )
                                 }
-                                if (subTodoState?.priority == 3) {
+                                if (propertySubTaskState?.priority == 3) {
                                     Icon(
                                         imageVector = Icons.Filled.AccountCircle,
                                         contentDescription = "Localized description",
@@ -122,7 +122,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
                         )
                         Text(
-                            text = LocalDatetimeToWords.formatLocalDateTimeAsWords(subTodoState?.dueDate),
+                            text = LocalDatetimeToWords.formatLocalDateTimeAsWords(propertySubTaskState?.dueDate),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             textAlign = TextAlign.Start
@@ -131,10 +131,10 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
 
                     Spacer(modifier = Modifier.height(8.dp))
-                    DisplaySubTodoImage(subTodoState?.imagePath)
+                    DisplaySubTodoImage(propertySubTaskState?.image)
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    subTodoState?.description?.let {
+                    propertySubTaskState?.description?.let {
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,

@@ -1,5 +1,6 @@
 package com.team2.todo.screens.add_todo
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -111,9 +112,9 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
     var currentlongitude by remember {
         mutableStateOf(0.0)
     }
-    var imageUris: List<String> = mutableListOf()
+    var bitmapList: List<Bitmap?> = mutableListOf()
 
-    var imageUri: String = ""
+    var bitmap: Bitmap? = null
 
     var localdateTime: LocalDateTime = LocalDateTime.now()
 
@@ -183,15 +184,15 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                     isError = isDescriptionEmpty,
                 )
                 if (isSubTodo) {
-                    CameraCapture { uri ->
-                        imageUris = listOf(uri)
-                        imageUri = imageUris[0]
-                        Log.d("ImageList", imageUris.toString())
+                    CameraCapture { bitmapCallback ->
+                        bitmapList = listOf(bitmapCallback)
+                        bitmap = bitmapList[0]
+                        Log.d("ImageList", bitmapList.toString())
                     }
                 } else {
-                    CameraCapture { uri ->
-                        imageUris = listOf(uri)
-                        Log.d("ImageList", imageUris.toString())
+                    CameraCapture { bitmapCallback ->
+                        bitmapList = listOf(bitmapCallback)
+                        Log.d("ImageList", bitmapList.toString())
                     }
                 }
 
@@ -275,7 +276,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(
                                 SubTodo(
-                                    0, todoid, enteredTitle, enteredDescription, imageUri,
+                                    0, todoid, enteredTitle, enteredDescription, bitmap,
                                     LocalDateTime.now(), localdateTime, false, selectpriorityindex
                                 )
                             )
@@ -304,8 +305,8 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                     )
                                     todoIdretrievalInProgress = false
                                     todoIdretrieved?.let { todoId ->
-                                        for (stringValue in imageUris) {
-                                            viewModel.addImage(Images(0, stringValue, todoId))
+                                        for (imageBitmapData in bitmapList) {
+                                            viewModel.addImage(Images(0, imageBitmapData, todoId))
                                         }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()

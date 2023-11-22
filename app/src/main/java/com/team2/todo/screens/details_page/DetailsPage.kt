@@ -149,8 +149,8 @@ fun DetailsPage(todoId: Long) {
 
 
                     Box(Modifier.fillMaxWidth()) {
-                        collecetedImages.map { it.imagePath }
-                            ?.let { it1 -> ImageLoader(uris = it1) }
+                        collecetedImages.map { bitmapList -> bitmapList.image }
+                            ?.let { it1 -> ImageLoader(bitmapList = it1) }
                     }
 
 

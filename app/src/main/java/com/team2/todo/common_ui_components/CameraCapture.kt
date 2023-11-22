@@ -1,6 +1,8 @@
 package com.team2.todo.common_ui_components
+
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.widget.Toast
@@ -42,7 +44,7 @@ import java.util.Objects
 
 
 @Composable
-fun CameraCapture(imageUriString: (String) -> Unit) {
+fun CameraCapture(imageBitmap: (Bitmap) -> Unit) {
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -89,7 +91,13 @@ fun CameraCapture(imageUriString: (String) -> Unit) {
     }
     if (capturedImageUri.path?.isNotEmpty() == true) {
 
-        imageUriString(capturedImageUri.toString())
+        val capturedImageBitmap = ImageDecoder.decodeBitmap(
+            ImageDecoder.createSource(
+                LocalContext.current.contentResolver,
+                capturedImageUri
+            )
+        )
+        imageBitmap(capturedImageBitmap)
 
         Column(
             modifier = Modifier
@@ -99,12 +107,7 @@ fun CameraCapture(imageUriString: (String) -> Unit) {
 
         ) {
             Image(
-                bitmap = ImageDecoder.decodeBitmap(
-                    ImageDecoder.createSource(
-                        LocalContext.current.contentResolver,
-                        capturedImageUri
-                    )
-                ).asImageBitmap(),
+                bitmap = capturedImageBitmap.asImageBitmap(),
                 contentDescription = "",
                 modifier = Modifier.padding(5.dp),
                 contentScale = ContentScale.Fit

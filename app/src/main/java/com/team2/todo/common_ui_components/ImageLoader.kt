@@ -1,5 +1,6 @@
 package com.team2.todo.common_ui_components
 
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -31,7 +32,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageLoader(uris: List<String?>) {
+fun ImageLoader(bitmapList: List<Bitmap?>) {
     var currentImageIndex by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -39,16 +40,16 @@ fun ImageLoader(uris: List<String?>) {
 
         Box(
             modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
-                .padding(16.dp)
+                .height(300.dp)
+                .height(300.dp)
+                .padding(8.dp)
 
         ) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                itemsIndexed(uris) { index, uri ->
+                itemsIndexed(bitmapList) { index, bitmap ->
                     Card(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,
@@ -68,14 +69,9 @@ fun ImageLoader(uris: List<String?>) {
                     ) {
 
 
-                        if (uri != null) {
+                        if (bitmap != null) {
                             Image(
-                                bitmap = ImageDecoder.decodeBitmap(
-                                    ImageDecoder.createSource(
-                                        LocalContext.current.contentResolver,
-                                        uri.toUri()
-                                    )
-                                ).asImageBitmap(),
+                                bitmap = bitmap.asImageBitmap(),
                                 contentDescription = "",
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Fit

@@ -1,5 +1,6 @@
 package com.team2.todo.data.entities
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -24,7 +25,7 @@ data class SubTodo(
     val todoId: Long,
     val title: String?,
     val description: String?,
-    val imagePath: String?,
+    val image: Bitmap?,
     /* added type converter for complex date object */
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
