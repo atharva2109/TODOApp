@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team2.todo.common_ui_components.filter.FilterScreenCompose
+import com.team2.todo.common_ui_components.filter.ui_components.FilterScreenCompose
 import com.team2.todo.common_ui_components.ReminderAlertCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.repo.TodoRepo

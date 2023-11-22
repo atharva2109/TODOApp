@@ -1,4 +1,4 @@
-package com.team2.todo.common_ui_components.filter
+package com.team2.todo.common_ui_components.filter.view_model
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
