@@ -11,8 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,7 +33,29 @@ import com.team2.todo.screens.listing.view_model.PropertyListViewModel
  * Created by Manu KJ on 11/6/23.
  */
 @Composable
-fun CompletedSaleList(viewModel: PropertyListViewModel = viewModel()) {
-    val list = viewModel.completedPropertyList.value
-    EmptyList(title = "Sale List Empty", drawableID = R.drawable.ic_no_completed_list)
+fun CompletedSaleList(viewModel: PropertyListViewModel) {
+    val list by remember { viewModel.completedPropertyList }.collectAsState()
+
+    if (list.isNullOrEmpty()) {
+        EmptyList(title = "Sale List Empty", drawableID = R.drawable.ic_no_completed_list)
+    } else {
+        Scaffold {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(top = 10.dp)
+            ) {
+                items(list.size) { index ->
+                    val todo = list[index]
+                    CustomListItem(
+                        property = todo,
+                        onClearTaskClicked = {
+                            viewModel.updateStatus(todo.todo.todoId, false)
+                        },
+                    )
+                }
+            }
+        }
+    }
+
 }

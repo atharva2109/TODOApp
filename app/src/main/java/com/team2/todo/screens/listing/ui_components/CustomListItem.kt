@@ -1,171 +1,180 @@
 package com.team2.todo.screens.listing.ui_components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.team2.todo.R
+import androidx.core.net.toUri
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
-import com.team2.todo.screens.listing.view_model.PropertyListViewModel
+import com.team2.todo.ui.theme.BlueColor
+import com.team2.todo.ui.theme.DarkGreenColor
+import com.team2.todo.ui.theme.DarkGreyColor
+import com.team2.todo.ui.theme.DarkRedColor
+import com.team2.todo.ui.theme.GreyColor
+import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.ui.theme.PriorityHigh
+import com.team2.todo.ui.theme.PriorityLow
+import com.team2.todo.ui.theme.PriorityMedium
+import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.Screen
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun CustomListItem(property: TodoWithSubTodos) {
-    var showSubtasks by remember { mutableStateOf(false) }
+fun CustomListItem(property: TodoWithSubTodos, onClearTaskClicked: () -> Unit) {
 
-    Column(
+    var priority = "Low";
+    if (property.todo.priority == 1) {
+        priority = "Medium"
+    }
+    if (property.todo.priority == 2) {
+        priority = "High"
+    }
+
+    fun getPriorityColor(): Color {
+        var color = PriorityMedium
+        if (priority.lowercase() == "low") {
+            color = PriorityLow
+        }
+        if (priority.lowercase() == "high") {
+            color = PriorityHigh
+        }
+        return color
+    }
+
+    var title = property.todo.title
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(90.dp)
+            .padding(
+                horizontal = 10.dp,
+                vertical = 10.dp
+            )
+            .border(0.3.dp, color = getPriorityColor(), shape = RoundedCornerShape(10.dp))
+            .clickable {
+            },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp,
+        ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .background(Color.Gray)
-                .clickable { showSubtasks = !showSubtasks },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = property.todo.status,
-                onCheckedChange = { isChecked ->
-                    property.todo.status = isChecked
-                    showSubtasks = isChecked
-                }
-            )
-            Text(
-                text = property.todo.title,
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(10.dp)
-            )
-            // Scroll down icon on the right side
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = null,
-                modifier = Modifier
-            )
-        }
-
-        // Spacer to fill the space when subtasks are hidden
-        Spacer(
-            modifier = Modifier
-                .height(2.dp)
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(10.dp)
-                .animateContentSize()
-                .alpha(if (showSubtasks) 1f else 0f)
-        )
-
-        // AnimatedVisibility for smooth rollout animation with spring effect
-        AnimatedVisibility(
-            visible = showSubtasks,
-            enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
-            exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(10.dp)
-                    .background(Color.White)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .draggable(
-                        orientation = Orientation.Vertical,
-                        state = rememberDraggableState { delta ->
-                            // Implement scrolling behavior here
-                        }
-                    )
+                    .width(10.dp)
+                    .height(90.dp)
+                    .background(getPriorityColor())
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.weight(1f)
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                ) {
-                    items(count = property.subtodos.size) { index ->
-                        var subTodo by remember { mutableStateOf(property.subtodos[index]) }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                                .border(width = 1.dp, color = Color.White)
-                                .clickable { /* Add any action on subtask click if needed */ },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = subTodo.isCompleted,
-                                onCheckedChange = { isChecked ->
-                                    subTodo = subTodo.copy(isCompleted = isChecked)
-                                }
-                            )
-                            Text(
-                                text = subTodo.title ?: "",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(10.dp)
-                            )
-                        }
-                    }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Image",
+                        Modifier
+                            .size(15.dp)
+                            .padding(end = 5.dp),
+                        tint = getPriorityColor()
+                    )
+                    Text(
+                        text = priority,
+                        color = getPriorityColor(),
+                        fontWeight = FontWeight.Light,
+                        fontSize = 15.sp
+                    )
+                    VerifiedLogo()
                 }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = title, fontSize = 23.sp, fontWeight = FontWeight.SemiBold)
+
+                }
+
             }
+            Checkbox(checked = false, onCheckedChange = {
+                onClearTaskClicked()
+            })
+
         }
+    }
+}
+
+
+@Composable
+fun VerifiedLogo() {
+    Row(
+        modifier = Modifier
+            .padding(start = 10.dp)
+            .border(1.dp, color = BlueColor, shape = RoundedCornerShape(8.dp)),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.padding(2.dp))
+        Icon(
+            imageVector = Icons.Filled.CheckCircle,
+            contentDescription = "Image",
+            Modifier
+                .size(15.dp)
+                .padding(end = 5.dp),
+            tint = BlueColor
+        )
+        Text(
+            text = "Verified ",
+            color = BlueColor,
+            fontWeight = FontWeight.Normal,
+            fontSize = 10.sp
+        )
+        Spacer(modifier = Modifier.padding(2.dp))
+
     }
 }

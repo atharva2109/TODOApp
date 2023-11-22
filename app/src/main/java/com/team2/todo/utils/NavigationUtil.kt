@@ -6,14 +6,18 @@ package com.team2.todo.utils
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.team2.todo.screens.listing.MainScreen
+import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
-import com.team2.todo.screens.MainScreen
+import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen,
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails
 }
 
 object NavigationUtil {
@@ -29,16 +33,44 @@ object NavigationUtil {
         navController.navigate(screen.name)
     }
 
-    fun navigateToCompletedListScreen() {
-        TODO("Not yet implemented")
+    fun navigateTo(screen: String) {
+        navController.navigate(screen)
+    }
+
+    fun goBack() {
+        navController.popBackStack();
     }
 }
 
 
 @Composable
 fun NavHostControllerProvider() {
-    NavHost(navController = NavigationUtil.navController, startDestination = Screen.MainScreen.name) {
+    NavHost(
+        navController = NavigationUtil.navController,
+        startDestination = Screen.MainScreen.name
+    ) {
         composable(Screen.MainScreen.name) { MainScreen() }
-        composable(Screen.DetailsScreen.name) { DetailsPage() }
+        composable(Screen.AddTodos.name) { AddTodos() }
+        composable(
+            route = "${Screen.DetailsScreen.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            DetailsPage(todoId)
+        }
+        composable(
+            route = "${Screen.SubTodoDetails.name}/{subTodoId}",
+            arguments = listOf(navArgument("subTodoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val subTodoId = backStackEntry.arguments?.getLong("subTodoId") ?: -1
+            SubTodoDetails(subTodoId)
+        }
+        composable(
+            route = "${Screen.AddOrEditSubToDo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            AddTodos(isSubTodo = true, todoid = todoId)
+        }
     }
 }

@@ -7,12 +7,13 @@ import java.time.LocalDateTime
 @Entity("todos")
 data class Todo(
     @PrimaryKey(autoGenerate = true)
-    val todoId: Int,
+    val todoId: Long,
     val title: String,
     val label: String?,
     val description: String,
     val latitude: Double?,
     val longitude: Double?,
+    val price: Double,
     /* added type converter for complex date object */
     val createdDate: LocalDateTime?,
     val dueDate: LocalDateTime?,
