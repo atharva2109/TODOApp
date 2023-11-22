@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fetchAndUpdateList()
+
         setContent {
             TODOTheme {
                 // A surface container using the 'background' color from the theme
@@ -53,19 +53,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun fetchAndUpdateList() {
-        val viewModel: PropertyListViewModel by viewModels()
-        val database = RealEstateDatabase.getInstance(context = this);
-        val response = TodoRepo(database).getAllTodosWithSubTodos();
-
-        lifecycleScope.launch {
-            response.collect { list ->
-                run {
-                    viewModel.updatedUncompletedPropertyList(list)
-                    println("viewmodal data" + list.size);
-                }
-            }
-        }
-    }
 }
+
+
+

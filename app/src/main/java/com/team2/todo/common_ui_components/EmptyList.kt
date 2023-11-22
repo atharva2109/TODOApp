@@ -35,10 +35,6 @@ fun EmptyList(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(onClick = { NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${1}") }) {
-            Text(text = "Go To First Details");
-        }
-
         Image(
             painter = painterResource(id = drawableID),
             contentDescription = title,

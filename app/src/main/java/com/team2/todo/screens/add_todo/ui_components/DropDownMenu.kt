@@ -48,7 +48,8 @@ fun DropDownMenuComponent(): Int {
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp)) {
+            .padding(vertical = 5.dp)
+    ) {
         OutlinedTextField(
             value = selectedPriority.toString(),
             onValueChange = { selectedPriority = it },
@@ -57,13 +58,17 @@ fun DropDownMenuComponent(): Int {
                     //This value is used to assign to the DropDown the same width
                     textfieldSize = coordinates.size.toSize()
                 }
+                .clickable {
+                    menuexpanded = !menuexpanded
+                }
                 .fillMaxWidth(),
             label = { Text("Priority") },
             //trailingIcon is for the dropdown arrow
             trailingIcon = {
                 Icon(icon, "contentDescription",
                     Modifier.clickable { menuexpanded = !menuexpanded })
-            }
+            },
+            readOnly = true
         )
         DropdownMenu(
             expanded = menuexpanded,

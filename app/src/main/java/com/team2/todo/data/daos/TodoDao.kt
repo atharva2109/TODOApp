@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoDao {
     @Upsert
-    suspend fun upsertTodo(todoEntity: Todo) : Long
+    suspend fun upsertTodo(todoEntity: Todo): Long
 
     @Query("SELECT * FROM todos where todoId = :todoId")
     fun getTodoWithSubTodosBasedOnTodoId(todoId: Long): Flow<List<TodoWithSubTodos>>
 
-    @Query("SELECT * FROM todos")
-    fun getAllTodosWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    @Query("SELECT * FROM todos where status = :status")
+    fun getAllTodosWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
     @Query("SELECT * FROM todos ORDER BY priority ASC")
     fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>>
