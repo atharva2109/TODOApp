@@ -11,26 +11,41 @@ import kotlinx.coroutines.launch
  * Created by Manu KJ on 11/14/23.
  */
 
+
+object ListingViewModel {
+    private lateinit var repo: TodoRepo
+    lateinit var instance: PropertyListViewModel
+
+    fun initialize(repo: TodoRepo) {
+        this.repo = repo
+        instance = PropertyListViewModel(repo)
+    }
+
+}
+
 class PropertyListViewModel(private val repo: TodoRepo) : ViewModel() {
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
     init {
+        fetchUpdatedList()
+    }
+
+
+    fun fetchUpdatedList(){
         fetchCompletedList()
         fetchInSaleList()
     }
 
-
     fun updateStatus(todoId: Long, status: Boolean): Boolean {
         viewModelScope.launch {
             repo.updateTodoStatus(todoId, status)
-            fetchCompletedList()
-            fetchInSaleList()
+            fetchUpdatedList()
         }
         return true;
     }
 
-    fun fetchCompletedList() {
+    private fun fetchCompletedList() {
         viewModelScope.launch {
             repo.getAllTodosWithSubTodos(status = true).collect { list ->
                 run {
@@ -40,7 +55,7 @@ class PropertyListViewModel(private val repo: TodoRepo) : ViewModel() {
         }
     }
 
-    fun fetchInSaleList() {
+    private fun fetchInSaleList() {
         viewModelScope.launch {
             repo.getAllTodosWithSubTodos(status = false).collect { list ->
                 run {

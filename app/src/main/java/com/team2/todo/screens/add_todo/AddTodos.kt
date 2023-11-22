@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -41,24 +40,18 @@ import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.TodoRepo
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.team2.todo.R
 import com.team2.todo.common_ui_components.LoaderBottomSheet
-import com.team2.todo.common_ui_components.ReminderAlertCompose
-import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
-import com.team2.todo.screens.add_todo.ui_components.PickImageForSubTodo
-import com.team2.todo.screens.add_todo.ui_components.PickImagesForTodo
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
+import com.team2.todo.screens.listing.view_model.ListingViewModel
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
@@ -317,6 +310,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
+                                        ListingViewModel.instance.fetchUpdatedList()
                                     } ?: run {
                                         Toast.makeText(ctx, "Error adding Todo", Toast.LENGTH_SHORT)
                                             .show()

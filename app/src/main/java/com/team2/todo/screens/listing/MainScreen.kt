@@ -35,6 +35,7 @@ import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
+import com.team2.todo.screens.listing.view_model.ListingViewModel
 import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
@@ -48,7 +49,8 @@ fun MainScreen() {
 
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
-    val viewModel = PropertyListViewModel(repo)
+    ListingViewModel.initialize(repo = repo)
+    val viewModel = ListingViewModel.instance
 
     MaterialTheme(typography = Typography()) {
         Scaffold(
