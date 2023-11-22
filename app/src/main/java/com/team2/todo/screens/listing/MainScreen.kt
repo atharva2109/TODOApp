@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.team2.todo.common_ui_components.filter.FilterScreenCompose
 import com.team2.todo.common_ui_components.ReminderAlertCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.repo.TodoRepo
@@ -39,7 +40,6 @@ import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
 import com.team2.todo.screens.listing.view_model.ListingViewModel
-import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
@@ -50,6 +50,7 @@ import com.team2.todo.utils.Screen
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
     var showReminderAlert by remember { mutableStateOf(false) }
+    var showFilter by remember { mutableStateOf(false) }
 
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
@@ -86,11 +87,19 @@ fun MainScreen() {
         ) { it ->
 
             FloatingActionButton(
-                onClick = { /* handle click */ },
+                onClick = {
+                          showFilter = true
+                },
                 modifier = Modifier
                     .padding(top = 20.dp, start = 315.dp)
             ) {
                 Icon(Icons.Filled.Menu, contentDescription = "Add")
+            }
+
+            if (showFilter) {
+                ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
+                    FilterScreenCompose()
+                }
             }
 
             if (showReminderAlert) {
@@ -110,8 +119,6 @@ fun MainScreen() {
                 } else {
                     CompletedSaleList(viewModel)
                 }
-
-
             }
         }
     }
