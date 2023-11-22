@@ -41,8 +41,8 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
         Box(
             modifier = Modifier
                 .height(300.dp)
-                .height(300.dp)
-                .padding(8.dp)
+                .fillMaxWidth()
+                .padding(16.dp)
 
         ) {
             LazyRow(
@@ -85,3 +85,4 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
         }
     }
 }
+

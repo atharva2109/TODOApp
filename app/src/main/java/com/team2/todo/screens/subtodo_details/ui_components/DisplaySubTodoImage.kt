@@ -40,7 +40,7 @@ fun DisplaySubTodoImage(imageBitmap: Bitmap?) {
                         contentDescription = "",
                         modifier = Modifier
                             .fillMaxWidth(.7f)
-                            .height(150.dp),
+                            .height(250.dp),
                         contentScale = ContentScale.Fit
                     )
                 }

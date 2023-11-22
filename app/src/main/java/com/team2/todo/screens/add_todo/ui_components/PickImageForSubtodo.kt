@@ -1,5 +1,6 @@
 package com.team2.todo.screens.add_todo.ui_components
 
+import android.Manifest
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -14,12 +15,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -37,10 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.ui.theme.PrimaryColor
+import com.team2.todo.utils.PermissionUtil
 
 
 @Composable
-fun PickImageForSubTodo(activity: ComponentActivity): Uri? {
+fun PickImageForSubTodo(bitmapCallback: (Bitmap) -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -60,81 +66,18 @@ fun PickImageForSubTodo(activity: ComponentActivity): Uri? {
         }
     }
 
-    if (imageUri == null) {
-        Box(
-            modifier = Modifier.clickable {
-                launcher.launch("image/*")
-            }
-        ) {
-            UploadImage()
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(vertical = 40.dp)
-        ) {
-            Image(
-                bitmap = bitmap!!.asImageBitmap(),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Delete icon functionality
-            IconButton(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 210.dp, top = 0.dp),
-                onClick = {
-                    // Clear the image URI and bitmap
-                    imageUri = null
-                    bitmap = null
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                    tint = Color.Red
-                )
-            }
-        }
+    ElevatedButton(onClick = {
+        launcher.launch("image/*")
+    })
+    {
+        Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
+        Spacer(modifier = Modifier.width(26.dp))
+        Text(text = "Gallery")
     }
-    return imageUri
-}
 
-@Composable
-fun UploadImage() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-    ) {
-        Text(
-            text = "Upload Image",
-            modifier = Modifier.padding(bottom = 10.dp),
-            fontWeight = FontWeight.SemiBold,
-            color = PrimaryColor,
-            fontSize = 18.sp
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                .border(1.dp, color = PrimaryColor, shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
+    if (imageUri == null) {
 
-            Image(
-                painter = painterResource(id = R.drawable.image_upload_placeholder),
-                contentDescription = "Upload Image",
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth(.6f)
+        bitmap?.let { bitmapCallback(it) }
 
-            )
-        }
     }
 }

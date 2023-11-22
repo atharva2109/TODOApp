@@ -3,7 +3,11 @@ package com.team2.todo.screens.add_todo
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,19 +27,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.team2.todo.common_ui_components.CameraCapture
+import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
@@ -48,6 +64,8 @@ import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
+import com.team2.todo.screens.add_todo.ui_components.PickImageForSubTodo
+import com.team2.todo.screens.add_todo.ui_components.PickImagesForTodo
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
@@ -67,6 +85,9 @@ import java.time.temporal.ChronoField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Black,
         unfocusedBorderColor = PrimaryColor,
@@ -173,8 +194,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                 // Description
                 OutlinedTextField(
                     value = enteredDescription,
-                    modifier = OutLinedTextModifier
-                        .height(120.dp),
+                    modifier = OutLinedTextModifier.height(120.dp),
                     onValueChange = {
                         enteredDescription = it
                         isDescriptionEmpty = it.isEmpty()
@@ -183,18 +203,55 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                     colors = OutLineTextColor,
                     isError = isDescriptionEmpty,
                 )
-                if (isSubTodo) {
-                    CameraCapture { bitmapCallback ->
-                        bitmapList = listOf(bitmapCallback)
-                        bitmap = bitmapList[0]
-                        Log.d("ImageList", bitmapList.toString())
-                    }
-                } else {
-                    CameraCapture { bitmapCallback ->
-                        bitmapList = listOf(bitmapCallback)
-                        Log.d("ImageList", bitmapList.toString())
-                    }
+
+
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    showBottomSheet = true
+                }) {
+
+                    Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
+                    Spacer(modifier = Modifier.width(26.dp))
+                    Text(text = "Upload Images")
+
                 }
+
+                //Bottom sheet for image selection
+                if (showBottomSheet) {
+                    ModalBottomSheet(onDismissRequest = { showBottomSheet = false; }
+                    ) {
+                        Row( modifier = Modifier.fillMaxWidth()
+                            .padding(28.dp)
+                            .paddingFromBaseline(top = 10.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween) {
+
+                            CameraCapture { bitmapCallback ->
+                                bitmap = bitmapCallback
+                                bitmapList = listOf(bitmapCallback)
+                                showBottomSheet = false
+                                Log.d("Image", bitmapList.toString())
+                            }
+
+
+                            if (isSubTodo) {
+                                PickImageForSubTodo{ bitmapCallback ->
+                                    bitmap = bitmapCallback
+                                    bitmapList = listOf(bitmapCallback)
+                                    showBottomSheet = false
+                                    Log.d("Image", bitmap.toString())
+                                }
+                            } else {
+                                PickImagesForTodo { bitmapCallback ->
+                                    bitmapList = bitmapCallback
+                                    showBottomSheet = false
+                                    Log.d("ImageList", bitmapList.toString())
+                                }
+                            }
+                        }
+                    }
+
+                }
+                if (bitmapList.isNotEmpty()) ImageLoader(bitmapList = bitmapList)
+
 
                 selectpriorityindex = DropDownMenuComponent()
 
@@ -205,15 +262,13 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                         label = { Text(text = "Price: ") },
                         placeholder = { Text(text = "Enter price: ") },
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
+                            keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                         ),
                         colors = OutLineTextColor,
                         modifier = OutLinedTextModifier,
                     )
                 }
-                DateAndTimeField(
-                    date = dateselected.value,
+                DateAndTimeField(date = dateselected.value,
                     time = timeselected.value,
                     onDateClick = {
                         calendarState.show()
@@ -224,18 +279,15 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
 
 
                 if (dateselected.value != "" && timeselected.value != "") {
-                    val formatter = DateTimeFormatterBuilder()
-                        .parseCaseInsensitive()
+                    val formatter = DateTimeFormatterBuilder().parseCaseInsensitive()
                         .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
                         .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
                         .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                        .toFormatter()
+                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter()
 
                     try {
                         localdateTime = LocalDateTime.parse(
-                            dateselected.value + " " + timeselected.value,
-                            formatter
+                            dateselected.value + " " + timeselected.value, formatter
                         )
                         Log.d("Local Time", localdateTime.toString())
                     } catch (e: Exception) {
@@ -246,12 +298,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                     ReminderField(dateselected.value, timeselected.value)
                 }
                 if (!isSubTodo) {
-                    VerifyByLocationCompose(
-                        callback = { location ->
-                            currentlatitude = location.latitude
-                            currentlongitude = location.longitude
-                        }
-                    )
+                    VerifyByLocationCompose(callback = { location ->
+                        currentlatitude = location.latitude
+                        currentlongitude = location.longitude
+                    })
                 }
 
 
@@ -270,14 +320,20 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                             .show()
                         isDescriptionEmpty = true
                     } else if (dateselected.value == "" || timeselected.value == "") {
-                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT).show()
                     } else {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(
                                 SubTodo(
-                                    0, todoid, enteredTitle, enteredDescription, bitmap,
-                                    LocalDateTime.now(), localdateTime, false, selectpriorityindex
+                                    0,
+                                    todoid,
+                                    enteredTitle,
+                                    enteredDescription,
+                                    bitmap,
+                                    LocalDateTime.now(),
+                                    localdateTime,
+                                    false,
+                                    selectpriorityindex
                                 )
                             )
                             NavigationUtil.goBack();
@@ -331,9 +387,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
                 Text(
-                    text = "ADD",
-                    color = Color.White,
-                    modifier = Modifier.padding(vertical = 5.dp)
+                    text = "ADD", color = Color.White, modifier = Modifier.padding(vertical = 5.dp)
                 )
             }
         }
@@ -342,6 +396,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                 LoaderBottomSheet()
             }
         }
+
     }
 }
 

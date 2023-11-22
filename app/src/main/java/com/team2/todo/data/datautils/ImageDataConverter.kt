@@ -9,13 +9,15 @@ class ImageDataConverter {
 
     @TypeConverter
     fun fromBitmapToByteArray(bitmap: Bitmap): ByteArray {
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ByteArrayOutputStream())
-        return ByteArrayOutputStream().toByteArray()
+        var outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        return outputStream.toByteArray()
+
     }
 
     @TypeConverter
     fun fromByteArrayToBitmap(byteArr: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(byteArr,0,byteArr.size)
+        return BitmapFactory.decodeByteArray(byteArr, 0, byteArr.size)
     }
 
 }
