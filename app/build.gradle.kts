@@ -77,9 +77,6 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.4.0")
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
-    implementation("androidx.compose.material:material-icons-extended:1.5.3")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
-    implementation("com.google.accompanist:accompanist-flowlayout:0.24.8-beta")
 
 
 
