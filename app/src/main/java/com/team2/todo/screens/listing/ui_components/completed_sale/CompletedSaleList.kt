@@ -52,6 +52,9 @@ fun CompletedSaleList(viewModel: PropertyListViewModel) {
                         onClearTaskClicked = {
                             viewModel.updateStatus(todo.todo.todoId, false)
                         },
+                        onPermanentDelete = {
+                            viewModel.deleteTheProperty(todo.todo.todoId)
+                        }
                     )
                 }
             }

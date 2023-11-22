@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
@@ -66,6 +67,7 @@ import kotlinx.coroutines.launch
 fun CustomListItem(
     property: TodoWithSubTodos,
     onClearTaskClicked: () -> Unit,
+    onPermanentDelete: () -> Unit = {}
 ) {
 
     var priority = "Low";
@@ -88,7 +90,9 @@ fun CustomListItem(
     }
 
     fun shouldShowVerified(): Boolean {
-        return property.todo.latitude != null && property.todo.longitude != null
+        var latitudeNotPresent = (property.todo.latitude == null || property.todo.latitude == 0.0)
+        var longitudeNotPresent = (property.todo.longitude == null || property.todo.longitude == 0.0)
+        return  !(latitudeNotPresent && longitudeNotPresent)
     }
 
     val title = property.todo.title
@@ -167,6 +171,14 @@ fun CustomListItem(
                 onClearTaskClicked()
             })
 
+            if (isCompleted)
+                Icon(
+                    Icons.Filled.Delete,
+                    contentDescription = "sdds",
+                    modifier = Modifier.clickable {
+                        onPermanentDelete()
+                    },
+                )
         }
     }
 }

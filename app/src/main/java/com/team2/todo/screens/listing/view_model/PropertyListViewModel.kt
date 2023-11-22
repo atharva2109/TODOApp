@@ -32,7 +32,7 @@ class PropertyListViewModel(private val repo: TodoRepo) : ViewModel() {
     }
 
 
-    fun fetchUpdatedList(){
+    fun fetchUpdatedList() {
         fetchCompletedList()
         fetchInSaleList()
     }
@@ -62,6 +62,12 @@ class PropertyListViewModel(private val repo: TodoRepo) : ViewModel() {
                     inSalePropertyList.emit(list)
                 }
             }
+        }
+    }
+
+    fun deleteTheProperty(todoId: Long) {
+        viewModelScope.launch {
+            repo.deleteProperty(todoId)
         }
     }
 }
