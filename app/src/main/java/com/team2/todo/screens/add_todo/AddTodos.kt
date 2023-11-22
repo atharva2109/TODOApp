@@ -112,7 +112,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
     var currentlongitude by remember {
         mutableStateOf(0.0)
     }
-    var bitmapList: List<Bitmap?> = mutableListOf()
+    var bitmapList: List<Bitmap> = mutableListOf()
 
     var bitmap: Bitmap? = null
 

@@ -44,7 +44,7 @@ import java.util.Objects
 
 
 @Composable
-fun CameraCapture(imageBitmap: (Bitmap) -> Unit) {
+fun CameraCapture(imageUriString: (Bitmap) -> Unit) {
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -91,13 +91,13 @@ fun CameraCapture(imageBitmap: (Bitmap) -> Unit) {
     }
     if (capturedImageUri.path?.isNotEmpty() == true) {
 
-        val capturedImageBitmap = ImageDecoder.decodeBitmap(
+        var bm = ImageDecoder.decodeBitmap(
             ImageDecoder.createSource(
                 LocalContext.current.contentResolver,
                 capturedImageUri
             )
         )
-        imageBitmap(capturedImageBitmap)
+        imageUriString(bm)
 
         Column(
             modifier = Modifier
@@ -107,7 +107,12 @@ fun CameraCapture(imageBitmap: (Bitmap) -> Unit) {
 
         ) {
             Image(
-                bitmap = capturedImageBitmap.asImageBitmap(),
+                bitmap = ImageDecoder.decodeBitmap(
+                    ImageDecoder.createSource(
+                        LocalContext.current.contentResolver,
+                        capturedImageUri
+                    )
+                ).asImageBitmap(),
                 contentDescription = "",
                 modifier = Modifier.padding(5.dp),
                 contentScale = ContentScale.Fit
