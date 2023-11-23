@@ -1,5 +1,6 @@
 package com.team2.todo.data.daos
 
+import android.graphics.Bitmap
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -46,5 +47,7 @@ interface TodoDao {
     @Query("DELETE FROM todos WHERE todoId = :todoId")
     fun deleteProperty(todoId: Long)
 
+    @Query("DELETE FROM images WHERE  imageId = :imageId")
+    fun deleteTodoImageBasedOnImageId(imageId: Long)
 
 }
