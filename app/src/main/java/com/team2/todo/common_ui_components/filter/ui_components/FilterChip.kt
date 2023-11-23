@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
-import com.team2.todo.data.entities.relations.TodoWithSubTodos
-import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

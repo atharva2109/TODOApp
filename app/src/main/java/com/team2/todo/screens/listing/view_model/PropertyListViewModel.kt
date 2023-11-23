@@ -46,15 +46,7 @@ class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
         return true;
     }
 
-//    fun updateInSalePropertyList(newList: List<TodoWithSubTodos>) {
-//        inSalePropertyList.value = newList
-//    }
-//
-//    fun updateCompletedPropertyList(newList: List<TodoWithSubTodos>) {
-//        completedPropertyList.value = newList
-//    }
-
-    fun dataForSelectedFilter(selectedFilter: Filter, status: Boolean) {
+    fun getDataForSelectedFilter(selectedFilter: Filter, status: Boolean) {
         fetchDataForSelectedFilter( selectedFilter, status) {
             System.out.println("UPDATED LIST - " + it)
             if (!status) {

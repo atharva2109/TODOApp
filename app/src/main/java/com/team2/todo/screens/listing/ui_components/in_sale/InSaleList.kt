@@ -42,44 +42,12 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos as TodoWithSubTod
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterViewModel) {
-
-    var showFilter by remember { mutableStateOf(false) }
     val list by remember { viewModel.inSalePropertyList }.collectAsState()
 
     if (list.isNullOrEmpty()) {
         EmptyList(title = "No Active Sales Found", drawableID = R.drawable.ic_no_in_sale_list)
     } else {
-        Scaffold (
-            floatingActionButton = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                        .padding(top = 40.dp, end = 20.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.End
-
-                ) {
-                    FloatingActionButton(
-                        onClick = {
-                            showFilter = true
-                        }
-                    ) {
-                        Icon(Icons.Filled.Menu, contentDescription = "Add")
-                    }
-                }
-
-            }
-        ) {
-
-            if (showFilter) {
-                ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
-                    FilterScreenCompose(filterViewModel) {
-                        viewModel.dataForSelectedFilter(filterViewModel.selectedFilter.value, false)
-                    }
-                }
-            }
-
+        Scaffold {
             LazyColumn(
                 modifier = Modifier
                     .padding(it)
