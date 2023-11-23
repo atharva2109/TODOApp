@@ -2,6 +2,7 @@ package com.team2.todo.screens.add_todo
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,15 +24,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -67,6 +74,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
+import java.util.Currency
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * Created by Atharva K on 11/13/23.
@@ -111,10 +121,13 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
         mutableStateOf("Low")
     }
 
+    var pound = Currency. getInstance("GBP")
+
     val collecetedImages by fetchTodViewModel.getTodoImages(todoid).collectAsState(initial = emptyList())
     var isTitleEmpty by remember { mutableStateOf(false) }
     var isLabelEmpty by remember { mutableStateOf(false) }
     var isDescriptionEmpty by remember { mutableStateOf(false) }
+    var isLabelCheck by remember { mutableStateOf(false) }
 
     var (calendarState, dateselected) = DatePickerComponent()
     var (timeState, timeselected) = TimePickerComponent()
@@ -232,7 +245,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                             },
                             label = { Text(text = "Label") },
                             colors = OutLineTextColor,
-                            isError = isLabelEmpty,
+                            isError = isLabelEmpty || isLabelCheck,
                         )
                     }
                     // Description
@@ -256,11 +269,31 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         }
                     }
                     else if(isEdit){
-                        Box(Modifier.fillMaxWidth()) {
+                        Box(
+                            Modifier
+                                .width(400.dp)
+                                .height(100.dp)) {
+                            Log.d("Imageurisinsideedit",imageUris.toString())
                             collecetedImages.map { it.imagePath }
                                 ?.let { it1 -> ImageLoader(uris = it1)
 
                                  }
+
+
+                            IconButton(
+                                modifier = Modifier
+
+                                    .align(Alignment.TopStart)
+                                    .padding(start = 320.dp, top = 0.dp)
+                                    ,
+                                onClick = {}
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete",
+                                    tint = Color.Red
+                                )
+                            }
                         }
                     }
                     else {
@@ -274,7 +307,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                     if (!isSubTodo) {
                         OutlinedTextField(
-                            value = enteredPrice.toString(),
+                            value = "${enteredPrice.toString()} ${pound.getSymbol()}",
                             onValueChange = { newText -> enteredPrice = newText.toDouble() },
                             label = { Text(text = "Price: ") },
                             placeholder = { Text(text = "Enter price: ") },
@@ -346,7 +379,12 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         } else if (dateselected.value == "" || timeselected.value == "") {
                             Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT)
                                 .show()
-                        } else {
+                        }
+                        else if(Regex("^\b[a-zA-Z0-9_]+\b$").matches(enteredLabel)==false){
+                            Toast.makeText(ctx,"Label should have only 1 word",Toast.LENGTH_SHORT).show()
+                            isLabelCheck=true
+                        }
+                        else {
                             if (isSubTodo) {
                                 subtodviewmodel.addSubTodo(
                                     SubTodo(
@@ -514,5 +552,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
             }
         }
 
+}
+
+@Composable
+fun deleteImage(){
+    var ctx= LocalContext.current.applicationContext
+    Toast.makeText(ctx,"Image deleted",Toast.LENGTH_SHORT).show()
 }
 
