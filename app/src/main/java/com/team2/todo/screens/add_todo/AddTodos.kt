@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,8 @@ import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
@@ -141,7 +144,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     var pound = Currency.getInstance("GBP")
 
-    val collecetedImages by fetchTodViewModel.getTodoImages(todoid)
+    var deleteImage by remember {
+        mutableStateOf(false)
+    }
+    val collectedImages by fetchTodViewModel.getTodoImages(todoid)
         .collectAsState(initial = emptyList())
     var isTitleEmpty by remember { mutableStateOf(false) }
     var isLabelEmpty by remember { mutableStateOf(false) }
@@ -161,6 +167,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     var bitmap: Bitmap? = null
 
+    var startIndex by remember { mutableStateOf(0) }
     var localdateTime: LocalDateTime = LocalDateTime.now()
 
     //Getting TodoId from Todos Table
@@ -180,6 +187,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var todosretrievalInProgress by remember { mutableStateOf(false) }
 
 
+    if(deleteImage){
+        ImageLoader(bitmapList = bitmapList)
+        deleteImage=false
+    }
     if (isEdit == true) {
         showFetchingDbLoading = true
         LaunchedEffect(key1 = true) {
@@ -212,6 +223,16 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                             defaultPriority = "Low"
                         }
 
+                        val updatedBitmapList = mutableListOf<Bitmap>()
+                        collectedImages.forEach { image ->
+                            // Convert image to Bitmap and add to the list
+                            val bitmap = image.image
+                            bitmap?.let {
+                                updatedBitmapList.add(it)
+                            }
+                        }
+                        bitmapList = updatedBitmapList
+
                     }
                 } ?: run {
                     Toast.makeText(
@@ -228,6 +249,8 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                     .show()
             }
         }
+
+
     }
 
     Scaffold {
@@ -316,25 +339,77 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     Log.d("Image", bitmap.toString())
                                 }
                             } else {
-                                PickImagesForTodo { bitmapCallback ->
-                                    bitmapList = bitmapCallback
-                                    showBottomSheet = false
-                                    Log.d("ImageList", bitmapList.toString())
+
+                                    PickImagesForTodo { bitmapCallback ->
+                                        bitmapList = bitmapCallback
+                                        showBottomSheet = false
+                                        Log.d("ImageList", bitmapList.toString())
+                                    }
+
+
                                 }
                             }
-                        }
+
                     }
 
                 }
-                if (bitmapList.isNotEmpty()) ImageLoader(bitmapList = bitmapList)
+                if (bitmapList.isNotEmpty()) {
+                    // Use LazyRow instead of Row for horizontal scrolling
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 1.dp),
+
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .padding(vertical = 40.dp)
 
 
+                    ) {
+                        itemsIndexed(
+                        bitmapList
+                        ) { index, bitmap ->
+
+                            Box(
+                                modifier = Modifier
+                                    .width(400.dp) // Set the fixed width of each Box
+                                    .height(100.dp)
+
+                            ) {
+                                ImageLoader(bitmapList = listOf(bitmap))
+                                // Delete icon functionality
+                                IconButton(
+                                    modifier = Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(start = 210.dp, top = 0.dp),
+                                    onClick = {
+                                        val globalIndex = index
+                                        scope.launch {
+
+                                            fetchTodViewModel.deleteImage(collectedImages[globalIndex].imageId)
+
+                                        }
+                                        deleteImage = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete",
+                                        tint = Color.Red
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+                }
+                
+                selectpriorityindex= DropDownMenuComponent(defaultPriority = defaultPriority)
                 if (!isSubTodo) {
                     OutlinedTextField(
-                        value = enteredPrice.toString(),
+                        value = enteredPrice.toString() ,
                         onValueChange = { newText -> enteredPrice = newText.toDouble() },
                         label = { Text(text = "Price: ") },
-                        placeholder = { Text(text = "Enter price: ") },
+                        placeholder = { Text(text = "Enter price(in ${pound.getSymbol()}") },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                         ),
@@ -419,6 +494,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                 .show()
                         } else if (isEdit) {
                             showAddingDbLoading = true
+                            Log.d("Bitmpalistt inside update",bitmapList.toString())
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
@@ -440,17 +516,19 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
 
                                     )
+                                    Log.d("Hi","Hi")
                                     todoIdretrievalInProgress = false
                                     Log.d("Todoid in progress", todoIdretrieved.toString())
+                                    Log.d("Todidretrieved",todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
                                         for (imageBitmapData in bitmapList) {
-                                            viewModel.addImage(Images(0, imageBitmapData, todoId))
+                                            Log.d("Image list",bitmapList.toString())
+                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
                                         }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
-                                        Log.d("Update TodId", todoId.toString())
+                                        Log.d("Update TodId", todoid.toString())
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoid}")
-                                        ListingViewModel.instance.fetchUpdatedList()
 
                                         Toast.makeText(
                                             ctx,
@@ -499,6 +577,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                                     )
                                     todoIdretrievalInProgress = false
+                                    Log.d("TodId inside add",todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
                                         for (imageBitmapData in bitmapList) {
                                             viewModel.addImage(Images(0, imageBitmapData, todoId))

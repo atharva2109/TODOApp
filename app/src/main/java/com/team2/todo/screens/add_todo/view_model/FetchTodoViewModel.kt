@@ -18,4 +18,9 @@ class FetchTodoViewModel(val repository: TodoRepo): ViewModel() {
     fun getTodoImages(id: Long): Flow<List<Images>> {
         return repository.getAllTodoImagesBasedOnTodo(id)
     }
+
+    suspend fun deleteImage(imageid:Long){
+        delay(2000)
+        return repository.deleteTodoImageBasedOnImageId(imageid)
+    }
 }
