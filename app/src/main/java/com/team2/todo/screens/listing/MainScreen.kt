@@ -52,11 +52,11 @@ fun MainScreen() {
     var showReminderAlert by remember { mutableStateOf(false) }
     var showFilter by remember { mutableStateOf(false) }
 
+    var filterViewModel = FilterViewModel(LocalContext.current)
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
-    ListingViewModel.initialize(repo = repo)
+    ListingViewModel.initialize(repo = repo, filterViewModel)
     val viewModel = ListingViewModel.instance
-    var filterViewModel = FilterViewModel(LocalContext.current)
 
     MaterialTheme(typography = Typography()) {
         Scaffold(
@@ -103,7 +103,7 @@ fun MainScreen() {
             if (showFilter) {
                 ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
                     FilterScreenCompose(filterViewModel) {
-                        viewModel.getDataForSelectedFilter(filterViewModel.selectedFilter.value, currentPage != 0)
+                        viewModel.getDataForSelectedFilter(filterViewModel.selectedFilter.value)
                     }
                 }
             }

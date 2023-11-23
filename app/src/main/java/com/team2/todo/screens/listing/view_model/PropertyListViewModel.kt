@@ -3,6 +3,7 @@ package com.team2.todo.screens.listing.view_model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2.todo.common_ui_components.filter.view_model.Filter
+import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.TodoRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,14 +18,14 @@ object ListingViewModel {
     private lateinit var repo: TodoRepo
     lateinit var instance: PropertyListViewModel
 
-    fun initialize(repo: TodoRepo) {
+    fun initialize(repo: TodoRepo, filterViewModel: FilterViewModel) {
         this.repo = repo
-        instance = PropertyListViewModel(repo)
+        instance = PropertyListViewModel(repo, filterViewModel)
     }
 
 }
 
-class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
+class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewModel) : ViewModel() {
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
@@ -34,8 +35,7 @@ class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
 
 
     fun fetchUpdatedList() {
-        fetchCompletedList()
-        fetchInSaleList()
+        getDataForSelectedFilter(filterViewModel.selectedFilter.value)
     }
 
     fun updateStatus(todoId: Long, status: Boolean): Boolean {
@@ -46,16 +46,14 @@ class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
         return true;
     }
 
-    fun getDataForSelectedFilter(selectedFilter: Filter, status: Boolean) {
-        fetchDataForSelectedFilter( selectedFilter, status) {
-            System.out.println("UPDATED LIST - " + it)
-            if (!status) {
-                    inSalePropertyList.value = it
+    fun getDataForSelectedFilter(selectedFilter: Filter) {
 
-            } else {
-                    completedPropertyList.value = it
+        fetchDataForSelectedFilter( selectedFilter, false) {
+            inSalePropertyList.value = it
+        }
 
-            }
+        fetchDataForSelectedFilter( selectedFilter, true) {
+            completedPropertyList.value = it
         }
     }
     private fun fetchDataForSelectedFilter(selectedFilter: Filter, status: Boolean, callback: (List<TodoWithSubTodos>) -> Unit) {
@@ -119,26 +117,6 @@ class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
             }
         }
 
-    }
-
-    private fun fetchCompletedList() {
-        viewModelScope.launch {
-            repo.getAllTodosWithSubTodos(status = true).collect { list ->
-                run {
-                    completedPropertyList.emit(list)
-                }
-            }
-        }
-    }
-
-    private fun fetchInSaleList() {
-        viewModelScope.launch {
-            repo.getAllTodosWithSubTodos(status = false).collect { list ->
-                run {
-                    inSalePropertyList.emit(list)
-                }
-            }
-        }
     }
 
     fun deleteTheProperty(todoId: Long) {
