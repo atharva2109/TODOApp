@@ -22,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
@@ -158,17 +160,39 @@ fun CustomListItem(
                 }
 
             }
-            Checkbox(checked = property.todo.status, onCheckedChange = {
-                onClearTaskClicked()
-            })
+
+
+
+            Box(
+                modifier = Modifier.padding(end = 15.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Done,
+                    "Extended floating action button.",
+                    tint = GreyColor,
+                    modifier = Modifier
+                        .border(
+                            2.dp,
+                            GreyColor,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(4.dp)
+                        .clickable {
+                            onClearTaskClicked()
+
+                        }
+                )
+            }
 
             if (isCompleted)
                 Icon(
                     Icons.Filled.Delete,
                     contentDescription = "sdds",
-                    modifier = Modifier.clickable {
-                        onPermanentDelete()
-                    },
+                    modifier = Modifier
+                        .clickable {
+                            onPermanentDelete()
+                        }
+                        .padding(end = 10.dp),
                 )
         }
     }
