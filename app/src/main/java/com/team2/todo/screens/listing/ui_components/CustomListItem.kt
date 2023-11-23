@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -167,7 +168,7 @@ fun CustomListItem(
                 modifier = Modifier.padding(end = 15.dp)
             ) {
                 Icon(
-                    Icons.Filled.Done,
+                   if(isCompleted) Icons.Filled.Refresh else Icons.Filled.Done,
                     "Extended floating action button.",
                     tint = GreyColor,
                     modifier = Modifier
