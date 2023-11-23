@@ -1,5 +1,6 @@
 package com.team2.todo.data.entities
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -17,6 +18,6 @@ import java.time.LocalDateTime
 data class Images(
     @PrimaryKey(autoGenerate = true)
     val imageId: Long,
-    val imagePath: String?,
+    val image: Bitmap?,
     val todoId: Long?
 )

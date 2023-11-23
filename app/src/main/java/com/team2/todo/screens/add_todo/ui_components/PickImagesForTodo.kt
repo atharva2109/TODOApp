@@ -1,6 +1,7 @@
 package com.team2.todo.screens.add_todo.ui_components
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +31,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -43,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.team2.todo.R
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.LocationUtils
@@ -55,14 +60,14 @@ import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
 
 @Composable
 
-fun PickImagesForTodo(activity: ComponentActivity):List<Uri> {
+fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
 
     val context = LocalContext.current
     var imageUris by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
 
-    val bitmaps = remember {
+    var bitmaps by remember {
         //Bitmap is similar to a pixel of an image
         mutableStateOf<List<Bitmap>>(emptyList())
     }
@@ -72,7 +77,7 @@ fun PickImagesForTodo(activity: ComponentActivity):List<Uri> {
     ) { uris: List<Uri>? ->
         uris?.let {
             imageUris = it
-            bitmaps.value =
+            bitmaps =
                 it.map { uri ->
                     uri.path?.let { it1 -> Log.d("Image", it1) }
 
@@ -101,91 +106,27 @@ fun PickImagesForTodo(activity: ComponentActivity):List<Uri> {
     }
 
 
-    var startIndex by remember { mutableStateOf(0) }
 
-    if (bitmaps.value.isEmpty()) {
-        Box(
-            modifier = Modifier.clickable {
-                checkAndRequestLocationPermissions(
-                    context,
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                    launchImagePickerPermission
-                ) {
-                    launcher.launch("image/*")
-                }
-            }
+    ElevatedButton(onClick = {
+        checkAndRequestLocationPermissions(
+            context,
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_EXTERNAL_STORAGE),
+            launchImagePickerPermission
         ) {
-            UploadImagePlaceHolder()
+            launcher.launch("image/*")
         }
-    } else {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    }) {
+        Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
+        Spacer(modifier = Modifier.width(26.dp))
+        Text(text = "Gallery")
+    }
 
+    if (bitmaps.isNotEmpty()) {
 
-            // Use LazyRow instead of Row for horizontal scrolling
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 1.dp),
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .padding(vertical = 40.dp)
-
-
-            ) {
-                itemsIndexed(
-                    bitmaps.value.subList(
-                        0,
-                        bitmaps.value.size
-                    )
-                ) { index, bitmap ->
-
-                    Box(
-                        modifier = Modifier
-                            .width(300.dp) // Set the fixed width of each Box
-                            .height(600.dp)
-
-                    ) {
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = null,
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(250.dp)
-                        )
-
-                        // Delete icon functionality
-                        IconButton(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(start = 210.dp, top = 0.dp),
-                            onClick = {
-                                // Remove the clicked image
-                                val globalIndex = index + startIndex
-                                imageUris =
-                                    imageUris.toMutableList().apply { removeAt(globalIndex) }
-                                bitmaps.value =
-                                    bitmaps.value.toMutableList()
-                                        .apply { removeAt(globalIndex) }
-
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete",
-                                tint = Color.Red
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
+        bitmapList(bitmaps)
 
 
     }
-    return imageUris
 }
 
 
