@@ -1,5 +1,6 @@
 package com.team2.todo.screens.subtodo_details.ui_components
 
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +22,7 @@ import androidx.core.net.toUri
 import com.team2.todo.R
 
 @Composable
-fun DisplaySubTodoImage(imagePathUri: String?) {
+fun DisplaySubTodoImage(imageBitmap: Bitmap?) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -33,17 +34,13 @@ fun DisplaySubTodoImage(imagePathUri: String?) {
                 contentAlignment = Alignment.Center,
             ) {
 
-                if (imagePathUri != null && imagePathUri != "" ) {
+                if (imageBitmap != null) {
                     Image(
-                        bitmap = ImageDecoder.decodeBitmap(
-                            ImageDecoder.createSource(
-                                LocalContext.current.contentResolver, imagePathUri.toUri()
-                            )
-                        ).asImageBitmap(),
+                        bitmap = imageBitmap.asImageBitmap(),
                         contentDescription = "",
                         modifier = Modifier
                             .fillMaxWidth(.7f)
-                            .height(150.dp),
+                            .height(250.dp),
                         contentScale = ContentScale.Fit
                     )
                 }

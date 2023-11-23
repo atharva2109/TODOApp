@@ -69,7 +69,7 @@ fun getDummyData(): List<TodoWithSubTodos1> {
             1,
             "SubTask2",
             "Inspect Property",
-            "",
+            null,
             LocalDateTime.now(),
             LocalDateTime.now(),
             true,
