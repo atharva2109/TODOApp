@@ -53,5 +53,10 @@ class TodoRepo(private val database: RealEstateDatabase) {
             database.todoDao().deleteProperty(todoId)
         }
     }
+    suspend fun deleteTodoImageBasedOnImageId(imageId: Long) {
+        withContext(Dispatchers.IO) {
+            database.todoDao().deleteTodoImageBasedOnImageId(imageId)
+        }
+    }
 
 }
