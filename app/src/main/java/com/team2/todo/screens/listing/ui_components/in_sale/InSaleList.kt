@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.EmptyList
@@ -45,7 +44,6 @@ fun InSaleList(viewModel: PropertyListViewModel) {
 
     var showFilter by remember { mutableStateOf(false) }
     val list by remember { viewModel.inSalePropertyList }.collectAsState()
-    val ctxt = LocalContext.current;
 
     if (list.isNullOrEmpty()) {
         EmptyList(title = "No Active Sales Found", drawableID = R.drawable.ic_no_in_sale_list)
@@ -75,7 +73,7 @@ fun InSaleList(viewModel: PropertyListViewModel) {
 
             if (showFilter) {
                 ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
-                    FilterScreenCompose()
+                    FilterScreenCompose(viewModel, false)
                 }
             }
 

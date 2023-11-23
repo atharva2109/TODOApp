@@ -76,7 +76,7 @@ fun CompletedSaleList(viewModel: PropertyListViewModel) {
 
             if (showFilter) {
                 ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
-                    FilterScreenCompose()
+                    FilterScreenCompose(viewModel, true)
                 }
             }
             LazyColumn(

@@ -23,7 +23,7 @@ object ListingViewModel {
 
 }
 
-class PropertyListViewModel(private val repo: TodoRepo) : ViewModel() {
+class PropertyListViewModel(val repo: TodoRepo) : ViewModel() {
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 

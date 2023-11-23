@@ -15,14 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.common_ui_components.filter.ui_components.FilterChipGroup
+import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 /*
 * Created by Vivek Tate on 18/11/2023
 * */
 
 @Composable
-@Preview
-fun FilterScreenCompose() {
+fun FilterScreenCompose(viewModel: PropertyListViewModel, isCompletedTaskScreen: Boolean) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,8 +34,10 @@ fun FilterScreenCompose() {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
+
         Spacer(modifier = Modifier.height(8.dp))
-        FilterChipGroup()
+
+        FilterChipGroup(viewModel, isCompletedTaskScreen)
 
     }
 }

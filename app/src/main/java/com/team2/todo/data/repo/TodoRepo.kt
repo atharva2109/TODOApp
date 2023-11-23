@@ -27,12 +27,12 @@ class TodoRepo(private val database: RealEstateDatabase) {
         database.todoDao().getAllTodosWithSubTodos(status = status)
 
 
-    fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosOrderedByPriorityASCWithSubTodos()
+    fun getAllTodosOrderedByPriorityASCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriorityASCWithSubTodos(status = status)
 
 
-    fun getAllTodosOrderedByPriorityDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosOrderedByPriorityDESCWithSubTodos()
+    fun getAllTodosOrderedByPriorityDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriorityDESCWithSubTodos(status = status)
 
 
     suspend fun updateTodoStatus(todoId: Long, status: Boolean) {
@@ -42,11 +42,14 @@ class TodoRepo(private val database: RealEstateDatabase) {
     fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>> =
         database.todoDao().getAllTodoImagesBasedOnTodo(todoId)
 
-    fun getAllTodosOrderedByPriceASCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosOrderedByPriceASCWithSubTodos()
+    fun getAllTodosOrderedByPriceASCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriceASCWithSubTodos(status = status)
 
-    fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>> =
-        database.todoDao().getAllTodosOrderedByPriceDESCWithSubTodos()
+    fun getAllTodosOrderedByPriceDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByPriceDESCWithSubTodos(status = status)
+
+    fun getAllTodosOrderedByDueDateDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>> =
+        database.todoDao().getAllTodosOrderedByDueDateDESCWithSubTodos(status = status)
 
     suspend fun deleteProperty(todoId: Long) {
         withContext(Dispatchers.IO) {
