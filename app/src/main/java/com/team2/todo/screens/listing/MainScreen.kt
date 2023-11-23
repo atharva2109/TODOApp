@@ -32,8 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team2.todo.common_ui_components.filter.ui_components.FilterScreenCompose
 import com.team2.todo.common_ui_components.ReminderAlertCompose
+import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
@@ -55,6 +55,7 @@ fun MainScreen() {
     val repo = TodoRepo(database)
     ListingViewModel.initialize(repo = repo)
     val viewModel = ListingViewModel.instance
+    var filterViewModel = FilterViewModel()
 
     MaterialTheme(typography = Typography()) {
         Scaffold(
@@ -97,10 +98,11 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 if (currentPage == 0) {
-                    InSaleList(viewModel)
+                    InSaleList(viewModel, filterViewModel)
                 } else {
-                    CompletedSaleList(viewModel)
+                    CompletedSaleList(viewModel, filterViewModel)
                 }
             }
         }

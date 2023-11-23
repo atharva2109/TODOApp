@@ -11,31 +11,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterChipGroup(viewModel: PropertyListViewModel, isCompletedTaskScreen: Boolean) {
-
-    var filterViewModel = FilterViewModel(viewModel, !isCompletedTaskScreen)
+fun FilterChipGroup(viewModel: FilterViewModel, onClick: () -> Unit) {
 
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        items(filterViewModel.getAllFilters()) { filter ->
+        items(viewModel.getAllFilters()) { filter ->
             FilterChip(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp)
                     .height(50.dp),
-                selected = (filter == filterViewModel.selectedFilter.value),
-                onClick = {
-                    filterViewModel.setSelectedFilter(filter)
 
+                selected = (filter == viewModel.selectedFilter.value),
+
+                onClick = {
+                    viewModel.setSelectedFilter(filter)
+                    onClick()
                           },
+
                 label = {
                     Text(text = filter.value)
-                })
+                }
+            )
         }
     }
 }

@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.common_ui_components.filter.ui_components.FilterChipGroup
+import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 
 /*
@@ -22,7 +24,7 @@ import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 * */
 
 @Composable
-fun FilterScreenCompose(viewModel: PropertyListViewModel, isCompletedTaskScreen: Boolean) {
+fun FilterScreenCompose(viewModel: FilterViewModel, onClick: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,7 +39,6 @@ fun FilterScreenCompose(viewModel: PropertyListViewModel, isCompletedTaskScreen:
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        FilterChipGroup(viewModel, isCompletedTaskScreen)
-
+        FilterChipGroup(viewModel) { onClick() }
     }
 }

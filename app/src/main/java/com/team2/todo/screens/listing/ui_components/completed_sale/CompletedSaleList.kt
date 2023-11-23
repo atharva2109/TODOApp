@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.EmptyList
 import com.team2.todo.common_ui_components.filter.ui_components.FilterScreenCompose
+import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.entities.Todo
 import com.team2.todo.screens.listing.ui_components.CustomListItem
@@ -43,10 +44,11 @@ import com.team2.todo.screens.listing.view_model.PropertyListViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompletedSaleList(viewModel: PropertyListViewModel) {
+fun CompletedSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterViewModel) {
 
     var showFilter by remember { mutableStateOf(false) }
     val list by remember { viewModel.completedPropertyList }.collectAsState()
+
 
     if (list.isNullOrEmpty()) {
         EmptyList(title = "Sale List Empty", drawableID = R.drawable.ic_no_completed_list)
@@ -76,7 +78,9 @@ fun CompletedSaleList(viewModel: PropertyListViewModel) {
 
             if (showFilter) {
                 ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
-                    FilterScreenCompose(viewModel, true)
+                    FilterScreenCompose(filterViewModel) {
+
+                    }
                 }
             }
             LazyColumn(
@@ -89,7 +93,7 @@ fun CompletedSaleList(viewModel: PropertyListViewModel) {
                     CustomListItem(
                         property = todo,
                         onClearTaskClicked = {
-                            viewModel.updateStatus(todo.todo.todoId, false)
+                            viewModel.updateStatus(todo.todo.todoId, true)
                         },
                         onPermanentDelete = {
                             viewModel.deleteTheProperty(todo.todo.todoId)
