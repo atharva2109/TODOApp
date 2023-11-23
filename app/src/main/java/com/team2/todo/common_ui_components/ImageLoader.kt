@@ -40,7 +40,7 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
 
         Box(
             modifier = Modifier
-                .height(300.dp)
+                .height(200.dp)
                 .fillMaxWidth()
                 .padding(16.dp)
 

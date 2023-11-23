@@ -13,6 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.PermissionUtil
 
@@ -66,14 +68,34 @@ fun PickImageForSubTodo(bitmapCallback: (Bitmap) -> Unit) {
         }
     }
 
-    ElevatedButton(onClick = {
-        launcher.launch("image/*")
-    })
-    {
-        Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
-        Spacer(modifier = Modifier.width(26.dp))
-        Text(text = "Gallery")
+
+    Box(
+        modifier = Modifier
+            .border(
+                2.dp,
+                BlueColor,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable {
+                launcher.launch("image/*")
+            }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(5.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_gallery),
+                contentDescription = "loading",
+                modifier = Modifier.height(150.dp)
+            )
+            Spacer(modifier = Modifier.width(26.dp))
+            Text(text = "Gallery")
+        }
+
     }
+
 
     if (imageUri == null) {
 

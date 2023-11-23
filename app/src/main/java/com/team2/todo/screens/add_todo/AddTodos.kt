@@ -68,6 +68,7 @@ import com.team2.todo.screens.add_todo.ui_components.PickImageForSubTodo
 import com.team2.todo.screens.add_todo.ui_components.PickImagesForTodo
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
+import com.team2.todo.screens.add_todo.ui_components.UploadImagePlaceHolder
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
 import com.team2.todo.screens.listing.view_model.ListingViewModel
@@ -204,25 +205,22 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
                     isError = isDescriptionEmpty,
                 )
 
-
-                Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    showBottomSheet = true
-                }) {
-
-                    Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
-                    Spacer(modifier = Modifier.width(26.dp))
-                    Text(text = "Upload Images")
-
-                }
+                if (bitmapList.isEmpty())
+                    UploadImagePlaceHolder(onCLick = {
+                        showBottomSheet = true
+                    })
 
                 //Bottom sheet for image selection
                 if (showBottomSheet) {
                     ModalBottomSheet(onDismissRequest = { showBottomSheet = false; }
                     ) {
-                        Row( modifier = Modifier.fillMaxWidth()
-                            .padding(28.dp)
-                            .paddingFromBaseline(top = 10.dp, bottom = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(28.dp)
+                                .paddingFromBaseline(top = 10.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
 
                             CameraCapture { bitmapCallback ->
                                 bitmap = bitmapCallback
@@ -233,7 +231,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0) {
 
 
                             if (isSubTodo) {
-                                PickImageForSubTodo{ bitmapCallback ->
+                                PickImageForSubTodo { bitmapCallback ->
                                     bitmap = bitmapCallback
                                     bitmapList = listOf(bitmapCallback)
                                     showBottomSheet = false

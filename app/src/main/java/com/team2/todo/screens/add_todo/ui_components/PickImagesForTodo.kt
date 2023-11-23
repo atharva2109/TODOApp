@@ -16,6 +16,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.team2.todo.R
+import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.LocationUtils
 import com.team2.todo.utils.PermissionUtil
@@ -106,20 +108,42 @@ fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
     }
 
 
-
-    ElevatedButton(onClick = {
-        checkAndRequestLocationPermissions(
-            context,
-            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_EXTERNAL_STORAGE),
-            launchImagePickerPermission
+    Box(
+        modifier = Modifier
+            .border(
+                2.dp,
+                BlueColor,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable {
+                checkAndRequestLocationPermissions(
+                    context,
+                    arrayOf(
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ),
+                    launchImagePickerPermission
+                ) {
+//                    launcher.launch("image/*")
+                }
+            }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(5.dp)
         ) {
-            launcher.launch("image/*")
+            Image(
+                painter = painterResource(id = R.drawable.ic_gallery),
+                contentDescription = "loading",
+                modifier = Modifier.height(150.dp)
+            )
+            Spacer(modifier = Modifier.width(26.dp))
+            Text(text = "Gallery")
         }
-    }) {
-        Icon(imageVector = Icons.Default.Home, contentDescription = "Image")
-        Spacer(modifier = Modifier.width(26.dp))
-        Text(text = "Gallery")
+
     }
+
 
     if (bitmaps.isNotEmpty()) {
 
@@ -131,11 +155,12 @@ fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
 
 
 @Composable
-fun UploadImagePlaceHolder() {
+fun UploadImagePlaceHolder(onCLick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
+            .padding(vertical = 10.dp)
+            .clickable { onCLick() },
     ) {
         Text(
             text = "Upload Image",
