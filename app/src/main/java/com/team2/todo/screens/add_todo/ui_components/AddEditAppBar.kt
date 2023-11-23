@@ -39,11 +39,11 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AddEditAppBar(isSubTodo:Boolean=false) {
+fun AddEditAppBar(isSubTodo:Boolean=false,isEdit:Boolean=false) {
     return TopAppBar(
         title = {
             Text(
-                text = if(isSubTodo)"Add New SubTask" else "Add New Property",
+                text = if(isSubTodo) "Add New SubTask" else if(isEdit) "Edit Task" else "Add New Property",
                 color = AppBarContentColor,
                 fontWeight = FontWeight.Bold)
         },

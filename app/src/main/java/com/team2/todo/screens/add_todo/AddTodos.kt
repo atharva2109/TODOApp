@@ -2,6 +2,7 @@ package com.team2.todo.screens.add_todo
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.team2.todo.common_ui_components.CameraCapture
+import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.location.VerifyByLocationCompose
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.entities.Images
@@ -42,6 +44,7 @@ import com.team2.todo.data.entities.Todo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.common_ui_components.LoaderBottomSheet
 import com.team2.todo.data.entities.SubTodo
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
@@ -49,14 +52,19 @@ import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
+import com.team2.todo.screens.add_todo.ui_components.priorities
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
+import com.team2.todo.screens.add_todo.view_model.FetchTodoViewModel
 import com.team2.todo.screens.listing.view_model.ListingViewModel
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 
@@ -81,6 +89,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var repository = TodoRepo(db)
     var viewModel = AddTodoViewModel(repository)
 
+    var fetchTodViewModel= FetchTodoViewModel(repository)
     var subtodorepo = SubTodoRepo(db)
     var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
 
@@ -98,6 +107,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
         mutableStateOf(0.0)
     }
 
+    var defaultPriority by remember {
+        mutableStateOf("Low")
+    }
+
+    val collecetedImages by fetchTodViewModel.getTodoImages(todoid).collectAsState(initial = emptyList())
     var isTitleEmpty by remember { mutableStateOf(false) }
     var isLabelEmpty by remember { mutableStateOf(false) }
     var isDescriptionEmpty by remember { mutableStateOf(false) }
@@ -128,19 +142,66 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     }
 
     var showAddingDbLoading by remember { mutableStateOf(false) }
+    var showFetchingDbLoading by remember { mutableStateOf(false) }
 
+    var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
+    var todosretrievalInProgress by remember { mutableStateOf(false) }
 
     if(isEdit==true){
-        Log.d("Edit Mode","Edit composable")
+        showFetchingDbLoading = true
+        LaunchedEffect(key1 = true)  {
+            try {
+                todosretrievalInProgress = true
+                todosRetrieved = fetchTodViewModel.fetchTodo(todoid)
+                todosretrievalInProgress = false
+                todosRetrieved?.collect { todoList ->
+                    for (todo in todoList) {
+                        Log.d("TODO Information", todo.todo.toString())
+                        enteredTitle=todo.todo.title
+                        enteredDescription=todo.todo.description
+                        enteredLabel=todo.todo.label?:""
+                        enteredPrice=todo.todo.price
+                         val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        dateselected.value=todo.todo.dueDate?.toLocalDate()?.format(dateFormatter)?: "---"
+
+                        val timeformatter = DateTimeFormatter.ofPattern("[ HH:m[:ss]]")
+                        timeselected.value=todo.todo.dueDate?.toLocalTime()?.format(timeformatter)?: "---"
+                        val priorityindex = todo.todo.priority
+                        val priorityList = priorities.values()
+
+// Checking if priorityindex is within the valid range
+                        if (priorityindex != null && priorityindex in priorityList.indices) {
+                            // Using the fetched priority
+                            defaultPriority = priorityList[priorityindex].name
+                        } else {
+                            defaultPriority = "Low"
+                        }
+
+                    }
+                } ?: run {
+                    Toast.makeText(
+                        ctx,
+                        "Error fetching Todo",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(ctx, "Error fetching Todo", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
-    else {
+
         Scaffold {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(it)
             ) {
-                AddEditAppBar(isSubTodo)
+                AddEditAppBar(isSubTodo,isEdit)
                 Column(
                     modifier = Modifier
                         .weight(weight = 1.0F)
@@ -193,14 +254,23 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                             imageUri = imageUris[0]
                             Log.d("ImageList", imageUris.toString())
                         }
-                    } else {
+                    }
+                    else if(isEdit){
+                        Box(Modifier.fillMaxWidth()) {
+                            collecetedImages.map { it.imagePath }
+                                ?.let { it1 -> ImageLoader(uris = it1)
+
+                                 }
+                        }
+                    }
+                    else {
                         CameraCapture { uri ->
                             imageUris = listOf(uri)
                             Log.d("ImageList", imageUris.toString())
                         }
                     }
 
-                    selectpriorityindex = DropDownMenuComponent()
+                    selectpriorityindex = DropDownMenuComponent(defaultPriority)
 
                     if (!isSubTodo) {
                         OutlinedTextField(
@@ -249,7 +319,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                         ReminderField(dateselected.value, timeselected.value)
                     }
-                    if (!isSubTodo) {
+                    if (!isSubTodo && !isEdit) {
                         VerifyByLocationCompose(
                             callback = { location ->
                                 currentlatitude = location.latitude
@@ -298,14 +368,16 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
-                            } else {
+                            }
+                             else if(isEdit){
                                 showAddingDbLoading = true
                                 scope.launch {
                                     try {
                                         todoIdretrievalInProgress = true
                                         todoIdretrieved = viewModel.addTodo(
+
                                             Todo(
-                                                0,
+                                                todoid,
                                                 enteredTitle,
                                                 enteredLabel,
                                                 enteredDescription,
@@ -317,6 +389,69 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                                 false,
                                                 selectpriorityindex
                                             )
+
+
+
+                                        )
+                                        todoIdretrievalInProgress = false
+                                        Log.d("Todoid in progress",todoIdretrieved.toString())
+                                        todoIdretrieved?.let { todoId ->
+                                            for (stringValue in imageUris) {
+                                                viewModel.addImage(Images(0, stringValue, todoId))
+                                            }
+                                            showAddingDbLoading = false
+                                            NavigationUtil.goBack()
+                                            Log.d("Update TodId",todoId.toString())
+                                            NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoid}")
+
+
+                                                Toast.makeText(
+                                                    ctx,
+                                                    "Todo updated successfully",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+
+                                        } ?: run {
+                                            Toast.makeText(
+                                                ctx,
+                                                "Error updating Todo",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+
+                                    } catch (e: Exception) {
+                                        showAddingDbLoading = false;
+                                        e.printStackTrace()
+                                        Toast.makeText(ctx, "Error updating Todo", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                }
+                            }
+                             else{
+                                showAddingDbLoading = true
+                                scope.launch {
+                                    try {
+                                        todoIdretrievalInProgress = true
+                                        todoIdretrieved = viewModel.addTodo(
+
+                                                Todo(
+                                                    0,
+                                                    enteredTitle,
+                                                    enteredLabel,
+                                                    enteredDescription,
+                                                    currentlatitude,
+                                                    currentlongitude,
+                                                    enteredPrice,
+                                                    LocalDateTime.now(),
+                                                    localdateTime,
+                                                    false,
+                                                    selectpriorityindex
+                                                )
+
+
+
                                         )
                                         todoIdretrievalInProgress = false
                                         todoIdretrieved?.let { todoId ->
@@ -325,7 +460,19 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                             }
                                             showAddingDbLoading = false
                                             NavigationUtil.goBack()
+                                            Log.d("TodId",todoId.toString())
                                             NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
+
+
+
+
+                                                Toast.makeText(
+                                                    ctx,
+                                                    "Todo added successfully",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+
                                         } ?: run {
                                             Toast.makeText(
                                                 ctx,
@@ -349,18 +496,23 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                     shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
                 ) {
                     Text(
-                        text = "ADD",
+                        text = if(isEdit) "UPDATE" else "ADD",
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 5.dp)
                     )
                 }
             }
-            if (showAddingDbLoading) {
+            if (showAddingDbLoading && isEdit) {
+                ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
+                    LoaderBottomSheet(text = "Updating data in DB")
+                }
+            }
+            if(showAddingDbLoading && !isEdit){
                 ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
                     LoaderBottomSheet()
                 }
             }
         }
-    }
+
 }
 

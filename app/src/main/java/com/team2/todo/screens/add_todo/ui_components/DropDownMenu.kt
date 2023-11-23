@@ -33,7 +33,7 @@ enum class priorities {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenuComponent(): Int {
+fun DropDownMenuComponent(defaultPriority:String): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
     var selectedPriority by remember { mutableStateOf("") }
@@ -62,7 +62,7 @@ fun DropDownMenuComponent(): Int {
                     menuexpanded = !menuexpanded
                 }
                 .fillMaxWidth(),
-            label = { Text("Priority") },
+            label = { Text(defaultPriority) },
             //trailingIcon is for the dropdown arrow
             trailingIcon = {
                 Icon(icon, "contentDescription",
