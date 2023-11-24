@@ -6,7 +6,10 @@ import kotlin.math.*
 
 object GeoFenceUtil {
 
-    fun sortLocationByDistance(list: List<TodoWithSubTodos>, centerLocation: Location): List<TodoWithSubTodos> {
+    fun sortLocationByDistance(
+        list: List<TodoWithSubTodos>,
+        centerLocation: Location
+    ): List<TodoWithSubTodos> {
 
         val distances = list.map {
             it.todo.longitude?.let { longitude ->
@@ -21,7 +24,11 @@ object GeoFenceUtil {
         return ((listDistancePair.sortedBy { it.second }).map { it.first })
     }
 
-    private fun calculateDistance(latitude: Double, longitude: Double, centerLocation: Location): Double {
+    fun calculateDistance(
+        latitude: Double,
+        longitude: Double,
+        centerLocation: Location
+    ): Double {
         val earthRadius = 6371
 
         val latitudeDifference = Math.toRadians(latitude - centerLocation.latitude)

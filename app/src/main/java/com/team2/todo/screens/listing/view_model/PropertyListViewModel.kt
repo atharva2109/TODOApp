@@ -8,8 +8,10 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.utils.GeoFenceUtil
 import com.team2.todo.utils.LocationUtil
+import com.team2.todo.utils.NotificationUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -28,12 +30,40 @@ object ListingViewModel {
 
 }
 
-class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewModel) : ViewModel() {
+class PropertyListViewModel(val repo: TodoRepo, var filterViewModel: FilterViewModel) :
+    ViewModel() {
+    private val THRESHOLD_DISTANCE = 0.0;
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
     init {
         fetchUpdatedList()
+        fetchNearestTask()
+    }
+
+    private fun fetchNearestTask() {
+        LocationUtil.getCurrentLocation { location ->
+            run {
+                inSalePropertyList.value.forEach { it ->
+                    run {
+                        if (!(((it.todo.latitude ?: 0.0) == 0.0 || (it.todo.longitude
+                                ?: 0.0) == 0.0))
+                        ) {
+                            var distance = GeoFenceUtil.calculateDistance(
+                                it.todo.latitude ?: 0.0,
+                                it.todo.longitude ?: 0.0,
+                                location
+                            )
+                            if (distance >= THRESHOLD_DISTANCE) {
+                                NotificationUtil.showGeoFencingNotification(
+                                    property = it
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -52,17 +82,22 @@ class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewMo
 
     fun getDataForSelectedFilter(selectedFilter: Filter) {
 
-        fetchDataForSelectedFilter( selectedFilter, false) {
+        fetchDataForSelectedFilter(selectedFilter, false) {
             inSalePropertyList.value = it
         }
 
-        fetchDataForSelectedFilter( selectedFilter, true) {
+        fetchDataForSelectedFilter(selectedFilter, true) {
             completedPropertyList.value = it
         }
     }
-    private fun fetchDataForSelectedFilter(selectedFilter: Filter, status: Boolean, callback: (List<TodoWithSubTodos>) -> Unit) {
 
-        when(selectedFilter) {
+    private fun fetchDataForSelectedFilter(
+        selectedFilter: Filter,
+        status: Boolean,
+        callback: (List<TodoWithSubTodos>) -> Unit
+    ) {
+
+        when (selectedFilter) {
 
             Filter.DEFAULT_FILTER -> {
                 viewModelScope.launch {
@@ -74,25 +109,28 @@ class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewMo
 
             Filter.DUE_DATE -> {
                 viewModelScope.launch {
-                    repo.getAllTodosOrderedByDueDateDESCWithSubTodos(status = status).collect { list ->
-                        callback(list)
-                    }
+                    repo.getAllTodosOrderedByDueDateDESCWithSubTodos(status = status)
+                        .collect { list ->
+                            callback(list)
+                        }
                 }
             }
 
             Filter.HIGH_PRIORITY -> {
                 viewModelScope.launch {
-                    repo.getAllTodosOrderedByPriorityDESCWithSubTodos(status = status).collect { list ->
-                        callback(list)
-                    }
+                    repo.getAllTodosOrderedByPriorityDESCWithSubTodos(status = status)
+                        .collect { list ->
+                            callback(list)
+                        }
                 }
             }
 
             Filter.LOW_PRIORITY -> {
                 viewModelScope.launch {
-                    repo.getAllTodosOrderedByPriorityASCWithSubTodos(status = status).collect { list ->
-                        callback(list)
-                    }
+                    repo.getAllTodosOrderedByPriorityASCWithSubTodos(status = status)
+                        .collect { list ->
+                            callback(list)
+                        }
                 }
             }
 
@@ -108,9 +146,10 @@ class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewMo
 
             Filter.HIGH_PRICE -> {
                 viewModelScope.launch {
-                    repo.getAllTodosOrderedByPriceDESCWithSubTodos(status = status).collect { list ->
-                        callback(list)
-                    }
+                    repo.getAllTodosOrderedByPriceDESCWithSubTodos(status = status)
+                        .collect { list ->
+                            callback(list)
+                        }
                 }
             }
 
