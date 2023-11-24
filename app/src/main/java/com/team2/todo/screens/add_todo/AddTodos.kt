@@ -144,9 +144,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     var pound = Currency.getInstance("GBP")
 
-    var deleteImage by remember {
-        mutableStateOf(false)
-    }
     val collectedImages by fetchTodViewModel.getTodoImages(todoid)
         .collectAsState(initial = emptyList())
     var isTitleEmpty by remember { mutableStateOf(false) }
@@ -166,8 +163,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var bitmapList: List<Bitmap> = mutableListOf()
 
     var bitmap: Bitmap? = null
-
-    var startIndex by remember { mutableStateOf(0) }
     var localdateTime: LocalDateTime = LocalDateTime.now()
 
     //Getting TodoId from Todos Table
@@ -185,12 +180,8 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
+    var isLabelValid by remember { mutableStateOf(true) }
 
-
-    if(deleteImage){
-        ImageLoader(bitmapList = bitmapList)
-        deleteImage=false
-    }
     if (isEdit == true) {
         showFetchingDbLoading = true
         LaunchedEffect(key1 = true) {
@@ -259,7 +250,15 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                 .fillMaxHeight()
                 .padding(it)
         ) {
-            AddEditAppBar(isSubTodo)
+            if(isSubTodo){
+                AddEditAppBar(isSubTodo)
+            }
+            else if(isEdit){
+                AddEditAppBar(isSubTodo,isEdit)
+            }
+            else{
+                AddEditAppBar()
+            }
             Column(
                 modifier = Modifier
                     .weight(weight = 1.0F)
@@ -287,10 +286,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         onValueChange = {
                             enteredLabel = it
                             isLabelEmpty = it.isEmpty()
+                            isLabelValid = it.split("\\s+".toRegex()).size == 1
                         },
                         label = { Text(text = "Label") },
                         colors = OutLineTextColor,
-                        isError = isLabelEmpty,
+                        isError = isLabelEmpty||!isLabelValid,
                     )
                 }
                 // Description
@@ -354,60 +354,18 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                 }
                 if (bitmapList.isNotEmpty()) {
-                    // Use LazyRow instead of Row for horizontal scrolling
-                    LazyRow(
-                        contentPadding = PaddingValues(horizontal = 1.dp),
 
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .padding(vertical = 40.dp)
+                                ImageLoader(bitmapList = bitmapList)
 
-
-                    ) {
-                        itemsIndexed(
-                        bitmapList
-                        ) { index, bitmap ->
-
-                            Box(
-                                modifier = Modifier
-                                    .width(400.dp) // Set the fixed width of each Box
-                                    .height(100.dp)
-
-                            ) {
-                                ImageLoader(bitmapList = listOf(bitmap))
-                                // Delete icon functionality
-                                IconButton(
-                                    modifier = Modifier
-                                        .align(Alignment.TopStart)
-                                        .padding(start = 210.dp, top = 0.dp),
-                                    onClick = {
-                                        val globalIndex = index
-                                        scope.launch {
-
-                                            fetchTodViewModel.deleteImage(collectedImages[globalIndex].imageId)
-
-                                        }
-                                        deleteImage = true
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Delete",
-                                        tint = Color.Red
-                                    )
-                                }
-                            }
-
-                        }
-                    }
                 }
                 
                 selectpriorityindex= DropDownMenuComponent(defaultPriority = defaultPriority)
                 if (!isSubTodo) {
                     OutlinedTextField(
-                        value = enteredPrice.toString() ,
-                        onValueChange = { newText -> enteredPrice = newText.toDouble() },
+                        value = "${enteredPrice.toString()} ${pound.getSymbol()}" ,
+                        onValueChange = { newText ->
+                            val priceWithoutSymbol=newText.removeSuffix(pound.getSymbol()).trim()
+                            enteredPrice = priceWithoutSymbol.toDouble() },
                         label = { Text(text = "Price: ") },
                         placeholder = { Text(text = "Enter price(in ${pound.getSymbol()}") },
                         keyboardOptions = KeyboardOptions(
@@ -468,7 +426,12 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
                             .show()
                         isDescriptionEmpty = true
-                    } else {
+                    }
+                    else if(!isLabelValid){
+                        Toast.makeText(ctx, "Label should be only 1 word", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    else {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(
                                 SubTodo(
@@ -538,7 +501,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     } ?: run {
                                         Toast.makeText(
                                             ctx,
-                                            "Error updating Todo",
+                                            "",
                                             Toast.LENGTH_SHORT
                                         )
                                             .show()

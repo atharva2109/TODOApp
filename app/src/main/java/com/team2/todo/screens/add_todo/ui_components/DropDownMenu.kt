@@ -36,7 +36,7 @@ enum class priorities {
 fun DropDownMenuComponent(defaultPriority:String): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
-    var selectedPriority by remember { mutableStateOf("") }
+    var selectedPriority by remember { mutableStateOf(defaultPriority) }
     var selectedPriorityIndex by remember { mutableStateOf(0) }
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -62,7 +62,7 @@ fun DropDownMenuComponent(defaultPriority:String): Int {
                     menuexpanded = !menuexpanded
                 }
                 .fillMaxWidth(),
-            label = { Text(defaultPriority) },
+            label = { Text("Priority") },
             //trailingIcon is for the dropdown arrow
             trailingIcon = {
                 Icon(icon, "contentDescription",

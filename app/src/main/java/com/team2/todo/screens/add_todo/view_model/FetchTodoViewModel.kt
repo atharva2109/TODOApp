@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class FetchTodoViewModel(val repository: TodoRepo): ViewModel() {
     suspend fun fetchTodo(todoid:Long):Flow<List<TodoWithSubTodos>>{
-        delay(2000)
         return repository.getTodoWithSubTodosBasedOnTodoId(todoid)
     }
 
@@ -19,8 +18,4 @@ class FetchTodoViewModel(val repository: TodoRepo): ViewModel() {
         return repository.getAllTodoImagesBasedOnTodo(id)
     }
 
-    suspend fun deleteImage(imageid:Long){
-        delay(2000)
-        return repository.deleteTodoImageBasedOnImageId(imageid)
-    }
 }

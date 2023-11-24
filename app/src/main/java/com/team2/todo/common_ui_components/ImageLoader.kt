@@ -81,7 +81,7 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = "",
-                                modifier = Modifier.fillMaxHeight().width(400.dp),
+                                modifier = Modifier.fillMaxHeight().width(300.dp).padding(start = 50.dp),
                                 contentScale = ContentScale.FillBounds
                             )
                         }
