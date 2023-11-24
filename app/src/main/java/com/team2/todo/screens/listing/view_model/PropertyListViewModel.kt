@@ -6,6 +6,8 @@ import com.team2.todo.common_ui_components.filter.view_model.Filter
 import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.TodoRepo
+import com.team2.todo.utils.GeoFenceUtil
+import com.team2.todo.utils.LocationUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -94,8 +96,10 @@ class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewMo
 
             Filter.GEO_LOCATION -> {
                 viewModelScope.launch {
-                    repo.getAllTodosOrderedByDueDateDESCWithSubTodos(status = status).collect { list ->
-                        callback(list)
+                    repo.getAllTodosWithSubTodos(status = status).collect { list ->
+                        LocationUtil.getCurrentLocation { location ->
+                            callback(GeoFenceUtil.sortLocationByDistance(list, location))
+                        }
                     }
                 }
             }
