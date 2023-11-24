@@ -96,10 +96,5 @@ fun PickImageForSubTodo(bitmapCallback: (Bitmap) -> Unit) {
 
     }
 
-
-    if (imageUri == null) {
-
         bitmap?.let { bitmapCallback(it) }
-
-    }
 }

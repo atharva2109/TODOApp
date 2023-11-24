@@ -122,22 +122,6 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                     imageVector = Icons.Sharp.Info,
                                     contentDescription = "Localized description",
                                     modifier = Modifier.size(18.dp),
-                                    tint = Color.Blue
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = "High",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    textAlign = TextAlign.Start
-                                )
-                            }
-                            if (propertySubTaskState?.priority == 2) {
-                                Icon(
-                                    imageVector = Icons.Sharp.Info,
-                                    contentDescription = "Localized description",
-                                    modifier = Modifier.size(18.dp),
                                     tint = Color.Yellow
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -149,7 +133,23 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                     textAlign = TextAlign.Start
                                 )
                             }
-                            if (propertySubTaskState?.priority == 3) {
+                            if (propertySubTaskState?.priority == 2) {
+                                Icon(
+                                    imageVector = Icons.Sharp.Info,
+                                    contentDescription = "Localized description",
+                                    modifier = Modifier.size(18.dp),
+                                    tint = Color.Red
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Text(
+                                    text = "High",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+                            if (propertySubTaskState?.priority == 0) {
                                 Icon(
                                     imageVector = Icons.Sharp.Info,
                                     contentDescription = "Localized description",
