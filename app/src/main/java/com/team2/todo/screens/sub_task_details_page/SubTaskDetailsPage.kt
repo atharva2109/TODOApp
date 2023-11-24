@@ -39,7 +39,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun SubTaskDetailsPage(id: Int) {
+fun SubTaskDetailsPage(id: Long) {
 
 
     val todoContext = LocalContext.current
@@ -50,7 +50,7 @@ fun SubTaskDetailsPage(id: Int) {
 
 
 
-    val collectedSubTodo by viewModel.subTodo.collectAsState(initial = SubTodo(1,1,"SubTask1", "Maintain Property", LocalDateTime.now(), LocalDateTime.now(), true,2))
+    val collectedSubTodo by viewModel.subTodo.collectAsState(initial = null)
 
 
     Scaffold(
@@ -67,7 +67,7 @@ fun SubTaskDetailsPage(id: Int) {
                     .padding(it)
                     .padding(start = 10.dp),
             ) {
-                Text(text = "Description : " + collectedSubTodo.description  )
+                Text(text = "Description : " + collectedSubTodo?.description  )
 
                 Spacer(modifier = Modifier.padding(top = 30.dp))
 
@@ -104,14 +104,14 @@ fun SubTaskDetailsPage(id: Int) {
 //                }
 
                 Box {
-                    Text(text = "Priority: " + collectedSubTodo.priority)
+                    Text(text = "Priority: " + collectedSubTodo?.priority)
 
                     Spacer(modifier = Modifier.padding(top = 20.dp))
                 }
 
 
                 Box {
-                    Text(text = "Due Date: " + collectedSubTodo.dueDate)
+                    Text(text = "Due Date: " + collectedSubTodo?.dueDate)
 
                     Box {
                         Spacer(modifier = Modifier.padding(top = 20.dp))

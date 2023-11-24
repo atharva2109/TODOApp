@@ -6,21 +6,18 @@ import kotlinx.coroutines.flow.Flow
 
 class SubTodoRepo(private val database: RealEstateDatabase) {
 
-    suspend fun addSubTodo(subTodoEntity: SubTodo) {
-        database.subTodoDao().upsertSubTodo(subTodoEntity)
+    suspend fun upsertSubTodo(subTodoEntity: SubTodo) : Long {
+        return database.subTodoDao().upsertSubTodo(subTodoEntity)
     }
 
-    fun getSubTodoBasedOnTodo(todoId: Int): Flow<List<SubTodo>> =
-        database.subTodoDao().getSubTodoBasedOnTodo(todoId)
+    fun getSubTodosBasedOnTodo(todoId: Long): Flow<List<SubTodo>> =
+        database.subTodoDao().getSubTodosBasedOnTodo(todoId)
 
-    fun getSubTodoBasedOnSubTodoId(subTodoId: Int): Flow<SubTodo> =
-        database.subTodoDao().getSubTodoBasedOnSubTodoId(subTodoId)
-
-    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Int): Flow<SubTodo> =
+    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Long): Flow<SubTodo> =
         database.subTodoDao().getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId)
 
-
-    fun getSubTodoOrderedByPriority(todoId: Int): Flow<List<SubTodo>> =
-        database.subTodoDao().getSubTodoOrderedByPriority(todoId)
+    suspend fun updateSubTodoStatus(subTodoId: Long, status: Boolean) {
+        database.subTodoDao().updateSubTodoStatus(subTodoId, status)
+    }
 
 }

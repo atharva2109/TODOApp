@@ -4,22 +4,21 @@ package com.team2.todo.utils
  * Created by Manu KJ on 11/1/23.
  */
 
-import SubTaskDetailsPage
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.team2.todo.data.entities.SubTodo
+import com.team2.todo.screens.listing.MainScreen
+import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
-import com.team2.todo.screens.MainScreen
-import com.team2.todo.screens.create_todo.CreateTodo
-import com.team2.todo.screens.listing.Listing
+import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, DetailsScreen, Listing, CreateTodo, SubTodoDetails
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails,EditSubTodo
 }
 
 object NavigationUtil {
@@ -35,8 +34,12 @@ object NavigationUtil {
         navController.navigate(screen.name)
     }
 
-    fun navigateTo(path: String) {
-        navController.navigate(path)
+    fun navigateTo(screen: String) {
+        navController.navigate(screen)
+    }
+
+    fun goBack() {
+        navController.popBackStack();
     }
 }
 
@@ -45,24 +48,39 @@ object NavigationUtil {
 fun NavHostControllerProvider() {
     NavHost(
         navController = NavigationUtil.navController,
-        startDestination = Screen.Listing.name
+        startDestination = Screen.MainScreen.name
     ) {
         composable(Screen.MainScreen.name) { MainScreen() }
+        composable(Screen.AddTodos.name) { AddTodos() }
         composable(
             route = "${Screen.DetailsScreen.name}/{todoId}",
-            arguments = listOf(navArgument("todoId") { type = NavType.IntType })
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val todoId = backStackEntry.arguments?.getInt("todoId") ?: -1
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
             DetailsPage(todoId)
         }
-        composable(Screen.Listing.name) { Listing() }
-        composable(Screen.CreateTodo.name) { CreateTodo() }
         composable(
             route = "${Screen.SubTodoDetails.name}/{subTodoId}",
-            arguments = listOf(navArgument("subTodoId") { type = NavType.IntType })
+            arguments = listOf(navArgument("subTodoId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val subTodoId = backStackEntry.arguments?.getInt("subTodoId") ?: -1
-            SubTaskDetailsPage(subTodoId)
+            val subTodoId = backStackEntry.arguments?.getLong("subTodoId") ?: -1
+            SubTodoDetails(subTodoId)
+        }
+        composable(
+            route = "${Screen.AddOrEditSubToDo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            AddTodos(isSubTodo = true, todoid = todoId)
+        }
+
+        composable(
+            route = "${Screen.EditSubTodo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            Log.d("In Edit Route","In edit route")
+            AddTodos(isSubTodo = false, todoid = todoId,isEdit = true)
         }
     }
 }
