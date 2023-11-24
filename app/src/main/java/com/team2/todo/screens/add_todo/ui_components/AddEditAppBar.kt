@@ -1,5 +1,6 @@
 package com.team2.todo.screens.add_todo.ui_components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -39,11 +40,13 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AddEditAppBar(isSubTodo:Boolean=false) {
+fun AddEditAppBar(isSubTodo:Boolean=false,isEdit:Boolean=false) {
+    Log.d("App Bar",isSubTodo.toString())
+    Log.d("App Bar isEdit",isEdit.toString())
     return TopAppBar(
         title = {
             Text(
-                text = if(isSubTodo)"Add New SubTask" else "Add New Property",
+                text = if(isSubTodo) "Add New SubTask" else if(isEdit) "Edit Task" else "Add New Property",
                 color = AppBarContentColor,
                 fontWeight = FontWeight.Bold)
         },

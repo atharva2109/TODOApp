@@ -33,10 +33,10 @@ enum class priorities {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenuComponent(): Int {
+fun DropDownMenuComponent(defaultPriority:String): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
-    var selectedPriority by remember { mutableStateOf("") }
+    var selectedPriority by remember { mutableStateOf(defaultPriority) }
     var selectedPriorityIndex by remember { mutableStateOf(0) }
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
