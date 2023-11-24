@@ -468,8 +468,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
                             .show()
                         isDescriptionEmpty = true
-                    } else if (dateselected.value == "" || timeselected.value == "") {
-                        Toast.makeText(ctx, "Please select the due date", Toast.LENGTH_SHORT).show()
                     } else {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(
