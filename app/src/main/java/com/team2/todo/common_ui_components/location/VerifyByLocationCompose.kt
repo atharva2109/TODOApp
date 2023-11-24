@@ -1,11 +1,7 @@
 package com.team2.todo.common_ui_components.location
 
 import android.Manifest
-import android.content.Intent
 import android.location.Location
-import android.net.Uri
-import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -40,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.PrimaryColor
-import com.team2.todo.utils.LocationUtils
+import com.team2.todo.utils.LocationUtil
 import com.team2.todo.utils.PermissionUtil
 import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
 
@@ -65,7 +61,7 @@ fun VerifyByLocationCompose(
     ) { permissionsMap ->
         val areGranted = permissionsMap.values.reduce { acc, next -> acc || next }
         if (areGranted) {
-            LocationUtils.getCurrentLocation { location: Location ->
+            LocationUtil.getCurrentLocation { location: Location ->
                 callback(location)
                 locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
                 locationLCEViewModel.updateFetchedLocation(location = location)
@@ -144,7 +140,7 @@ fun VerifyByLocationCompose(
                                 locationPermissions,
                                 launcherForLocationPermission
                             ) {
-                                LocationUtils.getCurrentLocation { location: Location ->
+                                LocationUtil.getCurrentLocation { location: Location ->
                                     callback(location)
                                     locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
                                     locationLCEViewModel.updateFetchedLocation(location = location)

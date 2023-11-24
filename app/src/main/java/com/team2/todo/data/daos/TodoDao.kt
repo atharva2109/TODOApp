@@ -22,11 +22,14 @@ interface TodoDao {
     @Query("SELECT * FROM todos where status = :status")
     fun getAllTodosWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
-    @Query("SELECT * FROM todos ORDER BY priority ASC")
-    fun getAllTodosOrderedByPriorityASCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    @Query("SELECT * FROM todos WHERE status = :status ORDER BY priority ASC")
+    fun getAllTodosOrderedByPriorityASCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
-    @Query("SELECT * FROM todos ORDER BY priority DESC")
-    fun getAllTodosOrderedByPriorityDESCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    @Query("SELECT * FROM todos WHERE status = :status ORDER BY priority DESC")
+    fun getAllTodosOrderedByPriorityDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
+
+    @Query("SELECT * FROM todos WHERE status = :status ORDER BY dueDate DESC")
+    fun getAllTodosOrderedByDueDateDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
     @Transaction
     @Query("UPDATE todos SET status = :status WHERE todoId = :todoId")
@@ -38,11 +41,11 @@ interface TodoDao {
     @Insert
     suspend fun insertImage(imageEntity: Images)
 
-    @Query("SELECT * FROM todos ORDER BY price ASC")
-    fun getAllTodosOrderedByPriceASCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    @Query("SELECT * FROM todos WHERE status = :status ORDER BY price ASC")
+    fun getAllTodosOrderedByPriceASCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
-    @Query("SELECT * FROM todos ORDER BY price DESC")
-    fun getAllTodosOrderedByPriceDESCWithSubTodos(): Flow<List<TodoWithSubTodos>>
+    @Query("SELECT * FROM todos WHERE status = :status ORDER BY price DESC")
+    fun getAllTodosOrderedByPriceDESCWithSubTodos(status: Boolean): Flow<List<TodoWithSubTodos>>
 
     @Query("DELETE FROM todos WHERE todoId = :todoId")
     fun deleteProperty(todoId: Long)

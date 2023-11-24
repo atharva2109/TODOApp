@@ -3,20 +3,21 @@ package com.team2.todo.screens.listing
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,38 +29,56 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team2.todo.common_ui_components.ReminderAlertCompose
+import com.team2.todo.common_ui_components.filter.ui_components.FilterScreenCompose
+import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
 import com.team2.todo.screens.listing.view_model.ListingViewModel
-import com.team2.todo.screens.listing.view_model.PropertyListViewModel
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
     var showReminderAlert by remember { mutableStateOf(false) }
+    var showFilter by remember { mutableStateOf(false) }
 
+    var filterViewModel = FilterViewModel(LocalContext.current)
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
-    ListingViewModel.initialize(repo = repo)
+    ListingViewModel.initialize(repo = repo, filterViewModel)
     val viewModel = ListingViewModel.instance
 
     MaterialTheme(typography = Typography()) {
         Scaffold(
             floatingActionButton = {
-                if (currentPage == 0) ExtendedFloatingActionButton(
-                    onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
-                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
-                    text = { Text(text = "Add New Property") },
-                )
+                Row {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(end = 10.dp),
+                        onClick = {
+                            showFilter = true
+                        }
+                    ) {
+                        Icon(Icons.Filled.Menu, contentDescription = "Add")
+                    }
+
+                    if (currentPage == 0) FloatingActionButton(
+                        onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
+
+                    ) {
+                         Icon(Icons.Filled.AddCircle, "Extended floating action button.")
+                    }
+                }
+
             },
             bottomBar = {
                 Card(
@@ -80,6 +99,15 @@ fun MainScreen() {
                 }
             }
         ) { it ->
+
+            if (showFilter) {
+                ModalBottomSheet(onDismissRequest = { showFilter = false; }) {
+                    FilterScreenCompose(filterViewModel) {
+                        viewModel.getDataForSelectedFilter(filterViewModel.selectedFilter.value)
+                    }
+                }
+            }
+
             if (showReminderAlert) {
                 ModalBottomSheet(onDismissRequest = { showReminderAlert = false; }) {
                     ReminderAlertCompose()
@@ -92,13 +120,12 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 if (currentPage == 0) {
-                    InSaleList(viewModel)
+                    InSaleList(viewModel, filterViewModel)
                 } else {
-                    CompletedSaleList(viewModel)
+                    CompletedSaleList(viewModel, filterViewModel)
                 }
-
-
             }
         }
     }

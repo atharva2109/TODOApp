@@ -6,25 +6,16 @@ import android.location.LocationManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.team2.todo.data.RealEstateDatabase
-import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.ui.theme.TODOTheme
 import com.team2.todo.utils.NavHostControllerProvider
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.NotificationUtil
-import com.team2.todo.screens.listing.view_model.PropertyListViewModel
-import com.team2.todo.utils.LocationUtils
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
-import kotlinx.coroutines.launch
-import kotlin.math.log
+import com.team2.todo.utils.LocationUtil
 
 class MainActivity : ComponentActivity() {
 
@@ -45,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavigationUtil.init(navController)
                     NotificationUtil.init(this)
-                    LocationUtils.init(this, this)
+                    LocationUtil.init(this, this)
 
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()

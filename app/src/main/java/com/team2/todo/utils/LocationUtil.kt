@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 /*
 * Created by Vivek Tate on 10/11/2023
 * */
-object LocationUtils {
+object LocationUtil {
 
     private lateinit var context: Context
     private lateinit var activity: Activity
