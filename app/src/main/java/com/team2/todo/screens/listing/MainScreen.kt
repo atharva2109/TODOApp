@@ -122,9 +122,9 @@ fun MainScreen() {
             ) {
 
                 if (currentPage == 0) {
-                    InSaleList(viewModel, filterViewModel)
+                    InSaleList(viewModel)
                 } else {
-                    CompletedSaleList(viewModel, filterViewModel)
+                    CompletedSaleList(viewModel)
                 }
             }
         }

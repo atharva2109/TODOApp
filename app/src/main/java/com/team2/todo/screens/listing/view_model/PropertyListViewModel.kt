@@ -8,6 +8,7 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.utils.GeoFenceUtil
 import com.team2.todo.utils.LocationUtil
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -43,6 +44,7 @@ class PropertyListViewModel(val repo: TodoRepo,var filterViewModel: FilterViewMo
     fun updateStatus(todoId: Long, status: Boolean): Boolean {
         viewModelScope.launch {
             repo.updateTodoStatus(todoId, status)
+            delay(300)
             fetchUpdatedList()
         }
         return true;

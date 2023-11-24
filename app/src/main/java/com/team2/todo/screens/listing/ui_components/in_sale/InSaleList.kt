@@ -41,7 +41,7 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos as TodoWithSubTod
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterViewModel) {
+fun InSaleList(viewModel: PropertyListViewModel) {
     val list by remember { viewModel.inSalePropertyList }.collectAsState()
 
     if (list.isNullOrEmpty()) {
@@ -58,69 +58,11 @@ fun InSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterViewMode
                     CustomListItem(
                         property = todo,
                         onClearTaskClicked = {
-                            viewModel.updateStatus(todo.todo.todoId, false)
+                            viewModel.updateStatus(todo.todo.todoId, true)
                         },
                     )
                 }
             }
         }
     }
-}
-
-
-fun getDummyData(): List<TodoWithSubTodos1> {
-
-    var subTaskList = mutableListOf<SubTodo>();
-
-
-    subTaskList.add(
-        SubTodo(
-            2,
-            1,
-            "SubTask2",
-            "Inspect Property",
-            null,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            true,
-            1
-        )
-    )
-    // val todos by viewModel.todoListBasedOnId.collectAsState(initial = emptyList())
-    var mainTask = TodoWithSubTodos1(
-        todo = Todo(
-            todoId = 1,
-            title = "Main Task One",
-            status = false,
-            priority = 2,
-            longitude = 54.0,
-            latitude = 55.0,
-            label = "Maintenance",
-            dueDate = LocalDateTime.now(),
-            createdDate = LocalDateTime.now(),
-            description = "Property in Lahore",
-            price = 10.0
-        ), subtodos = subTaskList, images = emptyList()
-    )
-    var mainTaskOne = TodoWithSubTodos1(
-        todo = Todo(
-            todoId = 1,
-            title = "Main Task One",
-            status = false,
-            priority = 1,
-            longitude = 54.0,
-            latitude = 55.0,
-            label = "Maintenance",
-            dueDate = LocalDateTime.now(),
-            createdDate = LocalDateTime.now(),
-            description = "Property in Lahore",
-            price = 10.0
-        ), subtodos = subTaskList, images = emptyList()
-    )
-
-    val list: MutableList<TodoWithSubTodos1> = mutableListOf()
-    list.add(mainTask)
-    list.add(mainTaskOne)
-    return list;
-
 }

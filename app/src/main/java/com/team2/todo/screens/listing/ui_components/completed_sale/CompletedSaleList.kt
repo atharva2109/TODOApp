@@ -21,7 +21,7 @@ import com.team2.todo.screens.listing.view_model.PropertyListViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompletedSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterViewModel) {
+fun CompletedSaleList(viewModel: PropertyListViewModel) {
     val list by remember { viewModel.completedPropertyList }.collectAsState()
 
 
@@ -40,7 +40,7 @@ fun CompletedSaleList(viewModel: PropertyListViewModel, filterViewModel: FilterV
                     CustomListItem(
                         property = todo,
                         onClearTaskClicked = {
-                            viewModel.updateStatus(todo.todo.todoId, true)
+                            viewModel.updateStatus(todo.todo.todoId, false)
                         },
                         onPermanentDelete = {
                             viewModel.deleteTheProperty(todo.todo.todoId)
