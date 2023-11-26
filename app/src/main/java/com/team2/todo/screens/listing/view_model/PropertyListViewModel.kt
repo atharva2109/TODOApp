@@ -1,5 +1,9 @@
 package com.team2.todo.screens.listing.view_model
 
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2.todo.common_ui_components.filter.view_model.Filter
@@ -13,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 /**
  * Created by Manu KJ on 11/14/23.
@@ -36,11 +41,23 @@ class PropertyListViewModel(val repo: TodoRepo, var filterViewModel: FilterViewM
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
+
     init {
         fetchUpdatedList()
+        showReminderDueDate()
         fetchNearestTask()
     }
 
+    private fun showReminderDueDate(){
+        viewModelScope.launch {
+            delay(3000)
+            inSalePropertyList.value.forEach { it ->
+                var duedate=it.todo.dueDate
+                NotificationUtil.getCountDueDate(property = it)
+            }
+        }
+
+    }
     private fun fetchNearestTask() {
         LocationUtil.getCurrentLocation { location ->
             run {

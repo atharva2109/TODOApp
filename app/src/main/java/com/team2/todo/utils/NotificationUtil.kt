@@ -7,7 +7,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.team2.todo.R
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlin.random.Random
+
 
 /**
  * Created by Manu KJ on 11/2/23.
@@ -70,6 +73,41 @@ object NotificationUtil {
             }
         }
         return count.toString()
+    }
+
+     fun getCountDueDate(property: TodoWithSubTodos) {
+         var count = 0;
+         var dueDateTodo=property.todo.dueDate
+         var duedate:LocalDate=LocalDate.now()
+         var currentDate=LocalDate.now()
+         if(dueDateTodo!=null){
+              duedate=dueDateTodo.toLocalDate()
+         }
+         else{
+             println("Fetched Due date is empty!!")
+         }
+
+         var daysDifference = ChronoUnit.DAYS.between(duedate, currentDate);
+         if(daysDifference==0L) {
+count++
+         }
+
+         var message =
+             "Your pending  tasks are $count";
+         val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
+             .setContentTitle("Tasks Due Today")
+             .setContentText(message)
+             .setStyle(
+                 NotificationCompat.BigTextStyle()
+                     .bigText(message)
+             )
+             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+             .setSmallIcon(R.drawable.ic_logo)
+             .build()
+         if(count!==0){
+             notificationManager.notify(count,notification)
+         }
+
     }
 
 
