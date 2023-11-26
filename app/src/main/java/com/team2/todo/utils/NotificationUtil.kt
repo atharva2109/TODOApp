@@ -75,40 +75,4 @@ object NotificationUtil {
         return count.toString()
     }
 
-     fun getCountDueDate(property: TodoWithSubTodos) {
-         var count = 0;
-         var dueDateTodo=property.todo.dueDate
-         var duedate:LocalDate=LocalDate.now()
-         var currentDate=LocalDate.now()
-         if(dueDateTodo!=null){
-              duedate=dueDateTodo.toLocalDate()
-         }
-         else{
-             println("Fetched Due date is empty!!")
-         }
-
-         var daysDifference = ChronoUnit.DAYS.between(duedate, currentDate);
-         if(daysDifference==0L) {
-count++
-         }
-
-         var message =
-             "Your pending  tasks are $count";
-         val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
-             .setContentTitle("Tasks Due Today")
-             .setContentText(message)
-             .setStyle(
-                 NotificationCompat.BigTextStyle()
-                     .bigText(message)
-             )
-             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
-             .setSmallIcon(R.drawable.ic_logo)
-             .build()
-         if(count!==0){
-             notificationManager.notify(count,notification)
-         }
-
-    }
-
-
 }
