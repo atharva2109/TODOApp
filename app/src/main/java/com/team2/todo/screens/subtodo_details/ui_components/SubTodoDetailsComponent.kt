@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,11 +17,14 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.sharp.DateRange
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material.icons.sharp.Info
+import androidx.compose.material.icons.sharp.Warning
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +47,7 @@ import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 import com.team2.todo.ui.theme.GreyColor
+import com.team2.todo.utils.AppUtil
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
@@ -57,32 +62,27 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
     } else {
 
 
-        Scaffold(
-            topBar = {
-                propertySubTaskState?.title?.let {
-                    CommonAppBar(
-                        text = it,
-                        actions = {
-                            Icon(
-                                Icons.Filled.Edit,
-                                "Extended floating action button.",
-                                tint = GreyColor,
-                                modifier = Modifier
-                                    .border(
-                                        2.dp,
-                                        GreyColor,
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .padding(8.dp)
-                                    .clickable {
-                                        //SUB-TODO handle navigation to edit
+        Scaffold(topBar = {
+            propertySubTaskState?.title?.let {
+                CommonAppBar(
+                    text = it,
+                    actions = {
+                        Icon(Icons.Filled.Edit,
+                            "Extended floating action button.",
+                            tint = GreyColor,
+                            modifier = Modifier
+                                .border(
+                                    2.dp, GreyColor, shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(8.dp)
+                                .clickable {
+                                    //SUB-TODO handle navigation to edit
 
-                                    }
-                            )
-                        },
-                    )
-                }
-            }) { padding ->
+                                })
+                    },
+                )
+            }
+        }) { padding ->
 
 
             Column(
@@ -96,8 +96,8 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(700.dp),
+                        .width(700.dp)
+                        .fillMaxHeight(),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.onPrimary
                     ),
@@ -116,57 +116,24 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
-
-                            if (propertySubTaskState?.priority == 1) {
+                            propertySubTaskState?.priority?.let {
                                 Icon(
-                                    imageVector = Icons.Sharp.Info,
+                                    imageVector = Icons.Sharp.Warning,
                                     contentDescription = "Localized description",
                                     modifier = Modifier.size(18.dp),
-                                    tint = Color.Yellow
+                                    tint = AppUtil.getPriorityColor(it)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-
                                 Text(
-                                    text = "Medium",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    textAlign = TextAlign.Start
-                                )
-                            }
-                            if (propertySubTaskState?.priority == 2) {
-                                Icon(
-                                    imageVector = Icons.Sharp.Info,
-                                    contentDescription = "Localized description",
-                                    modifier = Modifier.size(18.dp),
-                                    tint = Color.Red
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = "High",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    textAlign = TextAlign.Start
-                                )
-                            }
-                            if (propertySubTaskState?.priority == 0) {
-                                Icon(
-                                    imageVector = Icons.Sharp.Info,
-                                    contentDescription = "Localized description",
-                                    modifier = Modifier.size(18.dp),
-                                    tint = Color.LightGray
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = "Low",
-                                    style = MaterialTheme.typography.titleSmall,
+                                    text = AppUtil.getPriorityString(it),
+                                    style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     textAlign = TextAlign.Start
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Divider( modifier = Modifier.padding(top = 8.dp , bottom = 8.dp))
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
@@ -184,27 +151,29 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 text = LocalDatetimeToWords.formatLocalDateTimeAsWords(
                                     propertySubTaskState?.dueDate
                                 ),
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 textAlign = TextAlign.Start
                             )
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Divider( modifier = Modifier.padding(top = 8.dp , bottom = 2.dp))
                         DisplaySubTodoImage(propertySubTaskState?.image)
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Divider( modifier = Modifier.padding(top = 2.dp , bottom = 8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            ) {
 
-                        propertySubTaskState?.description?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 10,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                textAlign = TextAlign.Justify
-                            )
+                            propertySubTaskState?.description?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    maxLines = 10,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    textAlign = TextAlign.Justify
+                                )
+                            }
                         }
-
-
                     }
                 }
             }
