@@ -181,6 +181,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var todosRetrieved by rememberSaveable { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var todosretrievalInProgress by rememberSaveable { mutableStateOf(false) }
     var isLabelValid by rememberSaveable { mutableStateOf(true) }
+    var updatedBitmapList by rememberSaveable { mutableStateOf(mutableListOf<Bitmap>()) }
 
     if (isEdit) {
         showFetchingDbLoading = true
@@ -211,7 +212,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                             defaultPriority = "Low"
                         }
 
-                        val updatedBitmapList = mutableListOf<Bitmap>()
                         collectedImages.forEach { image ->
                             // Convert image to Bitmap and add to the list
                             val bitmap = image.image
