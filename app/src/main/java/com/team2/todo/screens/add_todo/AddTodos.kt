@@ -482,10 +482,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     Log.d("Todoid in progress", todoIdretrieved.toString())
                                     Log.d("Todidretrieved",todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
-                                        for (imageBitmapData in bitmapList) {
-                                            Log.d("Image list",bitmapList.toString())
-                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
-                                        }
+//                                        for (imageBitmapData in bitmapList) {
+//                                            Log.d("Image list",bitmapList.toString())
+//                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
+//                                        }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
                                         Log.d("Update TodId", todoid.toString())
