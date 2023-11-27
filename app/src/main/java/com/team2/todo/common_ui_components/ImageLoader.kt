@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ImageLoader(bitmapList: List<Bitmap?>) {
-    var currentImageIndex by rememberSaveable { mutableIntStateOf(0) }
+    var currentImageIndex by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
     Column() {
