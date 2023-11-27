@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.CommonAppBar
+import com.team2.todo.common_ui_components.EmptyList
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.datautils.LocalDatetimeToWords
@@ -67,6 +68,7 @@ import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.screens.details_page.ui_components.TodosCard
 import com.team2.todo.screens.details_page.view_model.DetailsPageViewModel
+import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
 import com.team2.todo.utils.NavigationUtil
@@ -203,18 +205,19 @@ fun DetailsPage(todoId: Long) {
                                     )
                                     Row(horizontalArrangement = Arrangement.End, modifier = Modifier
                                         .fillMaxWidth()
-                                        .clickable {
-                                            viewModel.GeoLocation(
-                                                propertyDetails.todo.latitude!!,
-                                                propertyDetails.todo.longitude!!,
-                                                context = todoContext
-                                            )
-                                        }) {
+                                        ) {
                                         Image(
-
                                             painter = painterResource(id = R.drawable.googlemaps),
                                             contentDescription = null, Modifier.size(25.dp),
                                             alignment = Alignment.CenterEnd)
+                                            Modifier.clickable {
+                                                viewModel.GeoLocation(
+                                                    propertyDetails.todo.latitude!!,
+                                                    propertyDetails.todo.longitude!!,
+                                                    context = todoContext
+                                                )
+                                            }
+
 
                                     }
                                 }
@@ -266,7 +269,7 @@ fun DetailsPage(todoId: Long) {
                                         contentDescription = null,
                                         Modifier.padding(end = 5.dp)
                                     )
-                                    Text(propertyDetails.todo.price.toString())
+                                    Text(propertyDetails.todo.price.toString() + " £" )
                                 }
 
 
@@ -294,14 +297,18 @@ fun DetailsPage(todoId: Long) {
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
-                    Box(Modifier.clickable {
-                            checkedState = !checkedState
-                            viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
-                            NavigationUtil.navigateTo(Screen.MainScreen)
-                    }.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row(Modifier
-                            .padding(10.dp)
-                            .border(1.dp, Color.Blue, shape = RoundedCornerShape(10))
+                    Box(
+                        Modifier
+                            .clickable {
+                                checkedState = !checkedState
+                                viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
+                                NavigationUtil.navigateTo(Screen.MainScreen)
+                            }
+                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row(
+                            Modifier
+                                .padding(10.dp)
+                                .border(1.dp, color = BlueColor, shape = RoundedCornerShape(20))
                             ,Arrangement.Center,) {
                             Text(text = " Mark Completed", Modifier.padding(end = 20.dp), fontStyle = FontStyle.Italic)
                             Image(
@@ -325,21 +332,30 @@ fun DetailsPage(todoId: Long) {
                             )
 
                         }
-                        Box {
-                            LazyColumn() {
-                                items(propertyDetails.subtodos) { subTask ->
-                                    //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
-                                    Box(Modifier.clickable {
-                                        Log.e(
-                                            subTask.subTodoId.toString(),
-                                            subTask.subTodoId.toString()
-                                        )
+                        if(propertyDetails.subtodos.isEmpty()){
+                            Spacer(modifier = Modifier.padding(top = 50.dp))
+                            Row(Modifier.fillMaxWidth(), Arrangement.Center) {
+                                Text(text = "No Subtasks", fontStyle = FontStyle.Italic)
+                            }
 
-                                        subTodoId = subTask.subTodoId.toInt()
 
-                                        NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
-                                    }) {
-                                        TodosCard(todos = subTask)
+                        }else {
+                            Box {
+                                LazyColumn() {
+                                    items(propertyDetails.subtodos) { subTask ->
+                                        //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
+                                        Box(Modifier.clickable {
+                                            Log.e(
+                                                subTask.subTodoId.toString(),
+                                                subTask.subTodoId.toString()
+                                            )
+
+                                            subTodoId = subTask.subTodoId.toInt()
+
+                                            NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
+                                        }) {
+                                            TodosCard(todos = subTask)
+                                        }
                                     }
                                 }
                             }
