@@ -18,9 +18,9 @@ object AppUtil {
     }
 
     fun getPriorityColor(priorityIndex: Int): Color {
-        var color = PriorityMedium
+        var color = PriorityLow
         if (priorityIndex == 1) {
-            color = PriorityLow
+            color = PriorityMedium
         }
         if (priorityIndex == 2) {
             color = PriorityHigh

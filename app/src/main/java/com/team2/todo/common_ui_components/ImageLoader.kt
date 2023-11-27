@@ -47,25 +47,19 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
 
         Box(
             modifier = Modifier
-                .height(100.dp)
-                .width(400.dp)
-                .padding(top = 10.dp, end = 10.dp)
+                .fillMaxWidth()
+                .height(300.dp)
 
 
         ) {
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
             ) {
                 itemsIndexed(bitmapList) { index, bitmap ->
                     Card(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
-                        modifier = Modifier
-                            .height(200.dp)
-                            .width(400.dp)
-                            .clickable {
+                        ), modifier = Modifier.clickable {
                                 if (index != currentImageIndex) {
                                     coroutineScope.launch {
                                         currentImageIndex = index
@@ -81,8 +75,10 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = "",
-                                modifier = Modifier.fillMaxHeight().width(300.dp).padding(start = 50.dp),
-                                contentScale = ContentScale.FillBounds
+                                modifier = Modifier
+                                    .fillMaxWidth(.7f)
+                                    .height(250.dp),
+                                contentScale = ContentScale.Fit
                             )
                         }
 
