@@ -167,16 +167,16 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     //Getting TodoId from Todos Table
     val scope = rememberCoroutineScope()
-    var todoIdretrieved by remember { mutableStateOf<Long?>(null) }
-    var todoIdretrievalInProgress by remember { mutableStateOf(false) }
+    var todoIdretrieved by rememberSaveable { mutableStateOf<Long?>(null) }
+    var todoIdretrievalInProgress by rememberSaveable { mutableStateOf(false) }
 
 
     var selectpriorityindex by rememberSaveable {
         mutableStateOf(0)
     }
 
-    var showAddingDbLoading by remember { mutableStateOf(false) }
-    var showFetchingDbLoading by remember { mutableStateOf(false) }
+    var showAddingDbLoading by rememberSaveable { mutableStateOf(false) }
+    var showFetchingDbLoading by rememberSaveable { mutableStateOf(false) }
 
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
@@ -426,7 +426,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         Toast.makeText(ctx, "Label should be only 1 word", Toast.LENGTH_SHORT)
                             .show()
                     }
-
                     else {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(

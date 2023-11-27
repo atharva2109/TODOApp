@@ -31,7 +31,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun ImageLoader(bitmapList: List<Bitmap?>) {
-    var currentImageIndex by remember { mutableIntStateOf(0) }
+    var currentImageIndex by rememberSaveable { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
     Column() {
