@@ -187,6 +187,8 @@ fun DetailsPage(todoId: Long) {
                             if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
 
                                 Row() {
+                                    Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
                                     Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null, Modifier.padding(end = 5.dp))
                                     Text(text = "Not Verified")
 
@@ -195,6 +197,8 @@ fun DetailsPage(todoId: Long) {
 
                             } else {
                                 Row {
+                                    Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
                                     Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null, Modifier.padding(end = 5.dp))
                                     Text(text = "Verification Status: ")
                                     Image(
@@ -206,17 +210,21 @@ fun DetailsPage(todoId: Long) {
                                     Row(horizontalArrangement = Arrangement.End, modifier = Modifier
                                         .fillMaxWidth()
                                         ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.googlemaps),
-                                            contentDescription = null, Modifier.size(25.dp),
-                                            alignment = Alignment.CenterEnd)
-                                            Modifier.clickable {
-                                                viewModel.GeoLocation(
-                                                    propertyDetails.todo.latitude!!,
-                                                    propertyDetails.todo.longitude!!,
-                                                    context = todoContext
-                                                )
-                                            }
+                                        Box(Modifier.clickable {
+                                            viewModel.GeoLocation(
+                                                propertyDetails.todo.latitude!!,
+                                                propertyDetails.todo.longitude!!,
+                                                context = todoContext
+                                            )
+                                        }) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.googlemaps),
+                                                contentDescription = null, Modifier.size(25.dp),
+                                                alignment = Alignment.CenterEnd
+                                            )
+
+                                        }
+                                            
 
 
                                     }
@@ -231,6 +239,7 @@ fun DetailsPage(todoId: Long) {
 
                     Box {
                             Row {
+                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
                                 Icon(
                                     imageVector = Icons.Filled.Warning,
                                     contentDescription = null,
@@ -254,7 +263,9 @@ fun DetailsPage(todoId: Long) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.moneyimage),
                                         contentDescription = null,
-                                        Modifier.padding(end = 5.dp)
+                                        Modifier
+                                            .padding(end = 5.dp)
+                                            .size(28.dp)
                                     )
                                     Text(text = "Not Specified")
                                 }
@@ -264,10 +275,11 @@ fun DetailsPage(todoId: Long) {
                             Box {
 
                                 Row {
+                                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+
                                     Icon(
                                         painter = painterResource(id = R.drawable.moneyimage),
                                         contentDescription = null,
-                                        Modifier.padding(end = 5.dp)
                                     )
                                     Text(propertyDetails.todo.price.toString() + " £" )
                                 }
@@ -282,6 +294,8 @@ fun DetailsPage(todoId: Long) {
                     Box {
 
                             Row {
+                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
                                     contentDescription = null,
@@ -297,25 +311,73 @@ fun DetailsPage(todoId: Long) {
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
-                    Box(
-                        Modifier
-                            .clickable {
-                                checkedState = !checkedState
-                                viewModel.updateTodo(propertyDetails.todo.todoId, checkedState!!)
-                                NavigationUtil.navigateTo(Screen.MainScreen)
-                            }
-                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row(
+                    if(propertyDetails.todo.status == false) {
+                        Box(
                             Modifier
-                                .padding(10.dp)
-                                .border(1.dp, color = BlueColor, shape = RoundedCornerShape(20))
-                            ,Arrangement.Center,) {
-                            Text(text = " Mark Completed", Modifier.padding(end = 20.dp), fontStyle = FontStyle.Italic)
-                            Image(
-                                painter = painterResource(id = R.drawable.completedtodo),
-                                contentDescription = null,
-                                Modifier.size(25.dp)
-                            )
+                                .clickable {
+                                    checkedState = !checkedState
+                                    viewModel.updateTodo(
+                                        propertyDetails.todo.todoId,
+                                        checkedState!!
+                                    )
+                                    NavigationUtil.navigateTo(Screen.MainScreen)
+                                }
+                                .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row(
+                                Modifier
+                                    .padding(10.dp)
+                                    .border(
+                                        1.dp,
+                                        color = BlueColor,
+                                        shape = RoundedCornerShape(20)
+                                    ),
+                                Arrangement.Center,
+                            ) {
+                                Text(
+                                    text = " Mark Completed",
+                                    Modifier.padding(end = 20.dp),
+                                    fontStyle = FontStyle.Italic
+                                )
+                                Image(
+                                    painter = painterResource(id = R.drawable.completedtodo),
+                                    contentDescription = null,
+                                    Modifier.size(25.dp)
+                                )
+                            }
+                        }
+                    }else{
+                        Box(
+                            Modifier
+                                .clickable {
+                                    checkedState = !checkedState
+                                    viewModel.updateTodo(
+                                        propertyDetails.todo.todoId,
+                                        checkedState!!
+                                    )
+                                    NavigationUtil.navigateTo(Screen.MainScreen)
+                                }
+                                .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row(
+                                Modifier
+                                    .padding(10.dp)
+                                    .border(
+                                        1.dp,
+                                        color = BlueColor,
+                                        shape = RoundedCornerShape(20)
+                                    ),
+                                Arrangement.Center,
+                            ) {
+                                Text(
+                                    text = " Mark As Incomplete",
+                                    Modifier.padding(end = 20.dp),
+                                    fontStyle = FontStyle.Italic
+                                )
+                                Image(
+                                    painter = painterResource(id = R.drawable.incomplete),
+                                    contentDescription = null,
+                                    Modifier.size(25.dp)
+                                )
+                            }
                         }
                     }
                     

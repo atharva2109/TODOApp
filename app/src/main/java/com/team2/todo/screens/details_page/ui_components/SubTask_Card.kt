@@ -77,14 +77,6 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
                 )
             }
-            Text(
-                text = "Due On: "+ LocalDatetimeToWords.formatLocalDateTimeAsWords(todos.dueDate),
-                modifier = Modifier
-                    .padding(10.dp),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleSmall
-
-            )
             FilledTonalIconButton(
                 onClick = {
                 }
