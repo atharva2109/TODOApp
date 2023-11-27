@@ -1,6 +1,7 @@
 package com.team2.todo.screens.details_page.ui_components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,7 +45,9 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
             ),
         modifier = Modifier
-            .fillMaxWidth().clip(CircleShape).padding(15.dp),
+            .fillMaxWidth()
+            .clip(CircleShape)
+            .padding(15.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
@@ -77,12 +80,8 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
                 )
             }
-            FilledTonalIconButton(
-                onClick = {
-                }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "SubTodo")
-            }
+            Box(){}
+
         }
 
 
@@ -108,7 +107,8 @@ fun TodosCardMain(todos: TodoWithSubTodos, dateTime: String) {
     {
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
 
