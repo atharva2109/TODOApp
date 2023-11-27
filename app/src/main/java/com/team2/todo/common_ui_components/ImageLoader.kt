@@ -38,14 +38,11 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
         Box(
             modifier = Modifier
                 .aspectRatio(1f)
-                .fillMaxWidth().padding(16.dp)
-
+                .fillMaxWidth().padding(16.dp),
 
             ) {
             LazyRow(
                 modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 itemsIndexed(bitmapList) { index, bitmap ->
                     Card(
@@ -59,8 +56,7 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                             }
                         }
                             .fillParentMaxHeight()
-                            .fillParentMaxWidth()
-                            .align(Alignment.Center),
+                            .fillParentMaxWidth(),
                         elevation = CardDefaults.cardElevation(
                             defaultElevation = 6.dp,
                         )
@@ -73,9 +69,12 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                                 bitmap = bitmap.asImageBitmap(),
                                 contentDescription = "",
                                 modifier = Modifier
-                                    .fillMaxWidth(.7f)
-                                    .aspectRatio(0.75f),
-                                contentScale = ContentScale.Fit
+                                    .fillMaxWidth()
+                                    .aspectRatio(0.5f)
+                                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                                ,
+                                contentScale = ContentScale.Fit,
+                                alignment = Alignment.Center
 
                             )
                         }
