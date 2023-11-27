@@ -181,6 +181,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
     var isLabelValid by remember { mutableStateOf(true) }
+    var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
 
     if (isEdit) {
         showFetchingDbLoading = true
@@ -211,7 +212,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                             defaultPriority = "Low"
                         }
 
-                        val updatedBitmapList = mutableListOf<Bitmap>()
                         collectedImages.forEach { image ->
                             // Convert image to Bitmap and add to the list
                             val bitmap = image.image
@@ -478,10 +478,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     Log.d("Todoid in progress", todoIdretrieved.toString())
                                     Log.d("Todidretrieved",todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
-                                        for (imageBitmapData in bitmapList) {
-                                            Log.d("Image list",bitmapList.toString())
-                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
-                                        }
+//                                        for (imageBitmapData in bitmapList) {
+//                                            Log.d("Image list",bitmapList.toString())
+//                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
+//                                        }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
                                         Log.d("Update TodId", todoid.toString())
