@@ -41,8 +41,6 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 @Preview
 @Composable
 fun AddEditAppBar(isSubTodo:Boolean=false,isEdit:Boolean=false) {
-    Log.d("App Bar",isSubTodo.toString())
-    Log.d("App Bar isEdit",isEdit.toString())
     return TopAppBar(
         title = {
             Text(

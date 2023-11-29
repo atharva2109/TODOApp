@@ -28,7 +28,7 @@ fun ReminderField(dateselected: String, timeselected: String) {
                 if (dateObj != null) {
                     val reminderTime = dateObj.time - 1 * 24 * 60 * 60 * 1000
                     val reminderDate = Date(reminderTime)
-                    val reminderFormat = SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault())
+                    val reminderFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                     val date = reminderFormat.format(reminderDate)
                     formattedText = "$date"
 

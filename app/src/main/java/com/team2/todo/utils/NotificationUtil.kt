@@ -7,7 +7,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.team2.todo.R
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlin.random.Random
+
 
 /**
  * Created by Manu KJ on 11/2/23.
@@ -71,6 +74,5 @@ object NotificationUtil {
         }
         return count.toString()
     }
-
 
 }

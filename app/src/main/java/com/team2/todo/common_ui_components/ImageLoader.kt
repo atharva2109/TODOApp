@@ -86,4 +86,3 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
         }
     }
 }
-
