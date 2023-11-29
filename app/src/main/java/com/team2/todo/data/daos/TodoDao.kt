@@ -35,8 +35,7 @@ interface TodoDao {
     @Query("UPDATE todos SET status = :status WHERE todoId = :todoId")
     suspend fun updateTodoStatus(todoId: Long, status: Boolean)
 
-    @Query("SELECT * FROM images WHERE todoId = :todoId")
-    fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>>
+
 
     @Insert
     suspend fun insertImage(imageEntity: Images)
@@ -52,5 +51,11 @@ interface TodoDao {
 
     @Query("DELETE FROM images WHERE  imageId = :imageId")
     fun deleteTodoImageBasedOnImageId(imageId: Long)
+
+    @Query("SELECT * FROM images WHERE todoId = :todoId")
+    fun getAllTodoImagesBasedOnTodo(todoId: Long): Flow<List<Images>>
+
+
+
 
 }

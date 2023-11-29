@@ -1,4 +1,7 @@
 package com.team2.todo.common_ui_components
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
