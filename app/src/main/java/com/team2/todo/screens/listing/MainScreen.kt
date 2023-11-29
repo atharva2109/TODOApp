@@ -55,7 +55,8 @@ fun MainScreen() {
     var filterViewModel = FilterViewModel(LocalContext.current)
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
-    ListingViewModel.initialize(repo = repo, filterViewModel)
+    var ctx= LocalContext.current.applicationContext
+    ListingViewModel.initialize(repo = repo, filterViewModel,ctx)
     val viewModel = ListingViewModel.instance
 
     MaterialTheme(typography = Typography()) {

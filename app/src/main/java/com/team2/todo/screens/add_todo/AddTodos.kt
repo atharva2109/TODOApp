@@ -53,6 +53,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 
@@ -104,7 +105,7 @@ import java.util.regex.Pattern
 @Composable
 fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) {
 
-    var showBottomSheet by remember { mutableStateOf(false) }
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Black,
         unfocusedBorderColor = PrimaryColor,
@@ -124,21 +125,21 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
     var subtodorepo = SubTodoRepo(db)
     var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
 
-    var enteredTitle by remember {
+    var enteredTitle by rememberSaveable {
         mutableStateOf("")
     }
-    var enteredLabel by remember {
+    var enteredLabel by rememberSaveable {
         mutableStateOf("")
     }
-    var enteredDescription by remember {
+    var enteredDescription by rememberSaveable {
         mutableStateOf("")
     }
 
-    var enteredPrice by remember {
+    var enteredPrice by rememberSaveable {
         mutableStateOf(0.0)
     }
 
-    var defaultPriority by remember {
+    var defaultPriority by rememberSaveable {
         mutableStateOf("Low")
     }
 
@@ -146,18 +147,17 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     val collectedImages by fetchTodViewModel.getTodoImages(todoid)
         .collectAsState(initial = emptyList())
-    var isTitleEmpty by remember { mutableStateOf(false) }
-    var isLabelEmpty by remember { mutableStateOf(false) }
-    var isDescriptionEmpty by remember { mutableStateOf(false) }
-    var isLabelCheck by remember { mutableStateOf(false) }
+    var isTitleEmpty by rememberSaveable { mutableStateOf(false) }
+    var isLabelEmpty by rememberSaveable { mutableStateOf(false) }
+    var isDescriptionEmpty by rememberSaveable { mutableStateOf(false) }
 
     var (calendarState, dateselected) = DatePickerComponent()
     var (timeState, timeselected) = TimePickerComponent()
 
-    var currentlatitude by remember {
+    var currentlatitude by rememberSaveable {
         mutableStateOf(0.0)
     }
-    var currentlongitude by remember {
+    var currentlongitude by rememberSaveable {
         mutableStateOf(0.0)
     }
     var bitmapList: List<Bitmap> = mutableListOf()
@@ -167,22 +167,23 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
     //Getting TodoId from Todos Table
     val scope = rememberCoroutineScope()
-    var todoIdretrieved by remember { mutableStateOf<Long?>(null) }
-    var todoIdretrievalInProgress by remember { mutableStateOf(false) }
+    var todoIdretrieved by rememberSaveable { mutableStateOf<Long?>(null) }
+    var todoIdretrievalInProgress by rememberSaveable { mutableStateOf(false) }
 
 
-    var selectpriorityindex by remember {
+    var selectpriorityindex by rememberSaveable {
         mutableStateOf(0)
     }
 
-    var showAddingDbLoading by remember { mutableStateOf(false) }
-    var showFetchingDbLoading by remember { mutableStateOf(false) }
+    var showAddingDbLoading by rememberSaveable { mutableStateOf(false) }
+    var showFetchingDbLoading by rememberSaveable { mutableStateOf(false) }
 
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
     var isLabelValid by remember { mutableStateOf(true) }
+    var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
 
-    if (isEdit == true) {
+    if (isEdit) {
         showFetchingDbLoading = true
         LaunchedEffect(key1 = true) {
             try {
@@ -191,7 +192,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                 todosretrievalInProgress = false
                 todosRetrieved?.collect { todoList ->
                     for (todo in todoList) {
-                        Log.d("TODO Information", todo.todo.toString())
                         enteredTitle = todo.todo.title
                         enteredDescription = todo.todo.description
                         enteredLabel = todo.todo.label ?: ""
@@ -206,15 +206,12 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         val priorityindex = todo.todo.priority
                         val priorityList = priorities.values()
 
-// Checking if priorityindex is within the valid range
                         if (priorityindex != null && priorityindex in priorityList.indices) {
-                            // Using the fetched priority
                             defaultPriority = priorityList[priorityindex].name
                         } else {
                             defaultPriority = "Low"
                         }
 
-                        val updatedBitmapList = mutableListOf<Bitmap>()
                         collectedImages.forEach { image ->
                             // Convert image to Bitmap and add to the list
                             val bitmap = image.image
@@ -243,7 +240,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
 
     }
-
     Scaffold {
         Column(
             modifier = Modifier
@@ -306,6 +302,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                     isError = isDescriptionEmpty,
                 )
 
+
                 if (bitmapList.isEmpty())
                     UploadImagePlaceHolder(onCLick = {
                         showBottomSheet = true
@@ -354,15 +351,13 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                 }
                 if (bitmapList.isNotEmpty()) {
-
                                 ImageLoader(bitmapList = bitmapList)
 
                 }
-                
                 selectpriorityindex= DropDownMenuComponent(defaultPriority = defaultPriority)
                 if (!isSubTodo) {
                     OutlinedTextField(
-                        value = "${enteredPrice.toString()} ${pound.getSymbol()}" ,
+                        value = "${enteredPrice} ${pound.getSymbol()}" ,
                         onValueChange = { newText ->
                             val priceWithoutSymbol=newText.removeSuffix(pound.getSymbol()).trim()
                             enteredPrice = priceWithoutSymbol.toDouble() },
@@ -482,10 +477,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                     Log.d("Todoid in progress", todoIdretrieved.toString())
                                     Log.d("Todidretrieved",todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
-                                        for (imageBitmapData in bitmapList) {
-                                            Log.d("Image list",bitmapList.toString())
-                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
-                                        }
+//                                        for (imageBitmapData in bitmapList) {
+//                                            Log.d("Image list",bitmapList.toString())
+//                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
+//                                        }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
                                         Log.d("Update TodId", todoid.toString())

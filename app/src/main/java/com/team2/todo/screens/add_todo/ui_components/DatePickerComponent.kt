@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 import java.util.Date
@@ -29,7 +30,7 @@ fun DatePickerComponent():Pair<DatePickerDialog,MutableState<String>>{
 
     mCalendar.time = Date()
 
-    val mDate = remember { mutableStateOf("") }
+    val mDate = rememberSaveable{ mutableStateOf("") }
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,

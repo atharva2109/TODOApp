@@ -1,5 +1,10 @@
 package com.team2.todo.screens.listing.view_model
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2.todo.common_ui_components.filter.view_model.Filter
@@ -13,6 +18,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 /**
  * Created by Manu KJ on 11/14/23.
@@ -23,24 +30,56 @@ object ListingViewModel {
     private lateinit var repo: TodoRepo
     lateinit var instance: PropertyListViewModel
 
-    fun initialize(repo: TodoRepo, filterViewModel: FilterViewModel) {
+    fun initialize(repo: TodoRepo, filterViewModel: FilterViewModel,ctx:Context) {
         this.repo = repo
-        instance = PropertyListViewModel(repo, filterViewModel)
+        instance = PropertyListViewModel(repo, filterViewModel,ctx)
     }
 
 }
 
-class PropertyListViewModel(val repo: TodoRepo, var filterViewModel: FilterViewModel) :
+class PropertyListViewModel(val repo: TodoRepo, var filterViewModel: FilterViewModel,var ctx: Context) :
     ViewModel() {
     private val THRESHOLD_DISTANCE = 0.0;
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
+
     init {
         fetchUpdatedList()
+        showReminderDueDate()
         fetchNearestTask()
     }
 
+    private fun showReminderDueDate(){
+        var count = 0;
+        var duedate:LocalDate=LocalDate.now()
+        viewModelScope.launch {
+            delay(3000)
+            inSalePropertyList.value.forEach { it ->
+
+                var dueDateTodo=it.todo.dueDate
+
+                var currentDate=LocalDate.now()
+                if(dueDateTodo!=null){
+                    duedate=dueDateTodo.toLocalDate()
+                }
+                else{
+                    println("Fetched Due date is empty!!")
+                }
+                var daysDifference = ChronoUnit.DAYS.between(duedate, currentDate);
+                println(daysDifference)
+                if(daysDifference==0L) {
+                    count++
+                }
+
+            }
+            if(count!==0) {
+                Toast.makeText(ctx, "You have $count pending tasks", Toast.LENGTH_LONG).show()
+            }
+        }
+
+
+    }
     private fun fetchNearestTask() {
         LocationUtil.getCurrentLocation { location ->
             run {

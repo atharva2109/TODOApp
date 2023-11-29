@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 
@@ -19,7 +20,7 @@ fun TimePickerComponent():Pair<TimePickerDialog,MutableState<String>>{
     val calendarinstance = Calendar.getInstance()
     val hour = calendarinstance[Calendar.HOUR_OF_DAY]
     val minute = calendarinstance[Calendar.MINUTE]
-    val time = remember { mutableStateOf("") }
+    val time = rememberSaveable { mutableStateOf("") }
 
     val mTimePickerDialog = TimePickerDialog(
         currentcontext,
