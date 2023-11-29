@@ -1,12 +1,6 @@
 package com.team2.todo.screens.details_page.view_model
 
 import android.content.Context
-import android.content.Intent
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +13,8 @@ import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.utils.AppUtil
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: SubTodoRepo) :
@@ -41,9 +37,8 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
     }
 
 
-
-    fun GeoLocation( lat: Double, lon: Double, context: Context ){
-        AppUtil.openMaps(lat,lon,context)
+    fun GeoLocation(lat: Double, lon: Double, context: Context) {
+        AppUtil.openMaps(lat, lon, context)
     }
 
 

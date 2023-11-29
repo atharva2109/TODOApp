@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -36,14 +37,24 @@ enum class priorities {
 fun DropDownMenuComponent(defaultPriority:String): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
+    println("Before selectd priority $defaultPriority")
     var selectedPriority by remember { mutableStateOf(defaultPriority) }
-    var selectedPriorityIndex by remember { mutableStateOf(0) }
+    println("after selectd priority $selectedPriority")
+
+    DisposableEffect(defaultPriority) {
+        selectedPriority = defaultPriority
+        onDispose {
+
+        }
+    }
+    var selectedPriorityIndex by rememberSaveable { mutableStateOf(0) }
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (menuexpanded)
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
+
 
     Column(
         Modifier

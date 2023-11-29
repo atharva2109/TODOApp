@@ -6,7 +6,11 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.team2.todo.R
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlin.random.Random
+
 
 /**
  * Created by Manu KJ on 11/2/23.
@@ -34,9 +38,13 @@ object NotificationUtil {
         }
     }
 
-    fun showGeoFencingNotification(propertyName: String = "Dimond Building", pendingTask: Int = 2) {
+    fun showGeoFencingNotification(property: TodoWithSubTodos) {
         var message =
-            "You have reached the location of ${propertyName}, pending task $pendingTask task";
+            "You have reached the location of ${property.todo.title}, pending task ${
+                getPendingSubTask(
+                    property
+                )
+            } task";
         if (notificationManager != null) {
             val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
                 .setContentTitle("Location Reached")
@@ -57,5 +65,14 @@ object NotificationUtil {
 
     }
 
+    private fun getPendingSubTask(property: TodoWithSubTodos): String {
+        var count = 1;
+        property.subtodos.forEach {
+            if (it.status == false) {
+                count++
+            }
+        }
+        return count.toString()
+    }
 
 }
