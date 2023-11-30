@@ -103,7 +103,7 @@ import java.util.regex.Pattern
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) {
+fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = false) {
 
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
@@ -246,13 +246,11 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                 .fillMaxHeight()
                 .padding(it)
         ) {
-            if(isSubTodo){
+            if (isSubTodo) {
                 AddEditAppBar(isSubTodo)
-            }
-            else if(isEdit){
-                AddEditAppBar(isSubTodo,isEdit)
-            }
-            else{
+            } else if (isEdit) {
+                AddEditAppBar(isSubTodo, isEdit)
+            } else {
                 AddEditAppBar()
             }
             Column(
@@ -286,7 +284,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         },
                         label = { Text(text = "Label") },
                         colors = OutLineTextColor,
-                        isError = isLabelEmpty||!isLabelValid,
+                        isError = isLabelEmpty || !isLabelValid,
                     )
                 }
                 // Description
@@ -337,30 +335,31 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                 }
                             } else {
 
-                                    PickImagesForTodo { bitmapCallback ->
-                                        bitmapList = bitmapCallback
-                                        showBottomSheet = false
-                                        Log.d("ImageList", bitmapList.toString())
-                                    }
-
-
+                                PickImagesForTodo { bitmapCallback ->
+                                    bitmapList = bitmapCallback
+                                    showBottomSheet = false
+                                    Log.d("ImageList", bitmapList.toString())
                                 }
+
+
                             }
+                        }
 
                     }
 
                 }
                 if (bitmapList.isNotEmpty()) {
-                                ImageLoader(bitmapList = bitmapList)
+                    ImageLoader(bitmapList = bitmapList)
 
                 }
-                selectpriorityindex= DropDownMenuComponent(defaultPriority = defaultPriority)
+                selectpriorityindex = DropDownMenuComponent(defaultPriority = defaultPriority)
                 if (!isSubTodo) {
                     OutlinedTextField(
-                        value = "${enteredPrice} ${pound.getSymbol()}" ,
+                        value = "${enteredPrice} ${pound.getSymbol()}",
                         onValueChange = { newText ->
-                            val priceWithoutSymbol=newText.removeSuffix(pound.getSymbol()).trim()
-                            enteredPrice = priceWithoutSymbol.toDouble() },
+                            val priceWithoutSymbol = newText.removeSuffix(pound.getSymbol()).trim()
+                            enteredPrice = priceWithoutSymbol.toDouble()
+                        },
                         label = { Text(text = "Price: ") },
                         placeholder = { Text(text = "Enter price(in ${pound.getSymbol()}") },
                         keyboardOptions = KeyboardOptions(
@@ -421,12 +420,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                         Toast.makeText(ctx, "Please fill the description", Toast.LENGTH_SHORT)
                             .show()
                         isDescriptionEmpty = true
-                    }
-                    else if(!isLabelValid){
+                    } else if (!isLabelValid) {
                         Toast.makeText(ctx, "Label should be only 1 word", Toast.LENGTH_SHORT)
                             .show()
-                    }
-                    else {
+                    } else {
                         if (isSubTodo) {
                             subtodviewmodel.addSubTodo(
                                 SubTodo(
@@ -450,7 +447,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                 .show()
                         } else if (isEdit) {
                             showAddingDbLoading = true
-                            Log.d("Bitmpalistt inside update",bitmapList.toString())
+                            Log.d("Bitmpalistt inside update", bitmapList.toString())
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
@@ -472,10 +469,10 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
 
                                     )
-                                    Log.d("Hi","Hi")
+                                    Log.d("Hi", "Hi")
                                     todoIdretrievalInProgress = false
                                     Log.d("Todoid in progress", todoIdretrieved.toString())
-                                    Log.d("Todidretrieved",todoIdretrieved.toString())
+                                    Log.d("Todidretrieved", todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
 //                                        for (imageBitmapData in bitmapList) {
 //                                            Log.d("Image list",bitmapList.toString())
@@ -533,7 +530,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
 
                                     )
                                     todoIdretrievalInProgress = false
-                                    Log.d("TodId inside add",todoIdretrieved.toString())
+                                    Log.d("TodId inside add", todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
                                         for (imageBitmapData in bitmapList) {
                                             viewModel.addImage(Images(0, imageBitmapData, todoId))
@@ -542,7 +539,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0,isEdit:Boolean=false) 
                                         NavigationUtil.goBack()
                                         Log.d("TodId", todoId.toString())
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
-                                        ListingViewModel.instance.fetchUpdatedList()
+                                        ListingViewModel.instance?.fetchUpdatedList()
 
 
 

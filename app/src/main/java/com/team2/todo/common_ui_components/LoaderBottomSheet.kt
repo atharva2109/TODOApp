@@ -25,7 +25,7 @@ import com.team2.todo.ui.theme.PrimaryColor
 
 @Preview
 @Composable
-fun LoaderBottomSheet(text: String = "Adding Data Into DB...") {
+fun LoaderBottomSheet(text: String = "Crafting Your Property... Just a Moment, We're Almost Done!") {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

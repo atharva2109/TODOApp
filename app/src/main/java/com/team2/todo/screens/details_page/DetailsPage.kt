@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.CommonAppBar
+import com.team2.todo.common_ui_components.LoaderBottomSheet
 import com.team2.todo.data.RealEstateDatabase
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
@@ -77,7 +78,6 @@ fun DetailsPage(todoId: Long) {
     var subTodoId by remember { mutableIntStateOf(0) }
 
 
-
     val collectedTodo by viewModel.getPropertyFromId(todoId).collectAsState(initial = emptyList())
     val collecetedImages by viewModel.getTodoImages(todoId).collectAsState(initial = emptyList())
 
@@ -85,7 +85,15 @@ fun DetailsPage(todoId: Long) {
 
 
     if (collectedTodo.isEmpty()) {
-        Text(text = "loading")
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxWidth()
+        ) {
+            LoaderBottomSheet("Fetching Your Property Details... Hold on, It's Loading Up!")
+        }
     } else {
         val propertyDetails: TodoWithSubTodos = collectedTodo[0];
 
@@ -131,7 +139,11 @@ fun DetailsPage(todoId: Long) {
                     Spacer(modifier = Modifier.padding(top = 10.dp))
 
                     Row(Modifier.fillMaxWidth()) {
-                        Icon(imageVector = Icons.Filled.List, contentDescription = null, Modifier.padding(end = 5.dp))
+                        Icon(
+                            imageVector = Icons.Filled.List,
+                            contentDescription = null,
+                            Modifier.padding(end = 5.dp)
+                        )
                         Text(text = propertyDetails.todo.description)
                     }
 
@@ -142,7 +154,8 @@ fun DetailsPage(todoId: Long) {
                             Box(
                                 Modifier
                                     .size(200.dp)
-                                    .fillMaxWidth(), Alignment.Center) {
+                                    .fillMaxWidth(), Alignment.Center
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.home),
                                     contentDescription = null,
@@ -151,153 +164,166 @@ fun DetailsPage(todoId: Long) {
                                 )
                             }
                         }
-                    }
-                        else{
-                        Row(Modifier.fillMaxWidth(),Arrangement.Center) {
+                    } else {
+                        Row(Modifier.fillMaxWidth(), Arrangement.Center) {
                             Box(
                                 Modifier
                                     .fillMaxWidth()
-                                    .size(150.dp)) {
+                                    .size(150.dp)
+                            ) {
                                 collecetedImages.map { bitmap -> bitmap.image }
                                     ?.let { it1 -> ImageLoader(bitmapList = it1) }
                             }
                         }
-                        }
+                    }
 
 
 
 
-                        Spacer(modifier = Modifier.padding(top = 20.dp))
-
-                        Box {
-                            if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
-
-                                Row() {
-                                    Spacer(modifier = Modifier.padding(horizontal = 1.dp))
-
-                                    Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null, Modifier.padding(end = 5.dp))
-                                    Text(text = "Not Verified")
-
-                                }
-                                Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                            } else {
-                                Row {
-                                    Spacer(modifier = Modifier.padding(horizontal = 1.dp))
-
-                                    Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null, Modifier.padding(end = 5.dp))
-                                    Text(text = "Verification Status: ")
-                                    Image(
-                                        painter = painterResource(id = R.drawable.verified), // or use Icons.Default.Check
-                                        contentDescription = null, // Provide a suitable description
-                                        modifier = Modifier.size(20.dp),
-                                        contentScale = ContentScale.Fit,
-                                    )
-                                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
-                                        .fillMaxWidth()
-                                        ) {
-                                        Box(Modifier.clickable {
-                                            viewModel.GeoLocation(
-                                                propertyDetails.todo.latitude!!,
-                                                propertyDetails.todo.longitude!!,
-                                                context = todoContext
-                                            )
-                                        }) {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.googlemaps),
-                                                contentDescription = null, Modifier.size(25.dp),
-                                                alignment = Alignment.CenterEnd
-                                            )
-
-                                        }
-
-
-
-                                    }
-                                }
-                                Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                            }
-
-                        }
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
-
+                    Spacer(modifier = Modifier.padding(top = 20.dp))
 
                     Box {
-                            Row {
-                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
-                                Icon(
-                                    imageVector = Icons.Filled.Warning,
-                                    contentDescription = null,
-                                    Modifier.padding(end = 5.dp),
-                                    tint = AppUtil.getPriorityColor(propertyDetails.todo.priority!!)
-                                )
-                                Text(text = "${AppUtil.getPriorityString(propertyDetails.todo.priority)}")
+                        if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
 
-
-                            }
-
-
-                        }
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
-
-
-                    if(propertyDetails.todo.price == 0.0){
-                            Box {
-
-                                Row {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.moneyimage),
-                                        contentDescription = null,
-                                        Modifier
-                                            .padding(end = 5.dp)
-                                            .size(28.dp)
-                                    )
-                                    Text(text = "Not Specified")
-                                }
-
-                            }
-                        }else{
-                            Box {
-
-                                Row {
-                                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
-
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.moneyimage),
-                                        contentDescription = null,
-                                    )
-                                    Text(propertyDetails.todo.price.toString() + " £" )
-                                }
-
-
-                            }
-                        }
-                         Spacer(modifier = Modifier.padding(top = 15.dp))
-
-
-
-                    Box {
-
-                            Row {
+                            Row() {
                                 Spacer(modifier = Modifier.padding(horizontal = 1.dp))
 
                                 Icon(
-                                    imageVector = Icons.Filled.DateRange,
+                                    imageVector = Icons.Filled.LocationOn,
                                     contentDescription = null,
                                     Modifier.padding(end = 5.dp)
                                 )
+                                Text(text = "Not Verified")
 
-                                Text(text = "${LocalDatetimeToWords.formatLocalDateTimeAsWords(propertyDetails.todo.dueDate)}")
                             }
+                            Spacer(modifier = Modifier.padding(top = 10.dp))
 
+                        } else {
+                            Row {
+                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
+                                Icon(
+                                    imageVector = Icons.Filled.LocationOn,
+                                    contentDescription = null,
+                                    Modifier.padding(end = 5.dp)
+                                )
+                                Text(text = "Verification Status: ")
+                                Image(
+                                    painter = painterResource(id = R.drawable.verified), // or use Icons.Default.Check
+                                    contentDescription = null, // Provide a suitable description
+                                    modifier = Modifier.size(20.dp),
+                                    contentScale = ContentScale.Fit,
+                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.End, modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Box(Modifier.clickable {
+                                        viewModel.GeoLocation(
+                                            propertyDetails.todo.latitude!!,
+                                            propertyDetails.todo.longitude!!,
+                                            context = todoContext
+                                        )
+                                    }) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.googlemaps),
+                                            contentDescription = null, Modifier.size(25.dp),
+                                            alignment = Alignment.CenterEnd
+                                        )
+
+                                    }
+
+
+                                }
+                            }
+                            Spacer(modifier = Modifier.padding(top = 10.dp))
+
+                        }
+
+                    }
+                    Spacer(modifier = Modifier.padding(top = 15.dp))
+
+
+                    Box {
+                        Row {
+                            Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+                            Icon(
+                                imageVector = Icons.Filled.Warning,
+                                contentDescription = null,
+                                Modifier.padding(end = 5.dp),
+                                tint = AppUtil.getPriorityColor(propertyDetails.todo.priority!!)
+                            )
+                            Text(text = "${AppUtil.getPriorityString(propertyDetails.todo.priority)}")
 
 
                         }
+
+
+                    }
+                    Spacer(modifier = Modifier.padding(top = 15.dp))
+
+
+                    if (propertyDetails.todo.price == 0.0) {
+                        Box {
+
+                            Row {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.moneyimage),
+                                    contentDescription = null,
+                                    Modifier
+                                        .padding(end = 5.dp)
+                                        .size(28.dp)
+                                )
+                                Text(text = "Not Specified")
+                            }
+
+                        }
+                    } else {
+                        Box {
+
+                            Row {
+                                Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.moneyimage),
+                                    contentDescription = null,
+                                )
+                                Text(propertyDetails.todo.price.toString() + " £")
+                            }
+
+
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(top = 15.dp))
+
+
+
+                    Box {
+
+                        Row {
+                            Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
+                            Icon(
+                                imageVector = Icons.Filled.DateRange,
+                                contentDescription = null,
+                                Modifier.padding(end = 5.dp)
+                            )
+
+                            Text(
+                                text = "${
+                                    LocalDatetimeToWords.formatLocalDateTimeAsWords(
+                                        propertyDetails.todo.dueDate
+                                    )
+                                }"
+                            )
+                        }
+
+
+                    }
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
-                    if(propertyDetails.todo.status == false) {
+                    if (propertyDetails.todo.status == false) {
                         Box(
                             Modifier
                                 .clickable {
@@ -331,7 +357,7 @@ fun DetailsPage(todoId: Long) {
                                 )
                             }
                         }
-                    }else{
+                    } else {
                         Box(
                             Modifier
                                 .clickable {
@@ -372,47 +398,47 @@ fun DetailsPage(todoId: Long) {
 
 
                     Box() {
-                            Text(
-                                text = "Sub Tasks ",
-                                fontSize = 20.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                        Text(
+                            text = "Sub Tasks ",
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
+                    }
+                    if (propertyDetails.subtodos.isEmpty()) {
+                        Spacer(modifier = Modifier.padding(top = 50.dp))
+                        Row(Modifier.fillMaxWidth(), Arrangement.Center) {
+                            Text(text = "No Subtasks", fontStyle = FontStyle.Italic)
                         }
-                        if(propertyDetails.subtodos.isEmpty()){
-                            Spacer(modifier = Modifier.padding(top = 50.dp))
-                            Row(Modifier.fillMaxWidth(), Arrangement.Center) {
-                                Text(text = "No Subtasks", fontStyle = FontStyle.Italic)
-                            }
 
 
-                        }else {
-                            Box {
-                                LazyColumn() {
-                                    items(propertyDetails.subtodos) { subTask ->
-                                        //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
-                                        Box(Modifier.clickable {
-                                            Log.e(
-                                                subTask.subTodoId.toString(),
-                                                subTask.subTodoId.toString()
-                                            )
+                    } else {
+                        Box {
+                            LazyColumn() {
+                                items(propertyDetails.subtodos) { subTask ->
+                                    //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
+                                    Box(Modifier.clickable {
+                                        Log.e(
+                                            subTask.subTodoId.toString(),
+                                            subTask.subTodoId.toString()
+                                        )
 
-                                            subTodoId = subTask.subTodoId.toInt()
+                                        subTodoId = subTask.subTodoId.toInt()
 
-                                            NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
-                                        }) {
-                                            TodosCard(todos = subTask)
-                                        }
+                                        NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTodoId}")
+                                    }) {
+                                        TodosCard(todos = subTask)
                                     }
                                 }
                             }
                         }
-
-
                     }
 
 
-})
-}
+                }
+
+
+            })
+    }
 }

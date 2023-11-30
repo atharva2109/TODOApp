@@ -55,9 +55,9 @@ fun MainScreen() {
     var filterViewModel = FilterViewModel(LocalContext.current)
     val database = RealEstateDatabase.getInstance(context = LocalContext.current)
     val repo = TodoRepo(database)
-    var ctx= LocalContext.current.applicationContext
-    ListingViewModel.initialize(repo = repo, filterViewModel,ctx)
-    val viewModel = ListingViewModel.instance
+    var ctx = LocalContext.current.applicationContext
+    val viewModel = ListingViewModel.getInstance(repo = repo, filterViewModel, ctx)
+
 
     MaterialTheme(typography = Typography()) {
         Scaffold(
@@ -75,8 +75,8 @@ fun MainScreen() {
                     if (currentPage == 0) FloatingActionButton(
                         onClick = { NavigationUtil.navigateTo(Screen.AddTodos) },
 
-                    ) {
-                         Icon(Icons.Filled.AddCircle, "Extended floating action button.")
+                        ) {
+                        Icon(Icons.Filled.AddCircle, "Extended floating action button.")
                     }
                 }
 
