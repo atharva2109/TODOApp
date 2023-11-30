@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Bundle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 
 /*
@@ -18,64 +20,40 @@ object LocationUtil {
     private lateinit var context: Context
     private lateinit var activity: Activity
 
-    private var currentLocation: Location? = null
+    var currentLocation:Location? by mutableStateOf<Location?>(null)
+        private set
+
     private lateinit var locationManager: LocationManager
 
-    fun init(context: Context, activity: Activity) {
+    fun init(context: Context, activity: Activity, locationManager: LocationManager) {
         this.context = context
         this.activity = activity
+        this.locationManager = locationManager
+
+        fetchCurrentLocation()
     }
 
-    fun getCurrentLocation(callback: (Location) -> Unit) {
-        fetchCurrentLocation {
-            callback(it)
-        }
+    private fun _setLocation(newLocation: Location?) {
+        currentLocation = newLocation
     }
 
-
-    private fun fetchCurrentLocation(callback: (Location) -> Unit) {
-
-        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        val hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-        if (hasGps || hasNetwork) {
-            if (hasGps && !hasNetwork) {
-                fetchLocationViaGPS {
-                    callback(it)
-                }
-            } else if (!hasGps && hasNetwork) {
-                fetchLocationViaNetwork {
-                    callback(it)
-                }
-            } else if (hasGps && hasNetwork) {
-                fetchLocationViaGPS { gpsLocation: Location ->
-                    fetchLocationViaNetwork {networkLocation: Location ->
-                        if (gpsLocation!= null && networkLocation != null) {
-                            if (gpsLocation.accuracy > networkLocation.accuracy) {
-                                callback(gpsLocation)
-                            } else {
-                                callback(networkLocation)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    fun updateLocation(newLocation: Location) {
+        _setLocation(newLocation)
     }
 
-    private fun fetchLocationViaGPS(callback: (Location) -> Unit) {
+    fun invalidate() {
+        _setLocation(null)
+    }
 
-        val gpsLocationListener: LocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                callback(location!!)
-                locationManager.removeUpdates(this)
-            }
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        }
+    fun valid():Boolean {
+        return (currentLocation != null)
+    }
+
+    private fun fetchCurrentLocation() {
+        fetchLocationViaGPS()
+    }
+
+    private fun fetchLocationViaGPS() {
 
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -93,49 +71,26 @@ object LocationUtil {
                 ),
                 2
             )
-        }
-        locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER,
-            5000,
-            0F,
-            gpsLocationListener
-        )
-    }
-
-    private fun fetchLocationViaNetwork(callback: (Location) -> Unit) {
-
-        val networkLocationListener: LocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                callback(location!!)
-                locationManager.removeUpdates(this)
+        } else {
+            val lastKnownLocation =
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (lastKnownLocation != null) {
+                updateLocation(lastKnownLocation)
             }
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                2
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                5000,
+                0F,
+                GPSGeoLocationListener
             )
         }
-        locationManager.requestLocationUpdates(
-            LocationManager.NETWORK_PROVIDER,
-            5000,
-            0F,
-            networkLocationListener
-        )
     }
+
+}
+
+object GPSGeoLocationListener: LocationListener {
+    override fun onLocationChanged(location: Location) {
+        LocationUtil.updateLocation(location)
+    }
+
 }
