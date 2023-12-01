@@ -5,9 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
+import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
+import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium
+import java.lang.reflect.Modifier
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 object AppUtil {
     fun getPriorityString(priorityIndex: Int): String {
@@ -40,4 +47,10 @@ object AppUtil {
         intent.setPackage("com.google.android.apps.maps")
         ContextCompat.startActivity(context, intent, null)
     }
+}
+
+fun checkOverdue(dateselected: LocalDateTime): Boolean {
+        val currentDate = LocalDateTime.now()
+       return dateselected.isBefore(currentDate)
+
 }
