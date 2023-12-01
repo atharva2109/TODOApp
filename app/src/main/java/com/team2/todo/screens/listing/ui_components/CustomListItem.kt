@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.team2.todo.common_ui_components.LocationVerifiedLogo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.DarkGreenColor
@@ -145,7 +146,7 @@ fun CustomListItem(
                         fontSize = 15.sp,
                         textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
-                    if (shouldShowVerified()) VerifiedLogo()
+                    if (shouldShowVerified()) LocationVerifiedLogo()
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -168,7 +169,7 @@ fun CustomListItem(
                 modifier = Modifier.padding(end = 15.dp)
             ) {
                 Icon(
-                   if(isCompleted) Icons.Filled.Refresh else Icons.Filled.Done,
+                    if (isCompleted) Icons.Filled.Refresh else Icons.Filled.Done,
                     "Extended floating action button.",
                     tint = GreyColor,
                     modifier = Modifier
@@ -199,31 +200,3 @@ fun CustomListItem(
     }
 }
 
-
-@Composable
-fun VerifiedLogo() {
-    Row(
-        modifier = Modifier
-            .padding(start = 10.dp)
-            .border(1.dp, color = BlueColor, shape = RoundedCornerShape(8.dp)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.padding(2.dp))
-        Icon(
-            imageVector = Icons.Filled.CheckCircle,
-            contentDescription = "Image",
-            Modifier
-                .size(15.dp)
-                .padding(end = 5.dp),
-            tint = BlueColor
-        )
-        Text(
-            text = "Verified ",
-            color = BlueColor,
-            fontWeight = FontWeight.Normal,
-            fontSize = 10.sp
-        )
-        Spacer(modifier = Modifier.padding(2.dp))
-
-    }
-}
