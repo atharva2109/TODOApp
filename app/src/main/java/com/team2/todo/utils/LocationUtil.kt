@@ -20,7 +20,7 @@ object LocationUtil {
     private lateinit var context: Context
     private lateinit var activity: Activity
 
-    var currentLocation:Location? by mutableStateOf<Location?>(null)
+    var currentLocation: Location? by mutableStateOf<Location?>(null)
         private set
 
     private lateinit var locationManager: LocationManager
@@ -45,7 +45,7 @@ object LocationUtil {
         _setLocation(null)
     }
 
-    fun valid():Boolean {
+    fun valid(): Boolean {
         return (currentLocation != null)
     }
 
@@ -72,6 +72,7 @@ object LocationUtil {
                 2
             )
         } else {
+            println("ca")
             val lastKnownLocation =
                 locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (lastKnownLocation != null) {
@@ -88,7 +89,7 @@ object LocationUtil {
 
 }
 
-object GPSGeoLocationListener: LocationListener {
+object GPSGeoLocationListener : LocationListener {
     override fun onLocationChanged(location: Location) {
         LocationUtil.updateLocation(location)
     }
