@@ -61,10 +61,10 @@ fun VerifyByLocationCompose(
     ) { permissionsMap ->
         val areGranted = permissionsMap.values.reduce { acc, next -> acc || next }
         if (areGranted) {
-            LocationUtil.getCurrentLocation { location: Location ->
-                callback(location)
+            if (LocationUtil.valid()) {
+                callback(LocationUtil.currentLocation!!)
                 locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                locationLCEViewModel.updateFetchedLocation(location = location)
+                locationLCEViewModel.updateFetchedLocation(location = LocationUtil.currentLocation!!)
             }
         } else {
             locationLCEViewModel.updateLoadingState(false);
@@ -140,10 +140,10 @@ fun VerifyByLocationCompose(
                                 locationPermissions,
                                 launcherForLocationPermission
                             ) {
-                                LocationUtil.getCurrentLocation { location: Location ->
-                                    callback(location)
+                                if (LocationUtil.valid()) {
+                                    callback(LocationUtil.currentLocation!!)
                                     locationLCEViewModel.updateLoadingState(isLoading = !locationLCEViewModel.isLoading)
-                                    locationLCEViewModel.updateFetchedLocation(location = location)
+                                    locationLCEViewModel.updateFetchedLocation(location = LocationUtil.currentLocation!!)
                                 }
                             }
 

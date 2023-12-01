@@ -90,7 +90,7 @@ class PropertyListViewModel(
 
     private fun fetchNearestTask() {
         if (!isNotificationShown) {
-            LocationUtil.getCurrentLocation { location ->
+            if (LocationUtil.valid()) {
                 run {
                     inSalePropertyList.value.forEach { it ->
                         run {
@@ -100,7 +100,7 @@ class PropertyListViewModel(
                                 var distance = GeoFenceUtil.calculateDistance(
                                     it.todo.latitude ?: 0.0,
                                     it.todo.longitude ?: 0.0,
-                                    location
+                                    LocationUtil.currentLocation!!
                                 )
                                 if (distance >= THRESHOLD_DISTANCE) {
                                     isNotificationShown = true
@@ -187,8 +187,8 @@ class PropertyListViewModel(
             Filter.GEO_LOCATION -> {
                 viewModelScope.launch {
                     repo.getAllTodosWithSubTodos(status = status).collect { list ->
-                        LocationUtil.getCurrentLocation { location ->
-                            callback(GeoFenceUtil.sortLocationByDistance(list, location))
+                        if (LocationUtil.valid()) {
+                            callback(GeoFenceUtil.sortLocationByDistance(list, LocationUtil.currentLocation!!))
                         }
                     }
                 }
