@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.sharp.DateRange
-import androidx.compose.material.icons.sharp.KeyboardArrowRight
 import androidx.compose.material.icons.sharp.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,14 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,11 +42,6 @@ import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
-import kotlinx.coroutines.delay
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-
-
 @Composable
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
