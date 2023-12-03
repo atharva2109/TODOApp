@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -169,7 +170,8 @@ fun DetailsPage(todoId: Long) {
                             Box(
                                 Modifier
                                     .fillMaxWidth()
-                                    .size(150.dp)
+                                    .height(300.dp)
+
                             ) {
                                 collecetedImages.map { bitmap -> bitmap.image }
                                     ?.let { it1 -> ImageLoader(bitmapList = it1) }
