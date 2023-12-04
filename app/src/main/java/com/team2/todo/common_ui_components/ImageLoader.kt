@@ -1,4 +1,5 @@
 package com.team2.todo.common_ui_components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 
@@ -41,7 +42,8 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
         Box(
             modifier = Modifier
                 .aspectRatio(1f)
-                .fillMaxWidth().padding(16.dp),
+                .fillMaxWidth()
+                .padding(16.dp),
 
             ) {
             LazyRow(
@@ -51,13 +53,14 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                     Card(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,
-                        ), modifier = Modifier.clickable {
-                            if (index != currentImageIndex) {
-                                coroutineScope.launch {
-                                    currentImageIndex = index
+                        ), modifier = Modifier
+                            .clickable {
+                                if (index != currentImageIndex) {
+                                    coroutineScope.launch {
+                                        currentImageIndex = index
+                                    }
                                 }
                             }
-                        }
                             .fillParentMaxHeight()
                             .fillParentMaxWidth(),
                         elevation = CardDefaults.cardElevation(
@@ -66,7 +69,6 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
 
                     ) {
 
-
                         if (bitmap != null) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
@@ -74,8 +76,7 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(0.5f)
-                                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                                ,
+                                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                                 contentScale = ContentScale.Fit,
                                 alignment = Alignment.Center
 

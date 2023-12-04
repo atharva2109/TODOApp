@@ -165,7 +165,8 @@ fun DetailsPage(todoId: Long) {
                             Box(
                                 Modifier
                                     .fillMaxWidth()
-                                    .size(150.dp)
+                                    .height(300.dp)
+
                             ) {
                                 collecetedImages.map { bitmap -> bitmap.image }
                                     ?.let { it1 -> ImageLoader(bitmapList = it1) }
