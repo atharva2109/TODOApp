@@ -150,7 +150,6 @@ fun SubTaskListItem(
                         fontSize = 15.sp,
                         textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
-                    if (shouldShowVerified()) LocationVerifiedLogo()
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -178,12 +177,6 @@ fun SubTaskListItem(
                         viewModel.updateSubTodo(subTask.subTodoId,checkedState!!)
 
                     })
-                    Box(modifier = Modifier.clickable { viewModel.deleteTheSubTask(subTask.subTodoId) },) {
-                        Icon(
-                            Icons.Filled.Delete,
-                            contentDescription = null
-                        )
-                    }
                 }
             }
 
