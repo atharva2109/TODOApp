@@ -47,6 +47,8 @@ object AppUtil {
         intent.setPackage("com.google.android.apps.maps")
         ContextCompat.startActivity(context, intent, null)
     }
+    const val OVERDUE = "OVERDUE!"
+
 }
 
 fun checkOverdue(dateselected: LocalDateTime): Boolean {
