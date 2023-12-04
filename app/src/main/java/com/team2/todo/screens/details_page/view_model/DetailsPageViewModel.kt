@@ -20,6 +20,11 @@ import kotlinx.coroutines.launch
 class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: SubTodoRepo) :
     ViewModel() {
 
+    fun deleteTheSubTask(subTodoId: Long) {
+        viewModelScope.launch {
+            subTodoRepo.deleteProperty(subTodoId)
+        }
+    }
 
     fun getPropertyFromId(propertyId: Long): Flow<List<TodoWithSubTodos>> {
         return repo.getTodoWithSubTodosBasedOnTodoId(propertyId)
@@ -28,6 +33,13 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
     fun updateTodo(todoId: Long, status: Boolean): Unit {
         viewModelScope.launch {
             repo.updateTodoStatus(todoId, status)
+        }
+
+    }
+
+    fun updateSubTodo(todoId: Long, status: Boolean): Unit {
+        viewModelScope.launch {
+            subTodoRepo.updateSubTodoStatus(todoId, status)
         }
 
     }
