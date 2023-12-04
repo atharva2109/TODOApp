@@ -32,6 +32,13 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
 
     }
 
+    fun updateSubTodo(todoId: Long, status: Boolean): Unit {
+        viewModelScope.launch {
+            subTodoRepo.updateSubTodoStatus(todoId, status)
+        }
+
+    }
+
     fun getTodoImages(id: Long): Flow<List<Images>> {
         return repo.getAllTodoImagesBasedOnTodo(id)
     }
