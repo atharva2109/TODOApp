@@ -21,6 +21,7 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
     ViewModel() {
 
 
+
     fun getPropertyFromId(propertyId: Long): Flow<List<TodoWithSubTodos>> {
         return repo.getTodoWithSubTodosBasedOnTodoId(propertyId)
     }
