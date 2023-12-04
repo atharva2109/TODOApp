@@ -12,54 +12,49 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.sharp.DateRange
-import androidx.compose.material.icons.sharp.Home
-import androidx.compose.material.icons.sharp.Info
 import androidx.compose.material.icons.sharp.Warning
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.CommonAppBar
+import com.team2.todo.common_ui_components.CountdownTimerForDueDate
 import com.team2.todo.common_ui_components.EmptyList
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
-import com.team2.todo.utils.NavigationUtil
-import com.team2.todo.utils.Screen
-
 @Composable
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
     viewModel.getSubTodoById(subTodoId)
     val propertySubTaskState by remember { viewModel.subTodo }.collectAsState()
+
     if (propertySubTaskState == null) {
         EmptyList(title = "No Active Sales Found", drawableID = R.drawable.ic_no_in_sale_list)
 
     } else {
+
+        var remainingHours =
+            propertySubTaskState!!.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
 
 
         Scaffold(topBar = {
@@ -116,24 +111,29 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
+                            Spacer(modifier = Modifier.width(1.dp))
                             propertySubTaskState?.priority?.let {
                                 Icon(
                                     imageVector = Icons.Sharp.Warning,
-                                    contentDescription = "Localized description",
-                                    modifier = Modifier.size(18.dp),
+                                    contentDescription = null,
+                                    Modifier
+                                        .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
+                                        .size(20.dp),
                                     tint = AppUtil.getPriorityColor(it)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = AppUtil.getPriorityString(it),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 15.sp,
+                                    color = AppUtil.getPriorityColor(it),
                                     textAlign = TextAlign.Start
                                 )
                             }
                         }
-                        Divider( modifier = Modifier.padding(top = 8.dp , bottom = 8.dp))
-
+                        Divider(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
@@ -141,10 +141,11 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                         ) {
 
                             Icon(
-                                imageVector = Icons.Sharp.DateRange,
-                                contentDescription = "Localized description",
-                                modifier = Modifier.size(18.dp),
-                                tint = Color.Blue
+                                imageVector = Icons.Filled.DateRange,
+                                contentDescription = null,
+                                Modifier
+                                    .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
+                                    .size(20.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -156,13 +157,43 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 textAlign = TextAlign.Start
                             )
                         }
-                        Divider( modifier = Modifier.padding(top = 8.dp , bottom = 2.dp))
-                        DisplaySubTodoImage(propertySubTaskState?.image)
-                        Divider( modifier = Modifier.padding(top = 2.dp , bottom = 8.dp))
+                        Divider(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
-                            ) {
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.duration),
+                                contentDescription = null,
+                                Modifier
+                                    .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
+                                    .size(20.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            if (remainingHours != null) {
+                                Text(
+                                    text = remainingHours,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+
+                        }
+                        Divider(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                        )
+                        DisplaySubTodoImage(propertySubTaskState?.image)
+                        Divider(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
 
                             propertySubTaskState?.description?.let {
                                 Text(
@@ -179,7 +210,5 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
             }
         }
     }
-
-
 }
 

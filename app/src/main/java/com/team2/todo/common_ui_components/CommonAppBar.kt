@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.team2.todo.ui.theme.AppBarBackGroundColor
 import com.team2.todo.ui.theme.AppBarContentColor
 import com.team2.todo.utils.NavigationUtil
@@ -35,7 +36,8 @@ fun CommonAppBar(text: String = "Dummy App Bar", actions: @Composable RowScope.(
             Text(
                 text = text,
                 color = AppBarContentColor,
-                fontWeight = FontWeight.Bold
+                fontSize = 23.sp,
+                fontWeight = FontWeight.SemiBold,
             )
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = AppBarBackGroundColor),
