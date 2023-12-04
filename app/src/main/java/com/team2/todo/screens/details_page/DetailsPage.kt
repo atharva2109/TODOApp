@@ -68,6 +68,7 @@ import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
+import com.team2.todo.screens.details_page.ui_components.LocateMe
 import com.team2.todo.screens.details_page.ui_components.SubTaskListItem
 import com.team2.todo.screens.details_page.ui_components.TodosCard
 import com.team2.todo.screens.details_page.view_model.DetailsPageViewModel
@@ -487,23 +488,3 @@ fun DetailsPage(todoId: Long) {
     }
 }
 
-@Composable
-@Preview
-fun LocateMe(){
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .border(
-                1.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(20),
-
-                )
-            .padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(painter = painterResource(id = R.drawable.ic_locate_property), contentDescription = null,Modifier.height(100.dp))
-        Text(text = "Locate Me",Modifier.weight(1f), fontSize = 15.sp)
-
-    }
-
-}

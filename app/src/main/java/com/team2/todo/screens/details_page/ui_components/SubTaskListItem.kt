@@ -43,7 +43,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierInfo
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -157,7 +159,7 @@ fun SubTaskListItem(
                 ) {
                     Text(
                         text = title!!,
-                        fontSize = 23.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
@@ -171,11 +173,19 @@ fun SubTaskListItem(
             Box(
                 modifier = Modifier.padding(end = 15.dp)
             ) {
-                Checkbox(checked = checkedState!!, onCheckedChange = {
-                    checkedState = !checkedState!!
-                    viewModel.updateSubTodo(subTask.subTodoId,checkedState!!)
+                Row(){
+                    Checkbox(checked = checkedState!!, onCheckedChange = {
+                        checkedState = !checkedState!!
+                        viewModel.updateSubTodo(subTask.subTodoId,checkedState!!)
 
-                })
+                    })
+                    Box(modifier = Modifier.clickable { viewModel.deleteTheSubTask(subTask.subTodoId) },) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = null
+                        )
+                    }
+                }
             }
 
 
