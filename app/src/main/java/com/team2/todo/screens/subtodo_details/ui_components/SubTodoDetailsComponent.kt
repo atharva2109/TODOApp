@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.sharp.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,7 @@ import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
+
 @Composable
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
@@ -53,7 +56,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
     } else {
 
-        var remainingHours =
+        var due =
             propertySubTaskState!!.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
 
 
@@ -103,8 +106,13 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             .padding(16.dp)
                             .fillMaxWidth()
                     ) {
-
                         Spacer(modifier = Modifier.height(8.dp))
+
+                        DisplaySubTodoImage(propertySubTaskState?.image)
+
+                        Divider(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
@@ -117,7 +125,12 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                     imageVector = Icons.Sharp.Warning,
                                     contentDescription = null,
                                     Modifier
-                                        .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
+                                        .padding(
+                                            start = 5.dp,
+                                            top = 5.dp,
+                                            end = 5.dp,
+                                            bottom = 5.dp
+                                        )
                                         .size(20.dp),
                                     tint = AppUtil.getPriorityColor(it)
                                 )
@@ -165,28 +178,56 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.duration),
-                                contentDescription = null,
-                                Modifier
-                                    .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
-                                    .size(20.dp),
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            if (remainingHours != null) {
-                                Text(
-                                    text = remainingHours,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    textAlign = TextAlign.Start
-                                )
+
+                            if (due != null) {
+                                if (due != AppUtil.OVERDUE) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.duration),
+                                        contentDescription = null,
+                                        Modifier
+                                            .padding(
+                                                start = 5.dp,
+                                                top = 5.dp,
+                                                end = 5.dp,
+                                                bottom = 5.dp
+                                            )
+                                            .size(20.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = due,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        textAlign = TextAlign.Start
+                                    )
+                                } else {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.duration),
+                                        contentDescription = null,
+                                        Modifier
+                                            .padding(
+                                                start = 5.dp,
+                                                top = 5.dp,
+                                                end = 5.dp,
+                                                bottom = 5.dp
+                                            )
+                                            .size(20.dp),
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = AppUtil.OVERDUE,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.error,
+                                        textAlign = TextAlign.Start,
+                                        fontStyle = FontStyle.Italic
+
+                                    )
+                                }
+
                             }
 
                         }
-                        Divider(
-                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
-                        )
-                        DisplaySubTodoImage(propertySubTaskState?.image)
                         Divider(
                             modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
                         )
@@ -194,7 +235,14 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
                         ) {
+                            Spacer(modifier = Modifier.width(1.dp))
 
+                            Icon(
+                                imageVector = Icons.Filled.List,
+                                contentDescription = null,
+                                Modifier.padding(end = 5.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
                             propertySubTaskState?.description?.let {
                                 Text(
                                     text = it,
@@ -205,6 +253,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 )
                             }
                         }
+
                     }
                 }
             }
