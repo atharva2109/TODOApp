@@ -76,7 +76,6 @@ import kotlinx.coroutines.launch
 fun SubTaskListItem(
     property: TodoWithSubTodos,
     subTask: SubTodo,
-    onClearTaskClicked: () -> Unit,
     viewModel: DetailsPageViewModel
 ) {
 

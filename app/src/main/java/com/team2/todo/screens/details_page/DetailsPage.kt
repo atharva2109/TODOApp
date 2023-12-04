@@ -471,7 +471,6 @@ fun DetailsPage(todoId: Long) {
                                         SubTaskListItem(
                                             property = propertyDetails,
                                             subTask = subTask,
-                                            onClearTaskClicked = { viewModel.updateSubTodo(subTask.subTodoId, subTask.status!!)},
                                             viewModel = viewModel
                                             )
                                     }
