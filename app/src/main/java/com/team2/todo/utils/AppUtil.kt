@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
 import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
 import com.team2.todo.ui.theme.PriorityHigh
@@ -39,7 +40,7 @@ object AppUtil {
         return color
     }
 
-    fun openMaps(lat: Double, lon: Double,context: Context){
+    fun openMaps(lat: Double, lon: Double, context: Context) {
         val stringLat = lat.toString()
         val stringLon = lon.toString()
         val intentUri = Uri.parse("geo:$stringLat,$stringLon")
@@ -47,12 +48,20 @@ object AppUtil {
         intent.setPackage("com.google.android.apps.maps")
         ContextCompat.startActivity(context, intent, null)
     }
+
     const val OVERDUE = "OVERDUE!"
+
+    fun shouldShowVerified(property: TodoWithSubTodos): Boolean {
+        var latitudeNotPresent = (property.todo.latitude == null || property.todo.latitude == 0.0)
+        var longitudeNotPresent =
+            (property.todo.longitude == null || property.todo.longitude == 0.0)
+        return !(latitudeNotPresent && longitudeNotPresent)
+    }
 
 }
 
 fun checkOverdue(dateselected: LocalDateTime): Boolean {
-        val currentDate = LocalDateTime.now()
-       return dateselected.isBefore(currentDate)
+    val currentDate = LocalDateTime.now()
+    return dateselected.isBefore(currentDate)
 
 }

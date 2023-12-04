@@ -36,7 +36,7 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 
 
 @Composable
-fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
+fun TodosCard(todos: SubTodo/* dateTime: String*/) {
     var checkedState by remember { mutableStateOf(todos.status) }
 
     ElevatedCard(
@@ -44,14 +44,7 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
             defaultElevation = 6.dp,
 
             ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(CircleShape)
-            .padding(15.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
-    )
     {
 
         Row(
@@ -80,7 +73,7 @@ fun TodosCard(todos: SubTodo,/* dateTime: String*/) {
 
                 )
             }
-            Box(){}
+            Box() {}
 
         }
 

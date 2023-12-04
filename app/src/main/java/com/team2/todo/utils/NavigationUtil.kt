@@ -5,6 +5,7 @@ package com.team2.todo.utils
  */
 
 import android.util.Log
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -88,6 +89,7 @@ fun NavHostControllerProvider() {
             route = "${Screen.PreDefinedSubTask.name}/{todoId}",
             arguments = listOf(navArgument("todoId") { type = NavType.LongType })
         ) { backStackEntry ->
+            Log.d("In Edit Route", "In  PreDefinedSubTask Route")
             val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
             PreDefinedSubTask(todoId = todoId)
         }
