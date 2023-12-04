@@ -5,6 +5,7 @@ package com.team2.todo.utils
  */
 
 import android.util.Log
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,11 +15,12 @@ import androidx.navigation.navArgument
 import com.team2.todo.screens.listing.MainScreen
 import com.team2.todo.screens.add_todo.AddTodos
 import com.team2.todo.screens.details_page.DetailsPage
+import com.team2.todo.screens.pre_defined_sub_task.PreDefinedSubTask
 import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails,EditSubTodo
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails, EditSubTodo, PreDefinedSubTask
 }
 
 object NavigationUtil {
@@ -79,8 +81,17 @@ fun NavHostControllerProvider() {
             arguments = listOf(navArgument("todoId") { type = NavType.LongType })
         ) { backStackEntry ->
             val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
-            Log.d("In Edit Route","In edit route")
-            AddTodos(isSubTodo = false, todoid = todoId,isEdit = true)
+            Log.d("In Edit Route", "In edit route")
+            AddTodos(isSubTodo = false, todoid = todoId, isEdit = true)
+        }
+
+        composable(
+            route = "${Screen.PreDefinedSubTask.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            Log.d("In Edit Route", "In  PreDefinedSubTask Route")
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            PreDefinedSubTask(todoId = todoId)
         }
     }
 }

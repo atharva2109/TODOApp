@@ -47,7 +47,7 @@ fun DisplaySubTodoImage(imageBitmap: Bitmap?) {
                 else{
 
                     Image(
-                        painter = painterResource(id = R.drawable.forsale),
+                        painter = painterResource(id = R.drawable.ic_task_place_holder),
                         contentDescription = ""
                     )
 

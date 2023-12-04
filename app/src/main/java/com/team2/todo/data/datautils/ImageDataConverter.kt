@@ -8,16 +8,19 @@ import java.io.ByteArrayOutputStream
 class ImageDataConverter {
 
     @TypeConverter
-    fun fromBitmapToByteArray(bitmap: Bitmap): ByteArray {
-        var outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        return outputStream.toByteArray()
-
+    fun fromBitmap(bitmap: Bitmap?): ByteArray? {
+        return bitmap?.let {
+            val stream = ByteArrayOutputStream()
+            it.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.toByteArray()
+        }
     }
 
     @TypeConverter
-    fun fromByteArrayToBitmap(byteArr: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(byteArr, 0, byteArr.size)
+    fun toBitmap(byteArray: ByteArray?): Bitmap? {
+        return byteArray?.let {
+            BitmapFactory.decodeByteArray(it, 0, it.size)
+        }
     }
 
 }

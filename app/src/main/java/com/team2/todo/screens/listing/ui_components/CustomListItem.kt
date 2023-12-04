@@ -104,9 +104,7 @@ fun CustomListItem(
                 0.3.dp,
                 color = getPriorityColor(property.todo.priority ?: -1),
                 shape = RoundedCornerShape(10.dp)
-            )
-            .clickable {
-            },
+            ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp,
         ),

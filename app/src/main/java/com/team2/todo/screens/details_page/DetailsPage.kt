@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,17 +22,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -54,6 +61,7 @@ import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,15 +125,14 @@ fun DetailsPage(todoId: Long) {
         var checkedState by remember { mutableStateOf(propertyDetails.todo.status) }
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { NavigationUtil.navigateTo("${Screen.AddOrEditSubToDo.name}/${todoId}") },
-                    modifier = Modifier.padding(end = 10.dp)
-                ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add")
-                }
-//                    icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
-//                    text = { Text(text = "Add New Task") },
-
+                if (!propertyDetails.todo.status) AddSubTodoFloatingButtons(
+                    onCreateNewClick = {
+                        NavigationUtil.navigateTo("${Screen.AddOrEditSubToDo.name}/${todoId}")
+                    },
+                    onPickFromPreDefinedClick = {
+                        NavigationUtil.navigateTo("${Screen.PreDefinedSubTask.name}/${todoId}")
+                    }
+                )
             },
             topBar = {
 
@@ -135,7 +142,7 @@ fun DetailsPage(todoId: Long) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(propertyDetails.todo.title)
-                            LocationVerifiedLogo()
+                            if (AppUtil.shouldShowVerified(propertyDetails)) LocationVerifiedLogo()
                         }
                     },
                     navigationIcon = {
@@ -169,36 +176,18 @@ fun DetailsPage(todoId: Long) {
                                     NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoId}")
                                 }
                         )
-                    })},
-
-//                CommonAppBar(
-//                    text = propertyDetails.todo.title,
-//                    actions = {
-//                        LocationVerifiedLogo()
-//                        Icon(
-//                            Icons.Filled.Edit,
-//                            "Extended floating action button.",
-//                            tint = GreyColor,
-//                            modifier = Modifier
-//                                .border(
-//                                    2.dp,
-//                                    GreyColor,
-//                                    shape = RoundedCornerShape(8.dp)
-//                                )
-//                                .padding(8.dp)
-//                                .clickable {
-//                                    NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoId}")
-//                                }
-//                        )
-//                    },
-//                )
-          //  },
+                    })
+            },
             content = {
+                val scrollState = rememberScrollState()
+
                 Column(
                     modifier = Modifier
                         .padding(it)
-                        .padding(horizontal = 15.dp)
-                        .fillMaxWidth(),
+                        .padding(bottom = 50.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .verticalScroll(state = scrollState),
                 ) {
 
                     if (collecetedImages.isEmpty()) {
@@ -236,17 +225,17 @@ fun DetailsPage(todoId: Long) {
                         }
 
 
-                    Spacer(modifier = Modifier.padding(top = 10.dp))
+                        Spacer(modifier = Modifier.padding(top = 10.dp))
 
-                    Row(Modifier.fillMaxWidth()) {
-                        Icon(
-                            imageVector = Icons.Filled.List,
-                            contentDescription = null,
-                            Modifier.padding(end = 5.dp)
-                        )
-                        Text(text = propertyDetails.todo.description)
+                        Row(Modifier.fillMaxWidth()) {
+                            Icon(
+                                imageVector = Icons.Filled.List,
+                                contentDescription = null,
+                                Modifier.padding(end = 5.dp)
+                            )
+                            Text(text = propertyDetails.todo.description)
+                        }
                     }
-                }
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
@@ -260,11 +249,12 @@ fun DetailsPage(todoId: Long) {
                                 Spacer(modifier = Modifier.padding(horizontal = 1.dp))
 
                                 Icon(
-                                    imageVector = Icons.Filled.LocationOn,
+                                    imageVector = Icons.Filled.Warning,
                                     contentDescription = null,
-                                    Modifier.padding(end = 5.dp)
+                                    Modifier.padding(end = 5.dp),
+                                    tint = Color(0XFFffcc00)
                                 )
-                                Text(text = "Not Verified")
+                                Text(text = "Property Not Verified")
 
                             }
                             Spacer(modifier = Modifier.padding(top = 10.dp))
@@ -279,7 +269,8 @@ fun DetailsPage(todoId: Long) {
                                             propertyDetails.todo.longitude!!,
                                             context = todoContext
                                         )
-                                    },Arrangement.Center ) {
+                                    }, Arrangement.Center
+                            ) {
                                 LocateMe()
                             }
 
@@ -294,7 +285,7 @@ fun DetailsPage(todoId: Long) {
                         Row {
                             Spacer(modifier = Modifier.padding(horizontal = 1.dp))
                             Icon(
-                                imageVector = Icons.Filled.Warning,
+                                imageVector = Icons.Default.Info,
                                 contentDescription = null,
                                 Modifier.padding(end = 5.dp),
                                 tint = AppUtil.getPriorityColor(propertyDetails.todo.priority!!)
@@ -369,75 +360,39 @@ fun DetailsPage(todoId: Long) {
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
-                    if (propertyDetails.todo.status == false) {
-                        Box(
-                            Modifier
-                                .clickable {
-                                    checkedState = !checkedState
-                                    viewModel.updateTodo(
-                                        propertyDetails.todo.todoId,
-                                        checkedState!!
-                                    )
-                                    NavigationUtil.navigateTo(Screen.MainScreen)
-                                }
-                                .fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Row(
-                                Modifier
-                                    .padding(10.dp)
-                                    .border(
-                                        1.dp,
-                                        Color.Black,
-                                        shape = RoundedCornerShape(20)
-                                    ),
-                                Arrangement.Center,
-                            ) {
-                                Text(
-                                    text = " Mark Completed",
-                                    Modifier.padding(end = 20.dp),
-                                    fontStyle = FontStyle.Italic
-                                )
-                                Image(
-                                    painter = painterResource(id = R.drawable.completedtodo),
-                                    contentDescription = null,
-                                    Modifier.size(25.dp)
-                                )
+                    Box(
+                        Modifier
+                            .clickable {
+
                             }
-                        }
-                    } else {
-                        Box(
-                            Modifier
-                                .clickable {
-                                    checkedState = !checkedState
-                                    viewModel.updateTodo(
-                                        propertyDetails.todo.todoId,
-                                        checkedState!!
-                                    )
-                                    NavigationUtil.navigateTo(Screen.MainScreen)
-                                }
-                                .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Button(onClick = {
+                            checkedState = !checkedState
+                            viewModel.updateTodo(
+                                propertyDetails.todo.todoId,
+                                checkedState
+                            )
+                            NavigationUtil.goBack()
+                        }) {
                             Row(
                                 Modifier
-                                    .padding(10.dp)
-                                    .border(
-                                        1.dp,
-                                        color = BlueColor,
-                                        shape = RoundedCornerShape(20)
-                                    ),
+                                    .padding(5.dp),
                                 Arrangement.Center,
                             ) {
                                 Text(
-                                    text = " Mark As Incomplete",
+                                    text = if (!propertyDetails.todo.status) "Mark Completed" else "Mark as InComplete",
                                     Modifier.padding(end = 20.dp),
-                                    fontStyle = FontStyle.Italic
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Image(
-                                    painter = painterResource(id = R.drawable.incomplete),
+                                    painter = painterResource(id = if (!propertyDetails.todo.status) R.drawable.completedtodo else R.drawable.incomplete),
                                     contentDescription = null,
                                     Modifier.size(25.dp)
                                 )
                             }
                         }
                     }
+
 
 
                     Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -460,20 +415,19 @@ fun DetailsPage(todoId: Long) {
 
 
                     } else {
+                        LazyColumn(
+                            modifier = Modifier.height(500.dp)
+                        ) {
+                            items(propertyDetails.subtodos) { subTask ->
+                                //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
+                                Box() {
+                                    subTodoId = subTask.subTodoId.toInt()
 
-                        Box {
-                            LazyColumn() {
-                                items(propertyDetails.subtodos) { subTask ->
-                                    //subTask.title?.let { it1 -> Text(text = it1, Modifier.padding(15.dp)) }
-                                    Box() {
-                                        subTodoId = subTask.subTodoId.toInt()
-                                        TodosCard(todos = subTask)
-                                        SubTaskListItem(
-                                            property = propertyDetails,
-                                            subTask = subTask,
-                                            viewModel = viewModel
-                                            )
-                                    }
+                                    SubTaskListItem(
+                                        property = propertyDetails,
+                                        subTask = subTask,
+                                        viewModel = viewModel
+                                    )
                                 }
                             }
                         }
@@ -484,6 +438,33 @@ fun DetailsPage(todoId: Long) {
 
 
             })
+    }
+}
+
+@Composable
+fun AddSubTodoFloatingButtons(onCreateNewClick: () -> Unit, onPickFromPreDefinedClick: () -> Unit) {
+    var expand by remember {
+        mutableStateOf(false)
+    }
+    return Column(horizontalAlignment = Alignment.End) {
+        if (expand) ExtendedFloatingActionButton(
+            modifier = Modifier.padding(5.dp),
+            onClick = { onCreateNewClick() },
+            icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
+            text = { Text(text = "Create New Task") },
+        )
+        if (expand) ExtendedFloatingActionButton(
+            modifier = Modifier.padding(5.dp),
+            onClick = { onPickFromPreDefinedClick() },
+            icon = { Icon(Icons.Filled.List, "Extended floating action button.") },
+            text = { Text(text = "Pick Pre Defined") },
+        )
+        FloatingActionButton(
+            onClick = { expand = !expand },
+            modifier = Modifier.padding(end = 10.dp)
+        ) {
+            Icon(if (expand) Icons.Filled.Close else Icons.Filled.Add, contentDescription = "Add")
+        }
     }
 }
 

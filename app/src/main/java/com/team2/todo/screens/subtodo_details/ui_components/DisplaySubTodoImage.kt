@@ -23,36 +23,35 @@ import com.team2.todo.R
 
 @Composable
 fun DisplaySubTodoImage(imageBitmap: Bitmap?) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(color = Color.White, shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center,
-            ) {
 
-                if (imageBitmap != null) {
-                    Image(
-                        bitmap = imageBitmap.asImageBitmap(),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxWidth(.7f)
-                            .height(250.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                }
-                else{
+            if (imageBitmap != null) {
+                Image(
+                    bitmap = imageBitmap.asImageBitmap(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth(.7f)
+                        .height(250.dp),
+                    contentScale = ContentScale.Fit
+                )
+            } else {
 
-                    Image(
-                        painter = painterResource(id = R.drawable.forsale),
-                        contentDescription = ""
-                    )
-
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.ic_task_place_holder),
+                    contentDescription = ""
+                )
 
             }
+
         }
+    }
 }
