@@ -65,7 +65,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
     } else {
 
-        var due =
+        var timerState =
             propertySubTaskState!!.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
 
         var todoid=  propertySubTaskState!!.todoId
@@ -108,10 +108,10 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoid}")
-                                })
-                    },
-                )
+                                    //NavigationUtil.navigateTo("")
+                                }
+                        )
+                    })
 
             }
         }) { padding ->
@@ -213,53 +213,82 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
-                            if (due != null) {
-                                if (due != AppUtil.OVERDUE) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.duration),
-                                        contentDescription = null,
-                                        Modifier
-                                            .padding(
-                                                start = 5.dp,
-                                                top = 5.dp,
-                                                end = 5.dp,
-                                                bottom = 5.dp
-                                            )
-                                            .size(20.dp),
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = due,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        textAlign = TextAlign.Start
-                                    )
-                                } else {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.duration),
-                                        contentDescription = null,
-                                        Modifier
-                                            .padding(
-                                                start = 5.dp,
-                                                top = 5.dp,
-                                                end = 5.dp,
-                                                bottom = 5.dp
-                                            )
-                                            .size(20.dp),
-                                        tint = MaterialTheme.colorScheme.error
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = AppUtil.OVERDUE,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.error,
-                                        textAlign = TextAlign.Start,
-                                        fontStyle = FontStyle.Italic
+                            if(propertySubTaskState?.status != true)
+                            {
+                                if (timerState != null) {
+                                    if (timerState != AppUtil.OVERDUE) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.duration),
+                                            contentDescription = null,
+                                            Modifier
+                                                .padding(
+                                                    start = 5.dp,
+                                                    top = 5.dp,
+                                                    end = 5.dp,
+                                                    bottom = 5.dp
+                                                )
+                                                .size(20.dp),
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = timerState,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            textAlign = TextAlign.Start
+                                        )
+                                    } else {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.duration),
+                                            contentDescription = null,
+                                            Modifier
+                                                .padding(
+                                                    start = 5.dp,
+                                                    top = 5.dp,
+                                                    end = 5.dp,
+                                                    bottom = 5.dp
+                                                )
+                                                .size(20.dp),
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = AppUtil.OVERDUE,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            color = MaterialTheme.colorScheme.error,
+                                            textAlign = TextAlign.Start,
+                                            fontStyle = FontStyle.Italic
 
-                                    )
+                                        )
+                                    }
+
                                 }
-
                             }
+                            else{
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.duration),
+                                    contentDescription = null,
+                                    Modifier
+                                        .padding(
+                                            start = 5.dp,
+                                            top = 5.dp,
+                                            end = 5.dp,
+                                            bottom = 5.dp
+                                        )
+                                        .size(20.dp),
+                                    tint = MaterialTheme.colorScheme.tertiary
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = AppUtil.DONE,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    textAlign = TextAlign.Start,
+                                    fontStyle = FontStyle.Italic
+
+                                )
+                            }
+
 
                         }
                         Divider(

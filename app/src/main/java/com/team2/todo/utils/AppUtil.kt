@@ -51,6 +51,7 @@ object AppUtil {
     }
 
     const val OVERDUE = "OVERDUE!"
+    const val DONE = "DONE"
 
     fun shouldShowVerified(property: TodoWithSubTodos): Boolean {
         var latitudeNotPresent = (property.todo.latitude == null || property.todo.latitude == 0.0)
