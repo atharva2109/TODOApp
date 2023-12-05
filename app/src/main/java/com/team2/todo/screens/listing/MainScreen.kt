@@ -40,6 +40,7 @@ import com.team2.todo.screens.listing.ui_components.BottomNavigationCompose
 import com.team2.todo.screens.listing.ui_components.completed_sale.CompletedSaleList
 import com.team2.todo.screens.listing.ui_components.in_sale.InSaleList
 import com.team2.todo.screens.listing.view_model.ListingViewModel
+import com.team2.todo.utils.LocationUtil
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
@@ -58,6 +59,9 @@ fun MainScreen() {
     var ctx = LocalContext.current.applicationContext
     val viewModel = ListingViewModel.getInstance(repo = repo, filterViewModel, ctx)
 
+    if (LocationUtil.valid()) {
+        viewModel.fetchNearestTask()
+    }
 
     MaterialTheme(typography = Typography()) {
         Scaffold(

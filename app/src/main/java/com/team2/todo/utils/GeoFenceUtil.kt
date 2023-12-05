@@ -24,6 +24,7 @@ object GeoFenceUtil {
         return ((listDistancePair.sortedBy { it.second }).map { it.first })
     }
 
+    // calculates the distance between 2 point and returns the distance in meter
     fun calculateDistance(
         latitude: Double,
         longitude: Double,
@@ -38,6 +39,6 @@ object GeoFenceUtil {
                 cos(Math.toRadians(centerLocation.latitude)) * cos(Math.toRadians(latitude)) *
                 sin(longitudeDifference / 2) * sin(longitudeDifference / 2)
 
-        return earthRadius * (2 * atan2(sqrt(result), sqrt(1 - result)))
+        return earthRadius * (2 * atan2(sqrt(result), sqrt(1 - result))) * 1000
     }
 }
