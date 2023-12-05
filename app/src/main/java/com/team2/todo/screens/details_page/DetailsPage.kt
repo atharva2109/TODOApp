@@ -212,7 +212,6 @@ fun DetailsPage(todoId: Long) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(200.dp)
                                     .background(
                                         color = Color.White,
                                         shape = RoundedCornerShape(16.dp)

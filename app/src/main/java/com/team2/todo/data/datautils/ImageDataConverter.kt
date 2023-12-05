@@ -11,7 +11,7 @@ class ImageDataConverter {
     fun fromBitmap(bitmap: Bitmap?): ByteArray? {
         return bitmap?.let {
             val stream = ByteArrayOutputStream()
-            it.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            it.compress(Bitmap.CompressFormat.JPEG, 75, stream)
             stream.toByteArray()
         }
     }
