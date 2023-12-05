@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
+import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
@@ -26,7 +27,7 @@ import com.team2.todo.utils.Screen
 /**
  * Created by Manu KJ on 11/9/23.
  */
-
+class ReminderModel(val totalCount: Int, val property: TodoWithSubTodos)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview

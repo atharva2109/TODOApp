@@ -1,9 +1,12 @@
 package com.team2.todo.screens.listing.view_model
 
 import android.content.Context
-import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team2.todo.common_ui_components.ReminderModel
 import com.team2.todo.common_ui_components.filter.view_model.Filter
 import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
@@ -14,7 +17,7 @@ import com.team2.todo.utils.NotificationUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 /**
@@ -50,42 +53,46 @@ class PropertyListViewModel(
     private val THRESHOLD_DISTANCE = 500.0 // 500 in meters
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
+    var reminderModel by mutableStateOf<ReminderModel?>(null);
 
 
     init {
         fetchUpdatedList()
-        showReminderDueDate()
+        fetchClosestTask()
         fetchNearestTask()
     }
 
-    private fun showReminderDueDate() {
-        var count = 0;
-        var duedate: LocalDate = LocalDate.now()
+    private fun fetchClosestTask() {
+        var count = 0
         viewModelScope.launch {
             delay(3000)
-            inSalePropertyList.value.forEach { it ->
+            var closestDuePropertyIndex = -1
+            var previousClosestDateDifference = Long.MAX_VALUE
+            val MINUTES_IN_DAY = 360
+            inSalePropertyList.value.forEachIndexed { index, it ->
+                val dueDateTodo = it.todo.dueDate
+                val currentDate = LocalDateTime.now()
 
-                var dueDateTodo = it.todo.dueDate
-
-                var currentDate = LocalDate.now()
                 if (dueDateTodo != null) {
-                    duedate = dueDateTodo.toLocalDate()
-                } else {
-                    println("Fetched Due date is empty!!")
-                }
-                var daysDifference = ChronoUnit.DAYS.between(duedate, currentDate);
-                println(daysDifference)
-                if (daysDifference == 0L) {
-                    count++
-                }
+                    val currentDueDateDifference =
+                        ChronoUnit.MINUTES.between(dueDateTodo, currentDate)
 
+                    if (currentDueDateDifference >= 0 && currentDueDateDifference <= MINUTES_IN_DAY) {
+                        count++
+                        if (currentDueDateDifference < previousClosestDateDifference) {
+                            previousClosestDateDifference = currentDueDateDifference
+                            closestDuePropertyIndex = index
+                        }
+                    }
+                } else {
+                    println("Fetched Due date is empty for property at index $index!!")
+                }
             }
-            if (count !== 0) {
-                Toast.makeText(ctx, "You have $count pending tasks", Toast.LENGTH_LONG).show()
+            if (closestDuePropertyIndex != -1) {
+                reminderModel =
+                    ReminderModel(count, inSalePropertyList.value[closestDuePropertyIndex])
             }
         }
-
-
     }
 
     fun fetchNearestTask() {
