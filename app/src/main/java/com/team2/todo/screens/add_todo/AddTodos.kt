@@ -105,7 +105,12 @@ import java.util.regex.Pattern
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = false,isEditSubTodo:Boolean=false) {
+fun AddTodos(
+    isSubTodo: Boolean = false,
+    todoid: Long = 0,
+    isEdit: Boolean = false,
+    isEditSubTodo: Boolean = false
+) {
 
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
@@ -127,7 +132,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
     var subtodorepo = SubTodoRepo(db)
     var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
 
-    var editsubtodoviewmodel=FetchSubtodoViewModel(subtodorepo)
+    var editsubtodoviewmodel = FetchSubtodoViewModel(subtodorepo)
 
     var enteredTitle by rememberSaveable {
         mutableStateOf("")
@@ -192,45 +197,44 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
     var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
 
     var subtodoid by remember { mutableStateOf(0L) }
-    if(isEditSubTodo){
+    if (isEditSubTodo) {
         showFetchingSubTodoLoading = true
         LaunchedEffect(key1 = true) {
-            try{
+            try {
                 todosretrievalInProgress = true
-                subtodoRetrieved=editsubtodoviewmodel.fetchSubtodo(todoid)
+                subtodoRetrieved = editsubtodoviewmodel.fetchSubtodo(todoid)
                 todosretrievalInProgress = false
-                subtodoRetrieved?.collect{subTodo ->
-                for (todo in subTodo) {
-                    enteredTitle = todo.title?:""
-                    enteredDescription=todo.description?:""
-                    subtodoid=todo.subTodoId
-                    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    dateselected.value =
-                        todo.dueDate?.toLocalDate()?.format(dateFormatter) ?: "---"
+                subtodoRetrieved?.collect { subTodo ->
+                    for (todo in subTodo) {
+                        enteredTitle = todo.title ?: ""
+                        enteredDescription = todo.description ?: ""
+                        subtodoid = todo.subTodoId
+                        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        dateselected.value =
+                            todo.dueDate?.toLocalDate()?.format(dateFormatter) ?: "---"
 
-                    val timeformatter = DateTimeFormatter.ofPattern("[ HH:m[:ss]]")
-                    timeselected.value =
-                        todo.dueDate?.toLocalTime()?.format(timeformatter) ?: "---"
+                        val timeformatter = DateTimeFormatter.ofPattern("[ HH:m[:ss]]")
+                        timeselected.value =
+                            todo.dueDate?.toLocalTime()?.format(timeformatter) ?: "---"
 
-                    val priorityindex = todo.priority
-                    val priorityList = priorities.values()
+                        val priorityindex = todo.priority
+                        val priorityList = priorities.values()
 
-                    if (priorityindex != null && priorityindex in priorityList.indices) {
-                        defaultPriority = priorityList[priorityindex].name
-                    } else {
-                        defaultPriority = "Low"
-                    }
+                        if (priorityindex != null && priorityindex in priorityList.indices) {
+                            defaultPriority = priorityList[priorityindex].name
+                        } else {
+                            defaultPriority = "Low"
+                        }
 
                         val bitmap = todo.image
                         bitmap?.let {
                             updatedBitmapList.add(it)
                         }
 
-                    bitmapList = updatedBitmapList
+                        bitmapList = updatedBitmapList
+                    }
                 }
-            }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(ctx, "", Toast.LENGTH_SHORT)
                     .show()
@@ -301,10 +305,9 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                 .padding(it)
         ) {
             if (isSubTodo) {
-                if(isEditSubTodo){
-                    AddEditAppBar(isSubTodo,false,isEditSubTodo)
-                }
-                else {
+                if (isEditSubTodo) {
+                    AddEditAppBar(isSubTodo, false, isEditSubTodo)
+                } else {
                     AddEditAppBar(isSubTodo)
                 }
             } else if (isEdit) {
@@ -437,15 +440,15 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                         timeState.show()
                     })
 
-Log.d("Date select",dateselected.value)
-                Log.d("Time select",timeselected.value)
+                Log.d("Date select", dateselected.value)
+                Log.d("Time select", timeselected.value)
                 if (dateselected.value != "" && timeselected.value != "") {
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyyHH:mm[:ss]")
 
 
                     try {
                         localdateTime = LocalDateTime.parse(
-                            dateselected.value + timeselected.value, formatter
+                            dateselected.value.trim() + timeselected.value.trim(), formatter
                         )
                         Log.d("Local Time", localdateTime.toString())
 
@@ -503,8 +506,7 @@ Log.d("Date select",dateselected.value)
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
-                        }
-                        else if (isSubTodo && isEditSubTodo) {
+                        } else if (isSubTodo && isEditSubTodo) {
 
                             scope.launch {
                                 try {
@@ -544,8 +546,7 @@ Log.d("Date select",dateselected.value)
                                     e.printStackTrace()
                                 }
                             }
-                        }
-                        else if (isEdit) {
+                        } else if (isEdit) {
                             showAddingDbLoading = true
                             Log.d("Bitmpalistt inside update", bitmapList.toString())
                             Log.d("Due date before update", localdateTime.toString())
@@ -674,7 +675,7 @@ Log.d("Date select",dateselected.value)
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
                 Text(
-                    text = if (isEdit||isEditSubTodo) "UPDATE" else "ADD",
+                    text = if (isEdit || isEditSubTodo) "UPDATE" else "ADD",
                     color = Color.White,
                     modifier = Modifier.padding(vertical = 5.dp)
                 )
