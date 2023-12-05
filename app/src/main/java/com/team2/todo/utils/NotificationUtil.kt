@@ -1,5 +1,6 @@
 package com.team2.todo.utils
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -16,6 +17,7 @@ import kotlin.random.Random
  * Created by Manu KJ on 11/2/23.
  */
 
+@SuppressLint("StaticFieldLeak")
 object NotificationUtil {
     private lateinit var context: Context
     private lateinit var notificationManager: NotificationManager
@@ -30,38 +32,34 @@ object NotificationUtil {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = "Notification"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(LOCATION_CHANNEL_ID, channelName, importance)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channelName = "Notification"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(LOCATION_CHANNEL_ID, channelName, importance)
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun showGeoFencingNotification(property: TodoWithSubTodos) {
         var message =
-            "You have reached the location of ${property.todo.title}, pending task ${
+            "There are ${
                 getPendingSubTask(
                     property
                 )
-            } task";
-        if (notificationManager != null) {
-            val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
-                .setContentTitle("Location Reached")
-                .setContentText(message)
-                .setStyle(
-                    NotificationCompat.BigTextStyle()
-                        .bigText(message)
-                )
-                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
-                .setSmallIcon(R.drawable.ic_logo)
-                .build()
-
-            notificationManager.notify(
-                Random.nextInt(),
-                notification
+            } pending task on this property"
+        val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
+            .setContentTitle("You're near the ${property.todo.title} property")
+            .setContentText(message)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(message)
             )
-        }
+            .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+            .setSmallIcon(R.drawable.ic_logo)
+            .build()
+
+        notificationManager.notify(
+            Random.nextInt(),
+            notification
+        )
 
     }
 

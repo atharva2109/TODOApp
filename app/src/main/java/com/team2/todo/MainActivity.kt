@@ -1,6 +1,5 @@
 package com.team2.todo
 
-
 import android.content.Context
 import android.location.LocationManager
 import android.os.Bundle
@@ -17,14 +16,15 @@ import com.team2.todo.utils.NavHostControllerProvider
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.NotificationUtil
 import com.team2.todo.utils.LocationUtil
-import com.team2.todo.utils.PermissionUtil
+
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var locationManager: LocationManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        initializeLocationService()
 
         setContent {
             TODOTheme {
@@ -38,9 +38,6 @@ class MainActivity : ComponentActivity() {
                     NavigationUtil.init(navController)
                     NotificationUtil.init(this)
 
-                    locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    LocationUtil.init(this, this, locationManager)
-
                     //Navigation Provider i,e the Navigation graph
                     NavHostControllerProvider()
                 }
@@ -50,15 +47,28 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-
+        locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationManager.removeUpdates(GPSGeoLocationListener)
     }
 
     override fun onResume() {
         super.onResume()
 
+        initializeLocationService()
+    }
+
+    private fun initializeLocationService() {
+
         locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         LocationUtil.init(this, this, locationManager)
+
+        if(!LocationUtil.hasLocationPermission()) {
+            LocationUtil.requestLocationPermission()
+
+        } else {
+            LocationUtil.requestLocationUpdates()
+
+        }
     }
 }
 

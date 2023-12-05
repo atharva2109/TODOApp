@@ -16,7 +16,7 @@ import java.util.Date
  */
 
 @Composable
-fun DatePickerComponent():Pair<DatePickerDialog,MutableState<String>>{
+fun DatePickerComponent(): Pair<DatePickerDialog, MutableState<String>> {
     val year: Int
     val month: Int
     val day: Int
@@ -30,15 +30,15 @@ fun DatePickerComponent():Pair<DatePickerDialog,MutableState<String>>{
 
     mCalendar.time = Date()
 
-    val mDate = rememberSaveable{ mutableStateOf("") }
+    val mDate = rememberSaveable { mutableStateOf("") }
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            mDate.value = "$mDayOfMonth/${mMonth + 1}/$mYear"
         }, year, month, day
     )
 
-return Pair(mDatePickerDialog,mDate)
+    return Pair(mDatePickerDialog, mDate)
 
 }
