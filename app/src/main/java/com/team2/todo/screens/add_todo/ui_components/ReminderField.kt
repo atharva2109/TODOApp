@@ -8,8 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -17,28 +20,16 @@ import java.util.Locale
  * Created by Atharva K on 11/16/23.
  */
 @Composable
-fun ReminderField(dateselected: String, timeselected: String) {
-    val dateTime = "$dateselected $timeselected"
-    var formattedText by remember { mutableStateOf("") }
+fun ReminderField(dateSelected: LocalDateTime) {
+    val reminderDate =dateSelected.minusDays(1)
 
-            try {
-                val format = SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault())
-                val dateObj = format.parse(dateTime)
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val formattedDate = reminderDate.format(formatter)
 
-                if (dateObj != null) {
-                    val reminderTime = dateObj.time - 1 * 24 * 60 * 60 * 1000
-                    val reminderDate = Date(reminderTime)
-                    val reminderFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val date = reminderFormat.format(reminderDate)
-                    formattedText = "$date"
-
-                } else {
-                    formattedText = "Invalid date"
-                }
-
-            } catch (e: ParseException) {
-                formattedText = "Error parsing date"
-            }
-
-    Text(text = "We will remind you on: $formattedText", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center )
+    Text(
+        text = "We will remind you on: $formattedDate",
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        fontSize = 15.sp
+    )
 }

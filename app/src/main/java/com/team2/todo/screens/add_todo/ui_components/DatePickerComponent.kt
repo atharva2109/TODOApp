@@ -35,7 +35,8 @@ fun DatePickerComponent(): Pair<DatePickerDialog, MutableState<String>> {
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth + 1}/$mYear"
+            val formattedDay = if (mDayOfMonth < 10) "0$mDayOfMonth" else "$mDayOfMonth"
+            mDate.value = "$formattedDay/${mMonth + 1}/$mYear"
         }, year, month, day
     )
 
