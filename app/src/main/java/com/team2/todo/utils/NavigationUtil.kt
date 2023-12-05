@@ -20,9 +20,7 @@ import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-
     MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails, EditTodo,EditSubTodo, PreDefinedSubTask
-
 }
 
 object NavigationUtil {
