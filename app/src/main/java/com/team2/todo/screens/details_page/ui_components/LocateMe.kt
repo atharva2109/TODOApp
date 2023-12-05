@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,7 +21,7 @@ import com.team2.todo.R
 
 @Composable
 @Preview
-fun LocateMe(){
+fun LocateMe() {
     Row(
         Modifier
             .fillMaxWidth()
@@ -31,10 +32,19 @@ fun LocateMe(){
                 shape = RoundedCornerShape(20),
 
                 )
-            .padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(painter = painterResource(id = R.drawable.ic_locate_property), contentDescription = null,
-            Modifier.height(100.dp))
-        Text(text = "Locate Me", Modifier.weight(1f), fontSize = 15.sp)
+            .padding(5.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_locate_property),
+            contentDescription = null,
+            Modifier.height(100.dp)
+        )
+        Text(
+            text = "View Property Location",
+            Modifier.weight(1f),
+            fontSize = 25.sp,
+            textAlign = TextAlign.Center
+        )
 
     }
 

@@ -19,5 +19,4 @@ data class TodoWithSubTodos(
         entityColumn = "todoId"
     )
     val images: List<Images>
-
 )

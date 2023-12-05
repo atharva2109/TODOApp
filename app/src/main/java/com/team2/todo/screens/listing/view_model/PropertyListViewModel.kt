@@ -47,7 +47,7 @@ class PropertyListViewModel(
 ) :
     ViewModel() {
     private var isNotificationShown = false
-    private val THRESHOLD_DISTANCE = 0.0;
+    private val THRESHOLD_DISTANCE = 500.0 // 500 in meters
     var inSalePropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
     var completedPropertyList = MutableStateFlow<List<TodoWithSubTodos>>(emptyList())
 
@@ -88,14 +88,16 @@ class PropertyListViewModel(
 
     }
 
-    private fun fetchNearestTask() {
+    fun fetchNearestTask() {
         if (!isNotificationShown) {
             if (LocationUtil.valid()) {
                 run {
                     inSalePropertyList.value.forEach { it ->
                         run {
-                            if (!(((it.todo.latitude ?: 0.0) == 0.0 || (it.todo.longitude
-                                    ?: 0.0) == 0.0))
+
+                            if (((it.todo.latitude
+                                    ?: 0.0) != 0.0 || (it.todo.longitude
+                                    ?: 0.0) != 0.0)
                             ) {
                                 var distance = GeoFenceUtil.calculateDistance(
                                     it.todo.latitude ?: 0.0,
@@ -188,7 +190,12 @@ class PropertyListViewModel(
                 viewModelScope.launch {
                     repo.getAllTodosWithSubTodos(status = status).collect { list ->
                         if (LocationUtil.valid()) {
-                            callback(GeoFenceUtil.sortLocationByDistance(list, LocationUtil.currentLocation!!))
+                            callback(
+                                GeoFenceUtil.sortLocationByDistance(
+                                    list,
+                                    LocationUtil.currentLocation!!
+                                )
+                            )
                         }
                     }
                 }

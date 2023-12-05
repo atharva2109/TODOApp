@@ -76,9 +76,9 @@ import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
+import com.team2.todo.screens.details_page.ui_components.AddSubTodoFloatingButtons
 import com.team2.todo.screens.details_page.ui_components.LocateMe
 import com.team2.todo.screens.details_page.ui_components.SubTaskListItem
-import com.team2.todo.screens.details_page.ui_components.TodosCard
 import com.team2.todo.screens.details_page.view_model.DetailsPageViewModel
 import com.team2.todo.screens.listing.ui_components.CustomListItem
 import com.team2.todo.ui.theme.AppBarContentColor
@@ -173,7 +173,7 @@ fun DetailsPage(todoId: Long) {
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoId}")
+                                    NavigationUtil.navigateTo("${Screen.EditTodo.name}/${todoId}")
                                 }
                         )
                     })
@@ -437,33 +437,6 @@ fun DetailsPage(todoId: Long) {
 
 
             })
-    }
-}
-
-@Composable
-fun AddSubTodoFloatingButtons(onCreateNewClick: () -> Unit, onPickFromPreDefinedClick: () -> Unit) {
-    var expand by remember {
-        mutableStateOf(false)
-    }
-    return Column(horizontalAlignment = Alignment.End) {
-        if (expand) ExtendedFloatingActionButton(
-            modifier = Modifier.padding(5.dp),
-            onClick = { onCreateNewClick() },
-            icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
-            text = { Text(text = "Create New Task") },
-        )
-        if (expand) ExtendedFloatingActionButton(
-            modifier = Modifier.padding(5.dp),
-            onClick = { onPickFromPreDefinedClick() },
-            icon = { Icon(Icons.Filled.List, "Extended floating action button.") },
-            text = { Text(text = "Pick Pre Defined") },
-        )
-        FloatingActionButton(
-            onClick = { expand = !expand },
-            modifier = Modifier.padding(end = 10.dp)
-        ) {
-            Icon(if (expand) Icons.Filled.Close else Icons.Filled.Add, contentDescription = "Add")
-        }
     }
 }
 
