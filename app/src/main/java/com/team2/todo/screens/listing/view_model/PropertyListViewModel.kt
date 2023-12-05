@@ -94,7 +94,7 @@ class PropertyListViewModel(
                 run {
                     inSalePropertyList.value.forEach { it ->
                         run {
-                            if (!(((it.todo.latitude ?: 0.0) == 0.0 || (it.todo.longitude
+                            if (!(((it.todo.latitude ?: 0.0) == THRESHOLD_DISTANCE || (it.todo.longitude
                                     ?: 0.0) == 0.0))
                             ) {
                                 var distance = GeoFenceUtil.calculateDistance(

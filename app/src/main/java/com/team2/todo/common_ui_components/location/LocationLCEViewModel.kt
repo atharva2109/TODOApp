@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
  * Created by Manu KJ on 11/17/23.
  */
 
-class CustomLocationModel(latitude: String, longtitude: String) {}
 class LocationLCEViewModel : ViewModel() {
     private var _isLoading by mutableStateOf(false)
     val isLoading: Boolean get() = _isLoading
