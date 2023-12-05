@@ -42,7 +42,7 @@ fun LocateMe() {
         Text(
             text = "View Property Location",
             Modifier.weight(1f),
-            fontSize = 25.sp,
+            fontSize = 20.sp,
             textAlign = TextAlign.Center
         )
 
