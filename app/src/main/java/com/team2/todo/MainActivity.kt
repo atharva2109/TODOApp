@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-
         locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         LocationUtil.init(this, this, locationManager)
     }
