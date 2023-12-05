@@ -542,12 +542,6 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                                 } catch (e: Exception) {
                                     showAddingDbLoading = false;
                                     e.printStackTrace()
-                                    Toast.makeText(
-                                        ctx,
-                                        "",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
                                 }
                             }
                         }
