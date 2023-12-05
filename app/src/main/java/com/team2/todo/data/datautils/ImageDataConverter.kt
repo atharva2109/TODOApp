@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream
 
 class ImageDataConverter {
 
+    /* Writes the compressed bitmap version to output stream for allocating bytearray */
     @TypeConverter
     fun fromBitmap(bitmap: Bitmap?): ByteArray? {
         return bitmap?.let {
@@ -16,6 +17,7 @@ class ImageDataConverter {
         }
     }
 
+    /* Decodes an immutable bitmap from bytearray for rendering images */
     @TypeConverter
     fun toBitmap(byteArray: ByteArray?): Bitmap? {
         return byteArray?.let {
