@@ -1,6 +1,7 @@
 package com.team2.todo.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -15,6 +16,7 @@ import androidx.core.app.ActivityCompat
 /*
 * Created by Vivek Tate on 10/11/2023
 * */
+@SuppressLint("StaticFieldLeak")
 object LocationUtil {
 
     private lateinit var context: Context
@@ -80,7 +82,7 @@ object LocationUtil {
             }
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                5000,
+                15000,
                 0F,
                 GPSGeoLocationListener
             )

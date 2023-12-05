@@ -40,13 +40,13 @@ object NotificationUtil {
 
     fun showGeoFencingNotification(property: TodoWithSubTodos) {
         var message =
-            "You have reached the location of ${property.todo.title}, pending task ${
+            "There are ${
                 getPendingSubTask(
                     property
                 )
-            } task";
+            } pending task on this property"
         val notification = NotificationCompat.Builder(context, LOCATION_CHANNEL_ID)
-            .setContentTitle("Location Reached")
+            .setContentTitle("You're near the ${property.todo.title} property")
             .setContentText(message)
             .setStyle(
                 NotificationCompat.BigTextStyle()
