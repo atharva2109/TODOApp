@@ -69,6 +69,7 @@ import com.team2.todo.utils.AppUtil
 import com.team2.todo.utils.AppUtil.getPriorityColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -175,6 +176,7 @@ fun SubTaskListItem(
                     Checkbox(checked = checkedState!!, onCheckedChange = {
                         checkedState = !checkedState!!
                         viewModel.updateSubTodo(subTask.subTodoId,checkedState!!)
+
 
                     })
                 }
