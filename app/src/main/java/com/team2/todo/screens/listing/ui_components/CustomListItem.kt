@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.team2.todo.common_ui_components.LocationVerifiedLogo
+import com.team2.todo.common_ui_components.OverDueLogo
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.DarkGreenColor
@@ -63,6 +64,7 @@ import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium
 import com.team2.todo.utils.AppUtil
+import com.team2.todo.utils.AppUtil.getDueDateDifferentFromCurrentDate
 import com.team2.todo.utils.AppUtil.getPriorityColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
@@ -145,6 +147,11 @@ fun CustomListItem(
                         textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
                     )
                     if (shouldShowVerified()) LocationVerifiedLogo()
+                    property.todo.dueDate?.let {
+                        if(getDueDateDifferentFromCurrentDate(it) <=0){
+                            OverDueLogo()
+                        }
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

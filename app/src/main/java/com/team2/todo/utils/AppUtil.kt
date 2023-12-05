@@ -16,6 +16,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 object AppUtil {
     fun getPriorityString(priorityIndex: Int): String {
@@ -56,6 +57,16 @@ object AppUtil {
         var longitudeNotPresent =
             (property.todo.longitude == null || property.todo.longitude == 0.0)
         return !(latitudeNotPresent && longitudeNotPresent)
+    }
+
+    fun getDueDateDifferentFromCurrentDate(dueDateTime: LocalDateTime): Long {
+        val currentDateTime = LocalDateTime.now()
+        return ChronoUnit.MILLIS.between(currentDateTime, dueDateTime);
+    }
+
+    fun isToday(dueDateTodo: LocalDateTime?): Boolean {
+        val currentDateTime = LocalDateTime.now()
+        return ChronoUnit.DAYS.between(currentDateTime, dueDateTodo) == 0L;
     }
 
 }

@@ -454,7 +454,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                         println("Error parsing date or time: ${e.message}")
                     }
 
-                    ReminderField(dateselected.value, timeselected.value)
+                    ReminderField(localdateTime)
                 }
                 if (!isSubTodo) {
                     VerifyByLocationCompose(callback = { location ->

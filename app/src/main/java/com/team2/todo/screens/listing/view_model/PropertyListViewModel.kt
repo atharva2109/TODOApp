@@ -11,6 +11,8 @@ import com.team2.todo.common_ui_components.filter.view_model.Filter
 import com.team2.todo.common_ui_components.filter.view_model.FilterViewModel
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.TodoRepo
+import com.team2.todo.utils.AppUtil
+import com.team2.todo.utils.AppUtil.getDueDateDifferentFromCurrentDate
 import com.team2.todo.utils.GeoFenceUtil
 import com.team2.todo.utils.LocationUtil
 import com.team2.todo.utils.NotificationUtil
@@ -71,11 +73,16 @@ class PropertyListViewModel(
             val MINUTES_IN_DAY = 360
             inSalePropertyList.value.forEachIndexed { index, it ->
                 val dueDateTodo = it.todo.dueDate
-                val currentDate = LocalDateTime.now()
-
+                // if the due date is not today then skip
+                if (!AppUtil.isToday(dueDateTodo)) {
+                    return@forEachIndexed;
+                }
+                // if today then calculate the difference in minute to find the closest task for current time
                 if (dueDateTodo != null) {
+                    val currentDateTime = LocalDateTime.now()
+
                     val currentDueDateDifference =
-                        ChronoUnit.MINUTES.between(dueDateTodo, currentDate)
+                        ChronoUnit.MINUTES.between(currentDateTime, dueDateTodo)
 
                     if (currentDueDateDifference >= 0 && currentDueDateDifference <= MINUTES_IN_DAY) {
                         count++

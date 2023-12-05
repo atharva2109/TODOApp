@@ -12,8 +12,8 @@ import java.time.temporal.ChronoUnit
 fun CountdownTimerForDueDate(
     dueDateTime: LocalDateTime,
 ): String {
-    val currentDateTime = LocalDateTime.now()
-    val timeDifferenceInMillis = ChronoUnit.MILLIS.between(currentDateTime, dueDateTime)
+
+    val timeDifferenceInMillis = AppUtil.getDueDateDifferentFromCurrentDate(dueDateTime)
     val remainingTime =
         remember { mutableLongStateOf(timeDifferenceInMillis) }
 

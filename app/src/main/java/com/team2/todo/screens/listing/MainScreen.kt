@@ -50,7 +50,6 @@ import com.team2.todo.utils.Screen
 @Preview
 fun MainScreen() {
     var currentPage by remember { mutableIntStateOf(0) }
-    var showReminderAlert by remember { mutableStateOf(false) }
     var showFilter by remember { mutableStateOf(false) }
 
     var filterViewModel = FilterViewModel(LocalContext.current)
@@ -113,9 +112,9 @@ fun MainScreen() {
                 }
             }
 
-            if (showReminderAlert) {
-                ModalBottomSheet(onDismissRequest = { showReminderAlert = false; }) {
-                    ReminderAlertCompose()
+            if (viewModel.reminderModel != null) {
+                ModalBottomSheet(onDismissRequest = { viewModel.reminderModel = null }) {
+                    ReminderAlertCompose(viewModel.reminderModel!!)
                 }
             }
             Column(
