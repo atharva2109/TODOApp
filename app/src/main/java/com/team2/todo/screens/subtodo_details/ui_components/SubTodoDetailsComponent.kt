@@ -15,14 +15,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.sharp.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,14 +43,17 @@ import com.team2.todo.R
 import com.team2.todo.common_ui_components.CommonAppBar
 import com.team2.todo.common_ui_components.CountdownTimerForDueDate
 import com.team2.todo.common_ui_components.EmptyList
+import com.team2.todo.common_ui_components.LocationVerifiedLogo
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
+import com.team2.todo.ui.theme.AppBarContentColor
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
 
@@ -65,15 +72,39 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
 
         Scaffold(topBar = {
             propertySubTaskState?.title?.let {
-                CommonAppBar(
-                    text = it,
+                TopAppBar(
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(it)
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                NavigationUtil.goBack();
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.KeyboardArrowLeft,
+                                contentDescription = null,
+                                tint = AppBarContentColor,
+                                modifier = Modifier.size(35.dp)
+                            )
+                        }
+                    },
                     actions = {
-                        Icon(Icons.Filled.Edit,
+
+                        Icon(
+                            Icons.Filled.Edit,
                             "Extended floating action button.",
                             tint = GreyColor,
                             modifier = Modifier
                                 .border(
-                                    2.dp, GreyColor, shape = RoundedCornerShape(8.dp)
+                                    2.dp,
+                                    GreyColor,
+                                    shape = RoundedCornerShape(8.dp)
                                 )
                                 .padding(8.dp)
                                 .clickable {
@@ -81,6 +112,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 })
                     },
                 )
+
             }
         }) { padding ->
 
