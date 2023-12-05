@@ -12,6 +12,7 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.data.repo.TodoRepo
 import com.team2.todo.utils.AppUtil
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -40,6 +41,7 @@ class DetailsPageViewModel(private val repo: TodoRepo, private val subTodoRepo: 
     fun updateSubTodo(todoId: Long, status: Boolean): Unit {
         viewModelScope.launch {
             subTodoRepo.updateSubTodoStatus(todoId, status)
+            delay(500)
         }
 
     }
