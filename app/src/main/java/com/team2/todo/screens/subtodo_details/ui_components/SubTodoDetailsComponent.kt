@@ -44,6 +44,8 @@ import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
 import com.team2.todo.ui.theme.GreyColor
 import com.team2.todo.utils.AppUtil
+import com.team2.todo.utils.NavigationUtil
+import com.team2.todo.utils.Screen
 
 @Composable
 fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long) {
@@ -59,6 +61,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
         var due =
             propertySubTaskState!!.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
 
+        var todoid=  propertySubTaskState!!.todoId
 
         Scaffold(topBar = {
             propertySubTaskState?.title?.let {
@@ -74,8 +77,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    //SUB-TODO handle navigation to edit
-
+                                    NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoid}")
                                 })
                     },
                 )

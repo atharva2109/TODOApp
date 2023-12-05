@@ -82,6 +82,7 @@ import com.team2.todo.screens.add_todo.ui_components.priorities
 import com.team2.todo.screens.add_todo.ui_components.UploadImagePlaceHolder
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
 import com.team2.todo.screens.add_todo.view_model.AddTodoViewModel
+import com.team2.todo.screens.add_todo.view_model.FetchSubtodoViewModel
 import com.team2.todo.screens.add_todo.view_model.FetchTodoViewModel
 import com.team2.todo.screens.listing.view_model.ListingViewModel
 import com.team2.todo.ui.theme.PrimaryColor
@@ -103,7 +104,7 @@ import java.util.regex.Pattern
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = false) {
+fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = false,isEditSubTodo:Boolean=false) {
 
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val OutLineTextColor = OutlinedTextFieldDefaults.colors(
@@ -124,6 +125,8 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
     var fetchTodViewModel = FetchTodoViewModel(repository)
     var subtodorepo = SubTodoRepo(db)
     var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
+
+    var editsubtodoviewmodel=FetchSubtodoViewModel(subtodorepo)
 
     var enteredTitle by rememberSaveable {
         mutableStateOf("")
@@ -176,13 +179,63 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
     }
 
     var showAddingDbLoading by rememberSaveable { mutableStateOf(false) }
+    var showAddSubTaskDbLoading by rememberSaveable { mutableStateOf(false) }
     var showFetchingDbLoading by rememberSaveable { mutableStateOf(false) }
 
+    var showFetchingSubTodoLoading by rememberSaveable { mutableStateOf(false) }
+
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
+    var subtodoRetrieved by remember { mutableStateOf<Flow<List<SubTodo>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
     var isLabelValid by remember { mutableStateOf(true) }
     var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
 
+    var subtodoid by remember { mutableStateOf(0L) }
+    if(isEditSubTodo){
+        showFetchingSubTodoLoading = true
+        LaunchedEffect(key1 = true) {
+            try{
+                todosretrievalInProgress = true
+                subtodoRetrieved=editsubtodoviewmodel.fetchSubtodo(todoid)
+                todosretrievalInProgress = false
+                subtodoRetrieved?.collect{subTodo ->
+                for (todo in subTodo) {
+                    enteredTitle = todo.title?:""
+                    enteredDescription=todo.description?:""
+                    subtodoid=todo.subTodoId
+                    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    dateselected.value =
+                        todo.dueDate?.toLocalDate()?.format(dateFormatter) ?: "---"
+
+                    val timeformatter = DateTimeFormatter.ofPattern("[ HH:m[:ss]]")
+                    timeselected.value =
+                        todo.dueDate?.toLocalTime()?.format(timeformatter) ?: "---"
+
+                    val priorityindex = todo.priority
+                    val priorityList = priorities.values()
+
+                    if (priorityindex != null && priorityindex in priorityList.indices) {
+                        defaultPriority = priorityList[priorityindex].name
+                    } else {
+                        defaultPriority = "Low"
+                    }
+
+                        val bitmap = todo.image
+                        bitmap?.let {
+                            updatedBitmapList.add(it)
+                        }
+
+                    bitmapList = updatedBitmapList
+                }
+            }
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(ctx, "", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
     if (isEdit) {
         showFetchingDbLoading = true
         LaunchedEffect(key1 = true) {
@@ -247,7 +300,12 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                 .padding(it)
         ) {
             if (isSubTodo) {
-                AddEditAppBar(isSubTodo)
+                if(isEditSubTodo){
+                    AddEditAppBar(isSubTodo,false,isEditSubTodo)
+                }
+                else {
+                    AddEditAppBar(isSubTodo)
+                }
             } else if (isEdit) {
                 AddEditAppBar(isSubTodo, isEdit)
             } else {
@@ -424,7 +482,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                         Toast.makeText(ctx, "Label should be only 1 word", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        if (isSubTodo) {
+                        if (isSubTodo && !isEditSubTodo) {
                             subtodviewmodel.addSubTodo(
                                 SubTodo(
                                     0,
@@ -445,7 +503,55 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
-                        } else if (isEdit) {
+                        }
+                        else if (isSubTodo && isEditSubTodo) {
+
+                            scope.launch {
+                                try {
+                                    todoIdretrievalInProgress = true
+                                    subtodviewmodel.addSubTodo(
+
+                                        SubTodo(
+                                            subtodoid,
+                                            todoid,
+                                            enteredTitle,
+                                            enteredDescription,
+                                            bitmapList[0],
+                                            LocalDateTime.now(),
+                                            localdateTime,
+                                            false,
+                                            selectpriorityindex
+                                        )
+
+
+                                    )
+                                    todoIdretrievalInProgress = false
+
+                                    NavigationUtil.goBack()
+
+                                    NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subtodoid}")
+
+                                    Toast.makeText(
+                                        ctx,
+                                        "SubTodo updated successfully",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+
+
+                                } catch (e: Exception) {
+                                    showAddingDbLoading = false;
+                                    e.printStackTrace()
+                                    Toast.makeText(
+                                        ctx,
+                                        "",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            }
+                        }
+                        else if (isEdit) {
                             showAddingDbLoading = true
                             Log.d("Bitmpalistt inside update", bitmapList.toString())
                             scope.launch {
@@ -573,7 +679,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
                 Text(
-                    text = if (isEdit) "UPDATE" else "ADD",
+                    text = if (isEdit||isEditSubTodo) "UPDATE" else "ADD",
                     color = Color.White,
                     modifier = Modifier.padding(vertical = 5.dp)
                 )
@@ -584,6 +690,9 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                 LoaderBottomSheet(text = "Updating data in DB")
             }
         }
+
+
+
         if (showAddingDbLoading && !isEdit) {
             ModalBottomSheet(onDismissRequest = { showAddingDbLoading = false; }) {
                 LoaderBottomSheet()

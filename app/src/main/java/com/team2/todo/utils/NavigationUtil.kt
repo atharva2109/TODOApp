@@ -18,7 +18,7 @@ import com.team2.todo.screens.subtodo_details.SubTodoDetails
 
 // Enum of all the Screen
 enum class Screen {
-    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails,EditSubTodo
+    MainScreen, AddTodos, AddOrEditSubToDo, DetailsScreen, SubTodoDetails,EditTodo,EditSubTodo
 }
 
 object NavigationUtil {
@@ -75,12 +75,21 @@ fun NavHostControllerProvider() {
         }
 
         composable(
-            route = "${Screen.EditSubTodo.name}/{todoId}",
+            route = "${Screen.EditTodo.name}/{todoId}",
             arguments = listOf(navArgument("todoId") { type = NavType.LongType })
         ) { backStackEntry ->
             val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
             Log.d("In Edit Route","In edit route")
             AddTodos(isSubTodo = false, todoid = todoId,isEdit = true)
+        }
+
+        composable(
+            route = "${Screen.EditSubTodo.name}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getLong("todoId") ?: -1
+            Log.d("In Edit Route","In edit route")
+            AddTodos(isSubTodo = true, todoid = todoId, isEditSubTodo = true)
         }
     }
 }
