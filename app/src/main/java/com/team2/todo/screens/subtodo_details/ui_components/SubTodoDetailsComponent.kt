@@ -68,6 +68,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
         var due =
             propertySubTaskState!!.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
 
+        var todoid=  propertySubTaskState!!.todoId
 
         Scaffold(topBar = {
             propertySubTaskState?.title?.let {
@@ -107,10 +108,11 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    NavigationUtil.navigateTo("")
-                                }
-                        )
-                    })
+                                    NavigationUtil.navigateTo("${Screen.EditSubTodo.name}/${todoid}")
+                                })
+                    },
+                )
+
             }
         }) { padding ->
 
