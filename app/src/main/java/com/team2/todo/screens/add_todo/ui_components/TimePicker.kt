@@ -25,7 +25,9 @@ fun TimePickerComponent(): Pair<TimePickerDialog, MutableState<String>> {
     val mTimePickerDialog = TimePickerDialog(
         currentcontext,
         { _, mHour: Int, mMinute: Int ->
-            time.value = "$mHour:$mMinute"
+            val formattedHour = if (mHour < 10) "0$mHour" else "$mHour"
+            val formattedMinute = if (mMinute < 10) "0$mMinute" else "$mMinute"
+            time.value = "$formattedHour:$formattedMinute"
         }, hour, minute, false
     )
     return Pair(mTimePickerDialog, time)
