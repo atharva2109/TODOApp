@@ -94,6 +94,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.time.format.ResolverStyle
 import java.time.temporal.ChronoField
 import java.util.Currency
 import java.util.regex.Matcher
@@ -436,19 +437,18 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                         timeState.show()
                     })
 
-
+Log.d("Date select",dateselected.value)
+                Log.d("Time select",timeselected.value)
                 if (dateselected.value != "" && timeselected.value != "") {
-                    val formatter = DateTimeFormatterBuilder().parseCaseInsensitive()
-                        .appendPattern("dd/MM/yyyy[ HH:m[:ss]]")
-                        .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                        .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0).toFormatter()
+                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyyHH:mm[:ss]")
+
 
                     try {
                         localdateTime = LocalDateTime.parse(
-                            dateselected.value + " " + timeselected.value, formatter
+                            dateselected.value + timeselected.value, formatter
                         )
                         Log.d("Local Time", localdateTime.toString())
+
                     } catch (e: Exception) {
                         e.printStackTrace()
                         println("Error parsing date or time: ${e.message}")
@@ -548,6 +548,7 @@ fun AddTodos(isSubTodo: Boolean = false, todoid: Long = 0, isEdit: Boolean = fal
                         else if (isEdit) {
                             showAddingDbLoading = true
                             Log.d("Bitmpalistt inside update", bitmapList.toString())
+                            Log.d("Due date before update", localdateTime.toString())
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
