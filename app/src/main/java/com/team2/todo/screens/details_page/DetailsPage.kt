@@ -38,11 +38,13 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -69,6 +71,7 @@ import androidx.compose.ui.unit.sp
 import com.team2.todo.R
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.CommonAppBar
+import com.team2.todo.common_ui_components.CountdownTimerForDueDate
 import com.team2.todo.common_ui_components.LoaderBottomSheet
 import com.team2.todo.common_ui_components.LocationVerifiedLogo
 import com.team2.todo.data.RealEstateDatabase
@@ -120,8 +123,9 @@ fun DetailsPage(todoId: Long) {
             LoaderBottomSheet("Fetching Your Property Details... Hold on, It's Loading Up!")
         }
     } else {
-        val propertyDetails: TodoWithSubTodos = collectedTodo[0];
 
+        val propertyDetails: TodoWithSubTodos = collectedTodo[0];
+        var dueDate = propertyDetails!!.todo.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
         var checkedState by remember { mutableStateOf(propertyDetails.todo.status) }
         Scaffold(
             floatingActionButton = {
@@ -224,7 +228,9 @@ fun DetailsPage(todoId: Long) {
                         }
 
 
-                        Spacer(modifier = Modifier.padding(top = 10.dp))
+                        Spacer(
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp)
+                        )
 
                         Row(Modifier.fillMaxWidth()) {
                             Icon(
@@ -239,7 +245,9 @@ fun DetailsPage(todoId: Long) {
 
 
 
-                    Spacer(modifier = Modifier.padding(top = 20.dp))
+                    Spacer(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp)
+                    )
 
                     Box(Modifier.fillMaxWidth()) {
                         if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
@@ -277,7 +285,9 @@ fun DetailsPage(todoId: Long) {
                         }
 
                     }
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                    )
 
 
                     Box {
@@ -296,7 +306,9 @@ fun DetailsPage(todoId: Long) {
 
 
                     }
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                    )
 
 
                     if (propertyDetails.todo.price == 0.0) {
@@ -330,7 +342,9 @@ fun DetailsPage(todoId: Long) {
 
                         }
                     }
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                    )
 
 
 
@@ -354,10 +368,73 @@ fun DetailsPage(todoId: Long) {
                             )
                         }
 
+                    }
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                    )
+                    Box(){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            if (dueDate != null) {
+                                if (dueDate != AppUtil.OVERDUE) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.duration),
+                                        contentDescription = null,
+                                        Modifier
+                                            .padding(
+                                                start = 5.dp,
+                                                top = 5.dp,
+                                                end = 5.dp,
+                                                bottom = 5.dp
+                                            )
+                                            .size(20.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = dueDate,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        textAlign = TextAlign.Start
+                                    )
+                                } else {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.duration),
+                                        contentDescription = null,
+                                        Modifier
+                                            .padding(
+                                                start = 5.dp,
+                                                top = 5.dp,
+                                                end = 5.dp,
+                                                bottom = 5.dp
+                                            )
+                                            .size(20.dp),
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = AppUtil.OVERDUE,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.error,
+                                        textAlign = TextAlign.Start,
+                                        fontStyle = FontStyle.Italic
+
+                                    )
+                                }
+
+                            }
+
+                        }
+
 
                     }
-                    Spacer(modifier = Modifier.padding(top = 20.dp))
-
+                    Divider(
+                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
+                    )
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
 
                     Box(
                         Modifier
