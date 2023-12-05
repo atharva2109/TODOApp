@@ -1,6 +1,7 @@
 package com.team2.todo.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -15,6 +16,7 @@ import androidx.core.app.ActivityCompat
 /*
 * Created by Vivek Tate on 10/11/2023
 * */
+@SuppressLint("StaticFieldLeak")
 object LocationUtil {
 
     private lateinit var context: Context
@@ -24,13 +26,12 @@ object LocationUtil {
         private set
 
     private lateinit var locationManager: LocationManager
+    private val GPS_LOCATION_PERMISSION_REQUEST = 2
 
     fun init(context: Context, activity: Activity, locationManager: LocationManager) {
         this.context = context
         this.activity = activity
         this.locationManager = locationManager
-
-        fetchCurrentLocation()
     }
 
     private fun _setLocation(newLocation: Location?) {
@@ -41,57 +42,84 @@ object LocationUtil {
         _setLocation(newLocation)
     }
 
-    fun invalidate() {
-        _setLocation(null)
-    }
-
     fun valid(): Boolean {
-        return (currentLocation != null)
+        return currentLocation != null
     }
 
-    private fun fetchCurrentLocation() {
+
+    fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            GPS_LOCATION_PERMISSION_REQUEST
+        )
+    }
+
+    fun hasLocationPermission(): Boolean {
+
+        return !(ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED)
+    }
+
+
+    fun requestLocationUpdates() {
         fetchLocationViaGPS()
     }
-
+    @SuppressLint("MissingPermission")
     private fun fetchLocationViaGPS() {
 
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                2
-            )
-        } else {
-            println("ca")
-            val lastKnownLocation =
+        if (hasLocationPermission()) {
+
+            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            val lastKnownLocationGPS =
                 locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (lastKnownLocation != null) {
-                updateLocation(lastKnownLocation)
+            if (lastKnownLocationGPS != null) {
+                updateLocation(lastKnownLocationGPS)
             }
+
+            val lastKnownLocationNetwork =
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (lastKnownLocationNetwork != null) {
+                updateLocation(lastKnownLocationNetwork)
+            }
+
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                5000,
+                1000,
                 0F,
                 GPSGeoLocationListener
             )
+
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                1000,
+                0F,
+                GPSGeoLocationListener
+            )
+
+            locationManager.requestLocationUpdates(
+                LocationManager.PASSIVE_PROVIDER,
+                1000,
+                0F,
+                GPSGeoLocationListener
+            )
+        } else {
+            requestLocationPermission()
         }
     }
-
 }
 
 object GPSGeoLocationListener : LocationListener {
     override fun onLocationChanged(location: Location) {
         LocationUtil.updateLocation(location)
     }
-
 }
