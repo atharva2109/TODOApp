@@ -61,8 +61,10 @@ fun ReminderAlertCompose(
             modifier = Modifier.padding(horizontal = 10.dp),
             overflow = TextOverflow.Ellipsis
         )
+        var dueDate = property.todo.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
+
         Text(
-            text = "The closest one is for property ${property.todo.title}",
+            text = "The closest one is for property ${property.todo.title} $dueDate",
             maxLines = 3,
             color = PrimaryColor,
             textAlign = TextAlign.Justify,
@@ -71,7 +73,8 @@ fun ReminderAlertCompose(
             modifier = Modifier.padding(horizontal = 10.dp),
             overflow = TextOverflow.Ellipsis
         )
-//        property.todo.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
+
+
         Button(
             onClick = {
                 NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${property.todo.todoId}")
