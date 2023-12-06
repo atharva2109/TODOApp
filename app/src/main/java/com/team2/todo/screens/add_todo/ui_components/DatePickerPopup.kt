@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +15,7 @@ import java.util.Date
  */
 
 @Composable
-fun DatePickerComponent(): Pair<DatePickerDialog, MutableState<String>> {
+fun DatePickerPopup(): Pair<DatePickerDialog, MutableState<String>> {
     val year: Int
     val month: Int
     val day: Int

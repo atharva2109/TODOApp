@@ -1,9 +1,7 @@
 package com.team2.todo.screens.add_todo.ui_components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -34,18 +32,14 @@ enum class priorities {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownMenuComponent(defaultPriority:String): Int {
+fun PriorityPickerComponent(defaultPriority:String): Int {
 
     var menuexpanded by remember { mutableStateOf(false) }
-    println("Before selectd priority $defaultPriority")
     var selectedPriority by remember { mutableStateOf(defaultPriority) }
-    println("after selectd priority $selectedPriority")
 
     DisposableEffect(defaultPriority) {
         selectedPriority = defaultPriority
-        onDispose {
-
-        }
+        onDispose {}
     }
     var selectedPriorityIndex by rememberSaveable { mutableStateOf(0) }
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
@@ -62,7 +56,7 @@ fun DropDownMenuComponent(defaultPriority:String): Int {
             .padding(vertical = 5.dp)
     ) {
         OutlinedTextField(
-            value = selectedPriority.toString(),
+            value = selectedPriority,
             onValueChange = { selectedPriority = it },
             modifier = Modifier
                 .onGloballyPositioned { coordinates ->
