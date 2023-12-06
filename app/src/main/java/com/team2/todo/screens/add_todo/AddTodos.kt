@@ -3,14 +3,9 @@ package com.team2.todo.screens.add_todo
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,32 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Alignment
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.team2.todo.common_ui_components.CameraCapture
@@ -72,12 +50,12 @@ import com.team2.todo.data.entities.relations.TodoWithSubTodos
 import com.team2.todo.data.repo.SubTodoRepo
 import com.team2.todo.screens.add_todo.ui_components.AddEditAppBar
 import com.team2.todo.screens.add_todo.ui_components.DateAndTimeField
-import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
-import com.team2.todo.screens.add_todo.ui_components.DropDownMenuComponent
+import com.team2.todo.screens.add_todo.ui_components.DatePickerPopup
 import com.team2.todo.screens.add_todo.ui_components.PickImageForSubTodo
 import com.team2.todo.screens.add_todo.ui_components.PickImagesForTodo
+import com.team2.todo.screens.add_todo.ui_components.PriorityPickerComponent
 import com.team2.todo.screens.add_todo.ui_components.ReminderField
-import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
+import com.team2.todo.screens.add_todo.ui_components.TimePickerPopup
 import com.team2.todo.screens.add_todo.ui_components.priorities
 import com.team2.todo.screens.add_todo.ui_components.UploadImagePlaceHolder
 import com.team2.todo.screens.add_todo.view_model.AddSubTodoViewModel
@@ -89,16 +67,10 @@ import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.format.ResolverStyle
-import java.time.temporal.ChronoField
 import java.util.Currency
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * Created by Atharva K on 11/13/23.
@@ -108,7 +80,9 @@ import java.util.regex.Pattern
 fun AddTodos(
     isSubTodo: Boolean = false,
     todoid: Long = 0,
+    //isEdit when set to true will allow editing of todos
     isEdit: Boolean = false,
+    //isEditSubTodo when set to true will allow editing of subtodos
     isEditSubTodo: Boolean = false
 ) {
 
@@ -124,16 +98,19 @@ fun AddTodos(
         .padding(vertical = 5.dp)
 
     var ctx = LocalContext.current
+
+    //Creating instance of TodoViewModel for accessing the db query functions
     var db = RealEstateDatabase.getInstance(ctx)
     var repository = TodoRepo(db)
     var viewModel = AddTodoViewModel(repository)
-
     var fetchTodViewModel = FetchTodoViewModel(repository)
+
+    //Creating instance of SubTodoViewModel for accessing the db query functions
     var subtodorepo = SubTodoRepo(db)
     var subtodviewmodel = AddSubTodoViewModel(subtodorepo)
-
     var editsubtodoviewmodel = FetchSubtodoViewModel(subtodorepo)
 
+    //rememberSaveable is used so that the values remain as they are when orientation changes
     var enteredTitle by rememberSaveable {
         mutableStateOf("")
     }
@@ -154,21 +131,23 @@ fun AddTodos(
 
     var pound = Currency.getInstance("GBP")
 
+    //Variable used for storing images of a todo based on todoid
     val collectedImages by fetchTodViewModel.getTodoImages(todoid)
         .collectAsState(initial = emptyList())
-    var isTitleEmpty by rememberSaveable { mutableStateOf(false) }
-    var isLabelEmpty by rememberSaveable { mutableStateOf(false) }
-    var isDescriptionEmpty by rememberSaveable { mutableStateOf(false) }
 
-    var (calendarState, dateselected) = DatePickerComponent()
-    var (timeState, timeselected) = TimePickerComponent()
 
+    var (calendarState, dateselected) = DatePickerPopup()
+    var (timeState, timeselected) = TimePickerPopup()
+
+    //latitude and longitude variables are used for storing location coordinates of the user.
     var currentlatitude by rememberSaveable {
         mutableStateOf(0.0)
     }
     var currentlongitude by rememberSaveable {
         mutableStateOf(0.0)
     }
+
+    //bitmapList used for storing list of images uploaded by user
     var bitmapList: List<Bitmap> = mutableListOf()
 
     var bitmap: Bitmap? = null
@@ -184,19 +163,23 @@ fun AddTodos(
         mutableStateOf(0)
     }
 
+    //these are progress variables used for a db query. When set to true, db operation is complete
     var showAddingDbLoading by rememberSaveable { mutableStateOf(false) }
-    var showAddSubTaskDbLoading by rememberSaveable { mutableStateOf(false) }
     var showFetchingDbLoading by rememberSaveable { mutableStateOf(false) }
-
     var showFetchingSubTodoLoading by rememberSaveable { mutableStateOf(false) }
-
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
     var subtodoRetrieved by remember { mutableStateOf<Flow<List<SubTodo>>?>(null) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
-    var isLabelValid by remember { mutableStateOf(true) }
-    var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
 
+    //these variables are used for validation checking
+    var isLabelValid by remember { mutableStateOf(true) }
+    var isTitleEmpty by rememberSaveable { mutableStateOf(false) }
+    var isLabelEmpty by rememberSaveable { mutableStateOf(false) }
+    var isDescriptionEmpty by rememberSaveable { mutableStateOf(false) }
+
+    var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
     var subtodoid by remember { mutableStateOf(0L) }
+
     if (isEditSubTodo) {
         showFetchingSubTodoLoading = true
         LaunchedEffect(key1 = true) {
@@ -378,6 +361,7 @@ fun AddTodos(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
 
+                            //Camera Upload Option
                             CameraCapture { bitmapCallback ->
                                 bitmap = bitmapCallback
                                 bitmapList = listOf(bitmapCallback)
@@ -391,14 +375,12 @@ fun AddTodos(
                                     bitmap = bitmapCallback
                                     bitmapList = listOf(bitmapCallback)
                                     showBottomSheet = false
-                                    Log.d("Image", bitmap.toString())
                                 }
                             } else {
 
                                 PickImagesForTodo { bitmapCallback ->
                                     bitmapList = bitmapCallback
                                     showBottomSheet = false
-                                    Log.d("ImageList", bitmapList.toString())
                                 }
 
 
@@ -412,7 +394,9 @@ fun AddTodos(
                     ImageLoader(bitmapList = bitmapList)
 
                 }
-                selectpriorityindex = DropDownMenuComponent(defaultPriority = defaultPriority)
+
+                //storing the index of selected priority which is an enum
+                selectpriorityindex = PriorityPickerComponent(defaultPriority = defaultPriority)
                 if (!isSubTodo) {
                     OutlinedTextField(
                         value = "${enteredPrice} ${pound.getSymbol()}",
@@ -422,6 +406,7 @@ fun AddTodos(
                         },
                         label = { Text(text = "Price: ") },
                         placeholder = { Text(text = "Enter price(in ${pound.getSymbol()}") },
+                        //used for allowing only number values
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                         ),
@@ -438,26 +423,23 @@ fun AddTodos(
                         timeState.show()
                     })
 
-                Log.d("Date select", dateselected.value)
-                Log.d("Time select", timeselected.value)
                 if (dateselected.value != "" && timeselected.value != "") {
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyyHH:mm[:ss]")
-
-
                     try {
                         localdateTime = LocalDateTime.parse(
                             dateselected.value.trim() + timeselected.value.trim(), formatter
                         )
-                        Log.d("Local Time", localdateTime.toString())
 
                     } catch (e: Exception) {
                         e.printStackTrace()
                         println("Error parsing date or time: ${e.message}")
                     }
 
+                    //used to show reminder which is 1 day before due date
                     ReminderField(localdateTime)
                 }
                 if (!isSubTodo) {
+                    //verifying current location of the user
                     VerifyByLocationCompose(callback = { location ->
                         currentlatitude = location.latitude
                         currentlongitude = location.longitude
@@ -547,18 +529,14 @@ fun AddTodos(
                                     }
 
                                     todoIdretrievalInProgress = false
-
                                     NavigationUtil.goBack()
-
                                     NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subtodoid}")
-
                                     Toast.makeText(
                                         ctx,
                                         "SubTodo updated successfully",
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()
-
 
                                 } catch (e: Exception) {
                                     showAddingDbLoading = false;
@@ -567,8 +545,6 @@ fun AddTodos(
                             }
                         } else if (isEdit) {
                             showAddingDbLoading = true
-                            Log.d("Bitmpalistt inside update", bitmapList.toString())
-                            Log.d("Due date before update", localdateTime.toString())
                             scope.launch {
                                 try {
                                     todoIdretrievalInProgress = true
@@ -590,18 +566,10 @@ fun AddTodos(
 
 
                                     )
-                                    Log.d("Hi", "Hi")
                                     todoIdretrievalInProgress = false
-                                    Log.d("Todoid in progress", todoIdretrieved.toString())
-                                    Log.d("Todidretrieved", todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
-//                                        for (imageBitmapData in bitmapList) {
-//                                            Log.d("Image list",bitmapList.toString())
-//                                            viewModel.addImage(Images(0, imageBitmapData, todoid))
-//                                        }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
-                                        Log.d("Update TodId", todoid.toString())
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoid}")
 
                                         Toast.makeText(
@@ -644,19 +612,14 @@ fun AddTodos(
 
                                     )
                                     todoIdretrievalInProgress = false
-                                    Log.d("TodId inside add", todoIdretrieved.toString())
                                     todoIdretrieved?.let { todoId ->
                                         for (imageBitmapData in bitmapList) {
                                             viewModel.addImage(Images(0, imageBitmapData, todoId))
                                         }
                                         showAddingDbLoading = false
                                         NavigationUtil.goBack()
-                                        Log.d("TodId", todoId.toString())
                                         NavigationUtil.navigateTo("${Screen.DetailsScreen.name}/${todoId}")
                                         ListingViewModel.instance?.fetchUpdatedList()
-
-
-
                                         Toast.makeText(
                                             ctx,
                                             "Todo added successfully",
