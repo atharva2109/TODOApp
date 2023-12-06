@@ -6,16 +6,14 @@ import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
-import com.team2.todo.screens.add_todo.ui_components.DatePickerComponent
-import com.team2.todo.screens.add_todo.ui_components.TimePickerComponent
+<<<<<<< HEAD
+
+=======
+>>>>>>> 99c320c3f204f921bd51da46ebdc0cf763da7b0f
 import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium
-import java.lang.reflect.Modifier
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 object AppUtil {
