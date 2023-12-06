@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team2.todo.data.entities.SubTodo
 import com.team2.todo.data.repo.SubTodoRepo
-import com.team2.todo.data.repo.TodoRepo
 import kotlinx.coroutines.launch
+
+/**
+ * Created by Atharva K on 11/14/23.
+ */
 
 class AddSubTodoViewModel(val repository: SubTodoRepo): ViewModel() {
     fun addSubTodo(subtodo:SubTodo){

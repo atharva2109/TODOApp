@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import com.team2.todo.utils.AppUtil
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun CountdownTimerForDueDate(

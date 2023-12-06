@@ -1,14 +1,12 @@
 package com.team2.todo.screens.add_todo.ui_components
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -18,36 +16,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.team2.todo.R
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.PrimaryColor
@@ -59,14 +43,11 @@ import com.team2.todo.utils.PermissionUtil.checkAndRequestLocationPermissions
  */
 
 @Composable
-
 fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
-
     val context = LocalContext.current
     var imageUris by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
-
     var bitmaps by remember {
         //Bitmap is similar to a pixel of an image
         mutableStateOf<List<Bitmap>>(emptyList())
@@ -82,7 +63,6 @@ fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
                     uri.path?.let { it1 -> Log.d("Image", it1) }
 
                     if (Build.VERSION.SDK_INT < 28) {
-
                         MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                     } else {
                         val source = ImageDecoder.createSource(context.contentResolver, uri)
@@ -142,15 +122,10 @@ fun PickImagesForTodo(bitmapList: (List<Bitmap>) -> Unit) {
 
     }
 
-
     if (bitmaps.isNotEmpty()) {
-
         bitmapList(bitmaps)
-
-
     }
 }
-
 
 @Composable
 fun UploadImagePlaceHolder(onCLick: () -> Unit) {
@@ -182,8 +157,8 @@ fun UploadImagePlaceHolder(onCLick: () -> Unit) {
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth(.6f)
-
             )
+
         }
     }
 }

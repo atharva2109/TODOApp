@@ -5,7 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
@@ -15,7 +14,7 @@ import java.util.Calendar
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimePickerComponent(): Pair<TimePickerDialog, MutableState<String>> {
+fun TimePickerPopup(): Pair<TimePickerDialog, MutableState<String>> {
     val currentcontext = LocalContext.current
     val calendarinstance = Calendar.getInstance()
     val hour = calendarinstance[Calendar.HOUR_OF_DAY]
