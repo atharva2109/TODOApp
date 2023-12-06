@@ -108,7 +108,7 @@ fun SubTodoDetailsComponent(viewModel: SubTodoDetailsViewModel, subTodoId: Long)
                                 )
                                 .padding(8.dp)
                                 .clickable {
-                                    //NavigationUtil.navigateTo("")
+                                    NavigationUtil.navigateTo("${Screen.EditSubTodo}/${subTodoId}")
                                 }
                         )
                     })

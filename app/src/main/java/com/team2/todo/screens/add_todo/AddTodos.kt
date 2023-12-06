@@ -236,8 +236,6 @@ fun AddTodos(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(ctx, "", Toast.LENGTH_SHORT)
-                    .show()
             }
         }
     }
@@ -510,23 +508,44 @@ fun AddTodos(
 
                             scope.launch {
                                 try {
-                                    todoIdretrievalInProgress = true
-                                    subtodviewmodel.addSubTodo(
+                                    if (bitmapList.isNotEmpty()) {
+                                        todoIdretrievalInProgress = true
+                                        subtodviewmodel.addSubTodo(
 
-                                        SubTodo(
-                                            subtodoid,
-                                            todoid,
-                                            enteredTitle,
-                                            enteredDescription,
-                                            bitmapList[0],
-                                            LocalDateTime.now(),
-                                            localdateTime,
-                                            false,
-                                            selectpriorityindex
+                                            SubTodo(
+                                                subtodoid,
+                                                todoid,
+                                                enteredTitle,
+                                                enteredDescription,
+                                                bitmapList[0],
+                                                LocalDateTime.now(),
+                                                localdateTime,
+                                                false,
+                                                selectpriorityindex
+                                            )
+
+
                                         )
+                                    } else {
+                                        todoIdretrievalInProgress = true
+                                        subtodviewmodel.addSubTodo(
+
+                                            SubTodo(
+                                                subtodoid,
+                                                todoid,
+                                                enteredTitle,
+                                                enteredDescription,
+                                                null,
+                                                LocalDateTime.now(),
+                                                localdateTime,
+                                                false,
+                                                selectpriorityindex
+                                            )
 
 
-                                    )
+                                        )
+                                    }
+
                                     todoIdretrievalInProgress = false
 
                                     NavigationUtil.goBack()
@@ -592,13 +611,6 @@ fun AddTodos(
                                         )
                                             .show()
 
-                                    } ?: run {
-                                        Toast.makeText(
-                                            ctx,
-                                            "",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                            .show()
                                     }
 
                                 } catch (e: Exception) {
