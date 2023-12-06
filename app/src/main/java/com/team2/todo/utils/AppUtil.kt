@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
-
 import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium

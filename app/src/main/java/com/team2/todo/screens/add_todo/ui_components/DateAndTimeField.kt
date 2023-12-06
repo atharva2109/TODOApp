@@ -76,14 +76,14 @@ fun DateAndTimeField(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 10.dp)
+                            .padding(bottom = 15.dp)
                             .background(color = Color.White, shape = RoundedCornerShape(8.dp))
                             .border(1.dp, color = PrimaryColor, shape = RoundedCornerShape(8.dp))
                             .clickable { onDateClick() },
                     ) {
                         Text(
                             text = if (date.isNullOrEmpty()) "--/--/--" else date,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(15.dp)
                         )
                     }
                     //Time
@@ -97,7 +97,7 @@ fun DateAndTimeField(
 
                         Text(
                             text = if (time.isNullOrEmpty()) "--:--" else time,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(15.dp)
                         )
                     }
                 }
