@@ -99,7 +99,7 @@ fun CustomListItem(
             .fillMaxWidth()
             .height(90.dp)
             .padding(
-                horizontal = 10.dp,
+                horizontal = 20.dp,
                 vertical = 10.dp
             )
             .border(
@@ -148,7 +148,7 @@ fun CustomListItem(
                     )
                     if (shouldShowVerified()) LocationVerifiedLogo()
                     property.todo.dueDate?.let {
-                        if(getDueDateDifferentFromCurrentDate(it) <=0){
+                        if(getDueDateDifferentFromCurrentDate(it) <=0 && !property.todo.status){
                             OverDueLogo()
                         }
                     }
