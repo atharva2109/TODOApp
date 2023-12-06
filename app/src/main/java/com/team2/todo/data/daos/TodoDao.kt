@@ -1,6 +1,5 @@
 package com.team2.todo.data.daos
 
-import android.graphics.Bitmap
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query

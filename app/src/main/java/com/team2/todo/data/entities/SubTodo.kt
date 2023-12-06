@@ -1,14 +1,11 @@
 package com.team2.todo.data.entities
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.team2.todo.data.datautils.ImageDataConverter
-import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 
 @Entity(

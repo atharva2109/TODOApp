@@ -1,12 +1,8 @@
 package com.team2.todo.common_ui_components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-
 import android.graphics.Bitmap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,7 +26,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun ImageLoader(bitmapList: List<Bitmap?>) {
@@ -50,10 +45,10 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                 modifier = Modifier.fillMaxSize(),
             ) {
                 itemsIndexed(bitmapList) { index, bitmap ->
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimary,
-                        ), modifier = Modifier
+                    Card(colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                        modifier = Modifier
                             .clickable {
                                 if (index != currentImageIndex) {
                                     coroutineScope.launch {

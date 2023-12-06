@@ -14,16 +14,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +36,6 @@ import androidx.core.content.FileProvider
 import com.team2.todo.BuildConfig
 import com.team2.todo.R
 import com.team2.todo.ui.theme.BlueColor
-import com.team2.todo.ui.theme.GreyColor
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -128,7 +122,6 @@ fun CameraCapture(imageBitmap: (Bitmap) -> Unit = {}) {
 
 
 fun Context.createImageFile(): File {
-    // Create an image file name
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
     return File.createTempFile(

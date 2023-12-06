@@ -40,10 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team2.todo.R
-import com.team2.todo.common_ui_components.CommonAppBar
 import com.team2.todo.common_ui_components.CountdownTimerForDueDate
 import com.team2.todo.common_ui_components.EmptyList
-import com.team2.todo.common_ui_components.LocationVerifiedLogo
 import com.team2.todo.data.datautils.LocalDatetimeToWords
 import com.team2.todo.screens.subtodo_details.ui_components.DisplaySubTodoImage
 import com.team2.todo.screens.subtodo_details.view_model.SubTodoDetailsViewModel
