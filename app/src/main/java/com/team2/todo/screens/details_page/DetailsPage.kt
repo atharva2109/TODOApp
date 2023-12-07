@@ -169,22 +169,23 @@ fun DetailsPage(todoId: Long) {
                         }
                     },
                     actions = {
-
-                        Icon(
-                            Icons.Filled.Edit,
-                            "Extended floating action button.",
-                            tint = GreyColor,
-                            modifier = Modifier
-                                .border(
-                                    2.dp,
-                                    GreyColor,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(8.dp)
-                                .clickable {
-                                    NavigationUtil.navigateTo("${Screen.EditTodo.name}/${todoId}")
-                                }
-                        )
+                        Box(Modifier.padding(end = 25.dp)) {
+                            Icon(
+                                Icons.Filled.Edit,
+                                "Extended floating action button.",
+                                tint = GreyColor,
+                                modifier = Modifier
+                                    .border(
+                                        2.dp,
+                                        GreyColor,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(8.dp)
+                                    .clickable {
+                                        NavigationUtil.navigateTo("${Screen.EditTodo.name}/${todoId}")
+                                    }
+                            )
+                        }
                     })
             },
             content = {
@@ -242,61 +243,13 @@ fun DetailsPage(todoId: Long) {
                     }
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
-                    Row(Modifier.fillMaxWidth()) {
-                        Icon(
-                            imageVector = Icons.Filled.List,
-                            contentDescription = null,
-                            Modifier.padding(end = 5.dp)
-                        )
-                        Text(text = propertyDetails.todo.description)
-                    }
+                    Text(text = propertyDetails.todo.description)
 
 
                     Divider(
                         modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
                         thickness = 3.dp
                     )
-
-                    Box(Modifier.fillMaxWidth()) {
-                        if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
-
-                            Row(Modifier.fillMaxWidth()) {
-                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
-
-                                Icon(
-                                    imageVector = Icons.Filled.Warning,
-                                    contentDescription = null,
-                                    Modifier.padding(end = 5.dp),
-                                    tint = Color(0XFFffcc00)
-                                )
-                                Text(text = "Property Not Verified")
-
-                            }
-                            Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                        } else {
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        viewModel.GeoLocation(
-                                            propertyDetails.todo.latitude!!,
-                                            propertyDetails.todo.longitude!!,
-                                            context = todoContext
-                                        )
-                                    }, Arrangement.Center
-                            ) {
-                                LocateMe()
-                            }
-
-
-                        }
-
-                    }
-                    Divider(
-                        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp), thickness = 3.dp
-                    )
-
 
                     Box {
                         Row {
@@ -471,12 +424,51 @@ fun DetailsPage(todoId: Long) {
                     )
                     Spacer(modifier = Modifier.padding(top = 10.dp))
 
-                    Box(
-                        Modifier
-                            .clickable {
+                    Box(Modifier.fillMaxWidth()) {
+                        if (propertyDetails.todo.longitude == 0.0 && propertyDetails.todo.latitude == 0.0) {
+
+                            Row(Modifier.fillMaxWidth()) {
+                                Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+
+                                Icon(
+                                    imageVector = Icons.Filled.Warning,
+                                    contentDescription = null,
+                                    Modifier.padding(end = 5.dp),
+                                    tint = Color(0XFFffcc00)
+                                )
+                                Text(text = "Property Not Verified")
 
                             }
-                            .fillMaxWidth(),
+                            Spacer(modifier = Modifier.padding(top = 10.dp))
+
+                        } else {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        viewModel.GeoLocation(
+                                            propertyDetails.todo.latitude!!,
+                                            propertyDetails.todo.longitude!!,
+                                            context = todoContext
+                                        )
+                                    }, Arrangement.Center
+                            ) {
+                                LocateMe()
+                            }
+
+
+                        }
+
+                    }
+
+                    Divider(
+                        modifier = Modifier.padding(top = 10.dp), thickness = 3.dp
+                    )
+
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Button(
@@ -499,13 +491,14 @@ fun DetailsPage(todoId: Long) {
                             ) {
                                 Text(
                                     text = if (!propertyDetails.todo.status) "Mark Completed" else "Mark as InComplete",
-                                    Modifier.padding(end = 20.dp),
                                     fontWeight = FontWeight.Bold
                                 )
                             }
-                        }
-                    }
 
+
+                        }
+
+                    }
 
 
                     Spacer(modifier = Modifier.padding(top = 20.dp))
