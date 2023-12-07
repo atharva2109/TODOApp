@@ -72,7 +72,7 @@ fun PreDefinedSubTask(todoId: Long = 0) {
             LazyColumn(
                 modifier = Modifier
                     .padding(it)
-                    .padding(top = 10.dp)
+                    .padding(vertical = 10.dp, horizontal = 15.dp)
             ) {
                 items(list.size) { index ->
                     val task = list[index]

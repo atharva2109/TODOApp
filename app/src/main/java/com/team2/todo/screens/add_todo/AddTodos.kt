@@ -391,7 +391,9 @@ fun AddTodos(
 
                 }
                 if (bitmapList.isNotEmpty()) {
-                    ImageLoader(bitmapList = bitmapList)
+                    ImageLoader(bitmapList = bitmapList) {
+                        showBottomSheet = true
+                    }
 
                 }
 

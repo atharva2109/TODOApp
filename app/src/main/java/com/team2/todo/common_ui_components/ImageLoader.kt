@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageLoader(bitmapList: List<Bitmap?>) {
+fun ImageLoader(bitmapList: List<Bitmap?>, onClick: () -> Unit = {}) {
     var currentImageIndex by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,9 +38,8 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
             modifier = Modifier
                 .aspectRatio(1f)
                 .fillMaxWidth()
-                .padding(16.dp),
 
-            ) {
+        ) {
             LazyRow(
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -50,6 +49,7 @@ fun ImageLoader(bitmapList: List<Bitmap?>) {
                     ),
                         modifier = Modifier
                             .clickable {
+                                onClick()
                                 if (index != currentImageIndex) {
                                     coroutineScope.launch {
                                         currentImageIndex = index

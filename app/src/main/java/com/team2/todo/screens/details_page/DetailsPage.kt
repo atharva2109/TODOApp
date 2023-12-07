@@ -169,7 +169,7 @@ fun DetailsPage(todoId: Long) {
                         }
                     },
                     actions = {
-                        Box(Modifier.padding(end = 25.dp)) {
+                        Box(Modifier.padding(end = 15.dp)) {
                             Icon(
                                 Icons.Filled.Edit,
                                 "Extended floating action button.",
@@ -257,7 +257,7 @@ fun DetailsPage(todoId: Long) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = null,
-                                Modifier.padding(end = 5.dp),
+                                Modifier.padding(end = 5.dp).size(20.dp),
                                 tint = AppUtil.getPriorityColor(propertyDetails.todo.priority!!)
                             )
                             Text(text = "${AppUtil.getPriorityString(propertyDetails.todo.priority)}")
@@ -279,9 +279,7 @@ fun DetailsPage(todoId: Long) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.moneyimage),
                                     contentDescription = null,
-                                    Modifier
-                                        .padding(end = 5.dp)
-                                        .size(28.dp)
+                                    Modifier.padding(end = 5.dp).size(20.dp)
                                 )
                                 Text(text = "Not Specified")
                             }
@@ -290,12 +288,13 @@ fun DetailsPage(todoId: Long) {
                     } else {
                         Box {
 
-                            Row {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Spacer(modifier = Modifier.padding(horizontal = 2.dp))
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.moneyimage),
                                     contentDescription = null,
+                                    Modifier.padding(end = 5.dp).size(20.dp)
                                 )
                                 Text(propertyDetails.todo.price.toString() + " £")
                             }
@@ -311,13 +310,13 @@ fun DetailsPage(todoId: Long) {
 
                     Box {
 
-                        Row {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Spacer(modifier = Modifier.padding(horizontal = 1.dp))
 
                             Icon(
                                 imageVector = Icons.Filled.DateRange,
                                 contentDescription = null,
-                                Modifier.padding(end = 5.dp)
+                                Modifier.padding(end = 5.dp).size(20.dp)
                             )
 
                             Text(
@@ -346,14 +345,7 @@ fun DetailsPage(todoId: Long) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.duration),
                                             contentDescription = null,
-                                            Modifier
-                                                .padding(
-                                                    start = 5.dp,
-                                                    top = 5.dp,
-                                                    end = 5.dp,
-                                                    bottom = 5.dp
-                                                )
-                                                .size(20.dp),
+                                            Modifier.padding(end = 5.dp).size(20.dp)
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
@@ -366,14 +358,7 @@ fun DetailsPage(todoId: Long) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.duration),
                                             contentDescription = null,
-                                            Modifier
-                                                .padding(
-                                                    start = 5.dp,
-                                                    top = 5.dp,
-                                                    end = 5.dp,
-                                                    bottom = 5.dp
-                                                )
-                                                .size(20.dp),
+                                            Modifier.padding(end = 5.dp).size(20.dp),
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
@@ -393,14 +378,7 @@ fun DetailsPage(todoId: Long) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.duration),
                                     contentDescription = null,
-                                    Modifier
-                                        .padding(
-                                            start = 5.dp,
-                                            top = 5.dp,
-                                            end = 5.dp,
-                                            bottom = 5.dp
-                                        )
-                                        .size(20.dp),
+                                    Modifier.padding(end = 5.dp).size(20.dp),
                                     tint = MaterialTheme.colorScheme.tertiary
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -433,7 +411,7 @@ fun DetailsPage(todoId: Long) {
                                 Icon(
                                     imageVector = Icons.Filled.Warning,
                                     contentDescription = null,
-                                    Modifier.padding(end = 5.dp),
+                                    Modifier.padding(end = 5.dp).size(20.dp),
                                     tint = Color(0XFFffcc00)
                                 )
                                 Text(text = "Property Not Verified")
