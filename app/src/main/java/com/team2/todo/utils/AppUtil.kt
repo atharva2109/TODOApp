@@ -6,14 +6,12 @@ import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.team2.todo.data.entities.relations.TodoWithSubTodos
-<<<<<<< HEAD
-
-=======
->>>>>>> 99c320c3f204f921bd51da46ebdc0cf763da7b0f
 import com.team2.todo.ui.theme.PriorityHigh
 import com.team2.todo.ui.theme.PriorityLow
 import com.team2.todo.ui.theme.PriorityMedium
+
 import java.time.LocalDateTime
+
 import java.time.temporal.ChronoUnit
 
 object AppUtil {
@@ -42,10 +40,14 @@ object AppUtil {
     fun openMaps(lat: Double, lon: Double, context: Context) {
         val stringLat = lat.toString()
         val stringLon = lon.toString()
-        val intentUri = Uri.parse("geo:$stringLat,$stringLon")
+
+
+        val intentUri = Uri.parse("geo:$stringLat,$stringLon?q=$stringLat,$stringLon($stringLat,$stringLon)")
+
         val intent = Intent(Intent.ACTION_VIEW, intentUri)
         intent.setPackage("com.google.android.apps.maps")
-        ContextCompat.startActivity(context, intent, null)
+
+        context.startActivity(intent)
     }
 
     const val OVERDUE = "OVERDUE!"
