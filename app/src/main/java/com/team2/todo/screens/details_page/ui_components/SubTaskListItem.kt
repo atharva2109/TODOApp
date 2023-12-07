@@ -81,7 +81,7 @@ fun SubTaskListItem(
     viewModel: DetailsPageViewModel
 ) {
 
-    var priority = AppUtil.getPriorityString(priorityIndex = property.todo.priority ?: -1)
+    var priority = AppUtil.getPriorityString(priorityIndex = subTask.priority ?: -1)
     var checkedState by remember { mutableStateOf(subTask.status ?: false) }
 
 
@@ -106,7 +106,7 @@ fun SubTaskListItem(
             )
             .border(
                 0.3.dp,
-                color = getPriorityColor(property.todo.priority ?: -1),
+                color = getPriorityColor(subTask.priority ?: -1),
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable {
@@ -122,7 +122,7 @@ fun SubTaskListItem(
                 modifier = Modifier
                     .width(10.dp)
                     .height(90.dp)
-                    .background(getPriorityColor(property.todo.priority ?: -1))
+                    .background(getPriorityColor(subTask.priority ?: -1))
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column(
@@ -141,11 +141,11 @@ fun SubTaskListItem(
                         Modifier
                             .size(15.dp)
                             .padding(end = 5.dp),
-                        tint = getPriorityColor(property.todo.priority ?: -1)
+                        tint = getPriorityColor(subTask.priority ?: -1)
                     )
                     Text(
                         text = priority,
-                        color = getPriorityColor(property.todo.priority ?: -1),
+                        color = getPriorityColor(subTask.priority ?: -1),
                         fontWeight = FontWeight.Light,
                         fontSize = 15.sp,
                         textDecoration = if (checkedState) TextDecoration.LineThrough else TextDecoration.None
