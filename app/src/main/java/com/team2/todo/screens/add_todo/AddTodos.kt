@@ -272,8 +272,8 @@ fun AddTodos(
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(ctx, "Error fetching Todo", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(ctx, "Error fetching Todo", Toast.LENGTH_SHORT)
+//                    .show()
             }
         }
 

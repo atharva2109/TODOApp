@@ -13,10 +13,9 @@ import java.time.format.DateTimeFormatter
  */
 @Composable
 fun ReminderField(dateSelected: LocalDateTime) {
-    val reminderDate =dateSelected.minusDays(1)
 
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val formattedDate = reminderDate.format(formatter)
+    val formattedDate = dateSelected.format(formatter)
 
     Text(
         text = "We will remind you on: $formattedDate",

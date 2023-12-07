@@ -74,6 +74,7 @@ import com.team2.todo.R
 import com.team2.todo.common_ui_components.ImageLoader
 import com.team2.todo.common_ui_components.CommonAppBar
 import com.team2.todo.common_ui_components.CountdownTimerForDueDate
+import com.team2.todo.common_ui_components.EmptyList
 import com.team2.todo.common_ui_components.LoaderBottomSheet
 import com.team2.todo.common_ui_components.LocationVerifiedLogo
 import com.team2.todo.data.RealEstateDatabase
@@ -89,6 +90,7 @@ import com.team2.todo.screens.listing.ui_components.CustomListItem
 import com.team2.todo.ui.theme.AppBarContentColor
 import com.team2.todo.ui.theme.BlueColor
 import com.team2.todo.ui.theme.GreyColor
+import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.AppUtil
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
@@ -509,22 +511,33 @@ fun DetailsPage(todoId: Long) {
                     Spacer(modifier = Modifier.padding(top = 20.dp))
 
 
-                    Box() {
-                        Text(
-                            text = "Sub Tasks ",
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                    }
+                    Text(
+                        text = "Tasks",
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
                     if (propertyDetails.subtodos.isEmpty()) {
-                        Spacer(modifier = Modifier.padding(top = 50.dp))
-                        Row(Modifier.fillMaxWidth(), Arrangement.Center) {
-                            Text(text = "No Subtasks", fontStyle = FontStyle.Italic)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 20.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = "Empty task list? Time to fill it up with your plans and goals!",
+                                fontWeight = FontWeight.Light,
+                                color = PrimaryColor,
+                                textAlign = TextAlign.Center
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_no_completed_list),
+                                contentDescription = "title",
+                                Modifier.size(100.dp)
+                            )
+
                         }
-
-
                     } else {
                         LazyColumn(
                             modifier = Modifier.height(500.dp)
