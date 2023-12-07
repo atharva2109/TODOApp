@@ -1,4 +1,5 @@
 package com.team2.todo.screens.details_page.ui_components
+
 import android.graphics.ImageDecoder
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -81,7 +82,7 @@ fun SubTaskListItem(
 ) {
 
     var priority = AppUtil.getPriorityString(priorityIndex = property.todo.priority ?: -1)
-    var checkedState by remember { mutableStateOf(subTask.status) }
+    var checkedState by remember { mutableStateOf(subTask.status ?: false) }
 
 
     fun shouldShowVerified(): Boolean {
@@ -92,7 +93,6 @@ fun SubTaskListItem(
     }
 
     val title = subTask.title
-    val isCompleted = subTask.isCompleted
 
     Card(
         colors = CardDefaults.cardColors(
@@ -129,7 +129,7 @@ fun SubTaskListItem(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .weight(1f)
-                    .alpha(if (isCompleted!!) 0.5f else 1.0f)
+                    .alpha(if (checkedState!!) 0.5f else 1.0f)
                     .clickable {
                         NavigationUtil.navigateTo("${Screen.SubTodoDetails.name}/${subTask.subTodoId}")
                     }
@@ -148,7 +148,7 @@ fun SubTaskListItem(
                         color = getPriorityColor(property.todo.priority ?: -1),
                         fontWeight = FontWeight.Light,
                         fontSize = 15.sp,
-                        textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                        textDecoration = if (checkedState) TextDecoration.LineThrough else TextDecoration.None
                     )
                 }
                 Row(
@@ -159,7 +159,7 @@ fun SubTaskListItem(
                         text = title!!,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
-                        textDecoration = if (isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                        textDecoration = if (checkedState) TextDecoration.LineThrough else TextDecoration.None
                     )
 
                 }
@@ -171,10 +171,10 @@ fun SubTaskListItem(
             Box(
                 modifier = Modifier.padding(end = 15.dp)
             ) {
-                Row(){
+                Row() {
                     Checkbox(checked = checkedState!!, onCheckedChange = {
                         checkedState = !checkedState!!
-                        viewModel.updateSubTodo(subTask.subTodoId,checkedState!!)
+                        viewModel.updateSubTodo(subTask.subTodoId, checkedState!!)
 
 
                     })

@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 @Composable
 fun CountdownTimerForDueDate(
     dueDateTime: LocalDateTime,
+    returnOnlyTime:Boolean = false
 ): String {
 
     val timeDifferenceInMillis = AppUtil.getDueDateDifferentFromCurrentDate(dueDateTime)
@@ -30,5 +31,8 @@ fun CountdownTimerForDueDate(
     val hoursRemaining = (remainingTime.value % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     val minutesRemaining = (remainingTime.value % (1000 * 60 * 60)) / (1000 * 60)
     val secondsRemaining = (remainingTime.value % (1000 * 60)) / 1000
+    if(returnOnlyTime){
+        return "$hoursRemaining h : $minutesRemaining m : $secondsRemaining s";
+    }
     return "$daysRemaining d : $hoursRemaining h : $minutesRemaining m : $secondsRemaining s"
 }

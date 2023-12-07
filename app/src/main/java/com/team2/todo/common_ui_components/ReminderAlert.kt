@@ -3,6 +3,7 @@ package com.team2.todo.common_ui_components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,7 +40,7 @@ fun ReminderAlertCompose(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(bottom = 25.dp, start = 2.dp, end = 2.dp)
+        modifier = Modifier.padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
     ) {
         Text(
             text = "Reminder for Today's task",
@@ -53,27 +54,15 @@ fun ReminderAlertCompose(
             modifier = Modifier.size(150.dp)
         )
         Text(
-            text = "There are a total of ${reminderModel.totalCount} properties pending for the day ",
+            text = "There are a total of \"${reminderModel.totalCount} properties\" pending for the day",
             maxLines = 3,
             color = PrimaryColor,
             textAlign = TextAlign.Justify,
             fontSize = 15.sp,
-            modifier = Modifier.padding(horizontal = 10.dp),
-            overflow = TextOverflow.Ellipsis
-        )
-        var dueDate = property.todo.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it) }
-
-        Text(
-            text = "The closest one is for property ${property.todo.title} $dueDate",
-            maxLines = 3,
-            color = PrimaryColor,
-            textAlign = TextAlign.Justify,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 10.dp),
             overflow = TextOverflow.Ellipsis
         )
 
+        ClosestTask(property)
 
         Button(
             onClick = {
@@ -86,6 +75,25 @@ fun ReminderAlertCompose(
             Text("Inspect & Complete Task")
         }
 
+    }
+
+}
+
+@Composable
+fun ClosestTask(property: TodoWithSubTodos) {
+    Column(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalAlignment = Alignment.Start) {
+        Text(
+            text = "The closest one is ",
+            maxLines = 3,
+            textAlign = TextAlign.Justify,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            overflow = TextOverflow.Ellipsis
+        )
+        var dueDate =
+            property.todo.dueDate?.let { CountdownTimerForDueDate(dueDateTime = it, true) }
+        Text(text = "Property : ${property.todo.title}")
+        Text(text = "Due in : $dueDate")
     }
 
 }
