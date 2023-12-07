@@ -105,29 +105,33 @@ class PropertyListViewModel(
     fun fetchNearestTask() {
         if (!isNotificationShown) {
             if (LocationUtil.valid()) {
-                run {
-                    inSalePropertyList.value.forEach { it ->
-                        run {
+                viewModelScope.launch {
+                    delay(3000)
+                    run {
+                        inSalePropertyList.value.forEach { it ->
+                            run {
 
-                            if (((it.todo.latitude
-                                    ?: 0.0) != 0.0 || (it.todo.longitude
-                                    ?: 0.0) != 0.0)
-                            ) {
-                                var distance = GeoFenceUtil.calculateDistance(
-                                    it.todo.latitude ?: 0.0,
-                                    it.todo.longitude ?: 0.0,
-                                    LocationUtil.currentLocation!!
-                                )
-                                if (distance >= THRESHOLD_DISTANCE) {
-                                    isNotificationShown = true
-                                    NotificationUtil.showGeoFencingNotification(
-                                        property = it
-                                    );
+                                if (((it.todo.latitude
+                                        ?: 0.0) != 0.0 || (it.todo.longitude
+                                        ?: 0.0) != 0.0)
+                                ) {
+                                    var distance = GeoFenceUtil.calculateDistance(
+                                        it.todo.latitude ?: 0.0,
+                                        it.todo.longitude ?: 0.0,
+                                        LocationUtil.currentLocation!!
+                                    )
+                                    if (distance <= THRESHOLD_DISTANCE) {
+                                        isNotificationShown = true
+                                        NotificationUtil.showGeoFencingNotification(
+                                            property = it
+                                        );
+                                    }
                                 }
                             }
                         }
                     }
                 }
+
             }
         }
     }
@@ -136,7 +140,6 @@ class PropertyListViewModel(
     fun fetchUpdatedList() {
         getDataForSelectedFilter(filterViewModel.selectedFilter.value)
     }
-
     fun updateStatus(todoId: Long, status: Boolean): Boolean {
         viewModelScope.launch {
             repo.updateTodoStatus(todoId, status)
