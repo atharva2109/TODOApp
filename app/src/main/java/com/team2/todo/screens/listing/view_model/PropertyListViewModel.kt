@@ -103,11 +103,11 @@ class PropertyListViewModel(
     }
 
     fun fetchNearestTask() {
-        if (!isNotificationShown) {
-            if (LocationUtil.valid()) {
-                viewModelScope.launch {
-                    delay(3000)
-                    run {
+        if (LocationUtil.valid()) {
+            viewModelScope.launch {
+                delay(3000)
+                run {
+                    if (!isNotificationShown) {
                         inSalePropertyList.value.forEach { it ->
                             run {
 
@@ -121,18 +121,20 @@ class PropertyListViewModel(
                                         LocationUtil.currentLocation!!
                                     )
                                     if (distance <= THRESHOLD_DISTANCE) {
-                                        isNotificationShown = true
+
                                         NotificationUtil.showGeoFencingNotification(
                                             property = it
                                         );
+
+                                        isNotificationShown = true
                                     }
                                 }
                             }
                         }
                     }
                 }
-
             }
+
         }
     }
 
@@ -140,6 +142,7 @@ class PropertyListViewModel(
     fun fetchUpdatedList() {
         getDataForSelectedFilter(filterViewModel.selectedFilter.value)
     }
+
     fun updateStatus(todoId: Long, status: Boolean): Boolean {
         viewModelScope.launch {
             repo.updateTodoStatus(todoId, status)
