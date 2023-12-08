@@ -15,8 +15,8 @@ interface SubTodoDao {
     @Query("SELECT * FROM subtodos where todoId = :todoId")
     fun getSubTodosBasedOnTodo(todoId: Long): Flow<List<SubTodo>>
 
-    @Query("SELECT  * FROM subtodos where subTodoId = :subTodoId ORDER BY priority ASC")
-    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Long): Flow<SubTodo>
+    @Query("SELECT  * FROM subtodos where subTodoId = :subTodoId")
+    fun getSubTodosBasedOnSubTodoId(subTodoId: Long): Flow<SubTodo>
 
     @Query("DELETE FROM subtodos WHERE subTodoId = :subTodoId")
     fun deleteProperty(subTodoId: Long)

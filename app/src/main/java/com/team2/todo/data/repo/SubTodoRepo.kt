@@ -21,8 +21,8 @@ class SubTodoRepo(private val database: RealEstateDatabase) {
     fun getSubTodosBasedOnTodo(todoId: Long): Flow<List<SubTodo>> =
         database.subTodoDao().getSubTodosBasedOnTodo(todoId)
 
-    fun getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId: Long): Flow<SubTodo> =
-        database.subTodoDao().getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId)
+    fun getSubTodosBasedOnSubTodoId(subTodoId: Long): Flow<SubTodo> =
+        database.subTodoDao().getSubTodosBasedOnSubTodoId(subTodoId)
 
     suspend fun updateSubTodoStatus(subTodoId: Long, status: Boolean) {
         database.subTodoDao().updateSubTodoStatus(subTodoId, status)

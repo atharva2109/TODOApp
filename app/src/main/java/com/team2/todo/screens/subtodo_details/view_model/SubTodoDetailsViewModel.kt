@@ -18,7 +18,7 @@ class SubTodoDetailsViewModel(private val repo: SubTodoRepo) : ViewModel() {
     fun getSubTodoById(subTodoId: Long) {
         try {
             viewModelScope.launch {
-                repo.getSubTodosBasedOnSubTodoIdOrderedByPriority(subTodoId).collect { subTodoObj ->
+                repo.getSubTodosBasedOnSubTodoId(subTodoId).collect { subTodoObj ->
                     _subTodo.value = subTodoObj
                 }
             }

@@ -67,6 +67,7 @@ import com.team2.todo.ui.theme.PrimaryColor
 import com.team2.todo.utils.NavigationUtil
 import com.team2.todo.utils.Screen
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -168,7 +169,7 @@ fun AddTodos(
     var showFetchingDbLoading by rememberSaveable { mutableStateOf(false) }
     var showFetchingSubTodoLoading by rememberSaveable { mutableStateOf(false) }
     var todosRetrieved by remember { mutableStateOf<Flow<List<TodoWithSubTodos>>?>(null) }
-    var subtodoRetrieved by remember { mutableStateOf<Flow<List<SubTodo>>?>(null) }
+    var subtodoRetrieved by remember { mutableStateOf<Flow<SubTodo>>(emptyFlow()) }
     var todosretrievalInProgress by remember { mutableStateOf(false) }
 
     //these variables are used for validation checking
@@ -178,7 +179,8 @@ fun AddTodos(
     var isDescriptionEmpty by rememberSaveable { mutableStateOf(false) }
 
     var updatedBitmapList by remember { mutableStateOf(mutableListOf<Bitmap>()) }
-    var subtodoid by remember { mutableStateOf(0L) }
+    var subtodoid by remember { mutableLongStateOf(0L) }
+    var mainTodoId by remember { mutableLongStateOf(0L) }
 
     if (isEditSubTodo) {
         showFetchingSubTodoLoading = true
@@ -188,19 +190,19 @@ fun AddTodos(
                 subtodoRetrieved = editsubtodoviewmodel.fetchSubtodo(todoid)
                 todosretrievalInProgress = false
                 subtodoRetrieved?.collect { subTodo ->
-                    for (todo in subTodo) {
-                        enteredTitle = todo.title ?: ""
-                        enteredDescription = todo.description ?: ""
-                        subtodoid = todo.subTodoId
+                        enteredTitle = subTodo.title ?: ""
+                        enteredDescription = subTodo.description ?: ""
+                        mainTodoId = subTodo.todoId
+                        subtodoid = subTodo.subTodoId
                         val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                         dateselected.value =
-                            todo.dueDate?.toLocalDate()?.format(dateFormatter) ?: "---"
+                            subTodo.dueDate?.toLocalDate()?.format(dateFormatter) ?: "---"
 
                         val timeformatter = DateTimeFormatter.ofPattern("[ HH:m[:ss]]")
                         timeselected.value =
-                            todo.dueDate?.toLocalTime()?.format(timeformatter) ?: "---"
+                            subTodo.dueDate?.toLocalTime()?.format(timeformatter) ?: "---"
 
-                        val priorityindex = todo.priority
+                        val priorityindex = subTodo.priority
                         val priorityList = priorities.values()
 
                         if (priorityindex != null && priorityindex in priorityList.indices) {
@@ -209,13 +211,13 @@ fun AddTodos(
                             defaultPriority = "Low"
                         }
 
-                        val bitmap = todo.image
+                        val bitmap = subTodo.image
                         bitmap?.let {
                             updatedBitmapList.add(it)
                         }
 
                         bitmapList = updatedBitmapList
-                    }
+
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -498,7 +500,7 @@ fun AddTodos(
 
                                             SubTodo(
                                                 subtodoid,
-                                                todoid,
+                                                mainTodoId,
                                                 enteredTitle,
                                                 enteredDescription,
                                                 bitmapList[0],
@@ -516,7 +518,7 @@ fun AddTodos(
 
                                             SubTodo(
                                                 subtodoid,
-                                                todoid,
+                                                mainTodoId,
                                                 enteredTitle,
                                                 enteredDescription,
                                                 null,

@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Atharva K on 11/14/23.
  */
-class FetchSubtodoViewModel(val repository: SubTodoRepo): ViewModel() {
-    suspend fun fetchSubtodo(todoid:Long): Flow<List<SubTodo>> {
-        return repository.getSubTodosBasedOnTodo(todoid)
+class FetchSubtodoViewModel(val repository: SubTodoRepo) : ViewModel() {
+    fun fetchSubtodo(subTodoId: Long): Flow<SubTodo> {
+        return repository.getSubTodosBasedOnSubTodoId(subTodoId)
     }
 }
