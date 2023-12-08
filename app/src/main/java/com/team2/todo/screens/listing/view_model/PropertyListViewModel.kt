@@ -70,7 +70,7 @@ class PropertyListViewModel(
             delay(3000)
             var closestDuePropertyIndex = -1
             var previousClosestDateDifference = Long.MAX_VALUE
-            val MINUTES_IN_DAY = 360
+            val MINUTES_IN_DAY = 24 * 60
             inSalePropertyList.value.forEachIndexed { index, it ->
                 val dueDateTodo = it.todo.dueDate
                 // if the due date is not today then skip
