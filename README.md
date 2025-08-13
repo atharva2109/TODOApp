@@ -1,70 +1,89 @@
-# COM6510 Assignment
+# TODO Android App
 
-Software Development for Mobile Development assignment
-
----
-
-## Geolocation aware Todo app
-
-<ins>Feature of the App</ins>
-
-* Purpose/Usage driven Todo List ( Need to Dicuss on this )
-* Todos : Add Update Delete - capturing datetime and latest known location (GeoLocation)
-* Capture/Upload image while add/edit the Todo List
-* Subtasks in TODO
-* Asking if the user needs a reminder (scope for discussion?)
-* If Reminder is set show, Notification for showing the time remaining  (  Need to Dicuss : How to
-  show if there are multiple
-  reminders ) [How to Create Notification](https://developer.android.com/develop/ui/views/notifications/build-notification)
-* Deeplinking for opening app from the notification that can take user to the exact TODO
-  List [More Info On Deeplink]( https://developer.android.com/training/app-links/deep-linking )
-* Done TODO List Screen, which can be used to view finished TODO and recover them later, and
-  permanently delete the TODO List.
-* Notification :
-
-- When the reminder time is reached.
-- When the user arrives at the location of a Todo (Geofenced Todo).
-
-* Showing typical tasks (for your users/focus) that a User can copy and fill in further (scope for
-  discussion??)
-
-<ins> GOOD TO HAVE (Your own (extra) requirement) <ins>
-* { To Be Added } 
-
-<ins>Important Note to include in Assignment </ins>
-
-* Design : Use of Material Design https://m3.material.io/
-* Architecture : MVVM with state
-* Data Persistance for storing data
-* GPS/GeoLocation
-* Camera Sensor for capturing Image
-* Minimum Android Version : 11
-
-<ins>For Agile we are using (suggest if there is any better one) </ins>
-
-* [Trello] (https://trello.com/b/Qa1JKGLv/real-estate)
-
-----
-<ins> Some Important Dates </ins>
-- Demo on Week 11 - Dec 8th
-- Report on Week 12 - Dec 15th
+Welcome to the TODO App! This app is designed to streamline the property management tasks of real estate agents. Below you will find a concise guide to the app's features, architecture, and setup.
 
 ---
 
-<ins> Folder Structure </ins>
+## Features of the App
 
-[![Folder Structure](./documents/images/folder_structure.png, "Hello World")]
+### Core Features
 
-Tutorial and information link
+- **Purpose/Usage Driven Todo List:** Customizable tasks for managing properties.
+- **Todo Management:** Add, update, and delete tasks with datetime and geolocation capture.
+- **Image Capture/Upload:** Add images via camera or gallery while creating or editing tasks.
+- **Subtasks:** Manage subtasks within each main task.
+- **Reminders:** Option to set reminders for tasks with notifications when the reminder time is reached.
+- **Geofenced Notifications:** Notifications triggered when the user is near the location of a task.
+- **Deep Linking:** Open the app directly to a specific task from a notification.
+- **Completed Tasks:** View, recover, or permanently delete finished tasks.
+- **Typical Tasks:** Provide users with common tasks that can be copied and filled in.
 
-* [Navigation](https://developer.android.com/jetpack/compose/navigation)
-* [Data Persistance](https://developer.android.com/courses/android-basics-kotlin/unit-5)
+### Good to Have
 
-Cloning the project
+- Suggestions for additional features are welcome!
 
-* ``` git clone https://git.shefcompsci.org.uk/com6510-2023-24/team02/project.git ```
-* Enter user name and password (set your password in gitlab, if you have not)
+---
 
+## Important Note to Include in Assignment
 
+### Design
 
+- **Material Design:** Follow Material Design guidelines [Material Design](https://m3.material.io/)
 
+### Architecture
+
+- **MVVM:** Model-View-ViewModel architecture with state management.
+
+### Data Persistence
+
+- **Room Database:** For storing task data.
+
+### Sensors
+
+- **GPS/GeoLocation:** For location-based functionalities.
+- **Camera:** For image capture.
+
+### Compatibility
+
+- **Minimum Android Version:** 11
+
+### Agile Methodology
+
+- **Trello:** Used for task management [Trello Board](https://trello.com/b/Qa1JKGLv/real-estate)
+
+---
+
+## Folder Structure
+
+Ensure your folder structure follows best practices for Android projects. Refer to the provided diagram for guidance.
+
+![Folder Structure](./documents/images/folder_structure.png)
+
+---
+
+## Setup Instructions
+
+### Cloning the Project
+
+To clone the project repository, use the following command:
+
+```bash
+https://github.com/atharva2109/TODOApp.git
+```
+
+### Resources
+
+- **Navigation:** [Navigation in Jetpack Compose](https://developer.android.com/jetpack/compose/navigation)
+- **Data Persistence:** [Android Basics in Kotlin: Unit 5](https://developer.android.com/courses/android-basics-kotlin/unit-5)
+- **Notifications:** [Building Notifications](https://developer.android.com/develop/ui/views/notifications/build-notification)
+- **Deep Linking:** [Deep Linking in Android](https://developer.android.com/training/app-links/deep-linking)
+
+---
+
+### License
+
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+Feel free to reach out via the project's GitHub repository for any issues or contributions. Enjoy exploring TODO App! For further details, please refer to the attached report.
